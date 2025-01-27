@@ -6,12 +6,20 @@ import { Preloader } from './scenes/Preloader';
 
 import { Game, Types } from "phaser";
 
+
+let requestedHeight = 1024;
+let gameRatio = window.innerWidth < window.innerHeight ? window.innerWidth / window.innerHeight : window.innerHeight / window.innerWidth;
+
+let height = requestedHeight > window.innerHeight ? window.innerHeight : requestedHeight;
+let width = Math.ceil(height * gameRatio);
+
+
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Types.Core.GameConfig = {
     type: Phaser.AUTO,
-    width: 1024,
-    height: 768,
+    width: width,
+    height: height,
     parent: 'game-container',
     backgroundColor: '#028af8',
     scale: {
