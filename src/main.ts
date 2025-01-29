@@ -32,7 +32,13 @@ const config: Types.Core.GameConfig = {
         MainMenu,
         MainGame,
         GameOver
-    ]
+    ],
+    physics: {
+        default: "arcade",
+        arcade: {
+            debug: true
+        }
+    }
 };
 
 export default new Game(config);

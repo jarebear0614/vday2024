@@ -1,0 +1,59 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "main.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "background-small.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "background-x2.tsx": {
+            "scaleInDock": 0.25,
+            "scaleInEditor": 1
+        },
+        "background.tsx": {
+            "scaleInDock": 0.25,
+            "scaleInEditor": 1
+        },
+        "main.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1457,
+                "y": 1566
+            }
+        },
+        "main.tmx#background": {
+            "scaleInDock": 0.25
+        }
+    },
+    "last.exportedFilePath": "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map",
+    "last.imagePath": "C:/Users/Jared Germano/Downloads/Kenney Game Assets 1 version 42/2D assets/RPG Tiles Vector/Tilesheet",
+    "map.fixedSize": false,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
+    "openFiles": [
+        "main.tmx"
+    ],
+    "project": "vday2024.tiled-project",
+    "recentFiles": [
+        "main.tmx",
+        "background.tsx",
+        "background-x2.tsx",
+        "background-small.tsx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    }
+}
