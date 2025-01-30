@@ -35,14 +35,14 @@ export class Game extends BaseScene
     preload() 
     {
         //controls
-        this.load.image('dpadup', '/assets/controls/dpad-up.png');
-        this.load.image('dpaddown', '/assets/controls/dpad-down.png');
-        this.load.image('dpadleft', '/assets/controls/dpad-left.png');
-        this.load.image('dpadright', '/assets/controls/dpad-right.png');
+        this.load.image('dpadup', 'assets/controls/dpad-up.png');
+        this.load.image('dpaddown', 'assets/controls/dpad-down.png');
+        this.load.image('dpadleft', 'assets/controls/dpad-left.png');
+        this.load.image('dpadright', 'assets/controls/dpad-right.png');
 
-        this.load.image('overworldTiles', '/assets/map/overworld-extruded.png');
-        this.load.image('interiorTiles', '/assets/map/interior-extruded.png');
-        this.load.tilemapTiledJSON('map', '/assets/map/main.tmj')
+        this.load.image('overworldTiles', 'assets/map/overworld-extruded.png');
+        this.load.image('interiorTiles', 'assets/map/interior-extruded.png');
+        this.load.tilemapTiledJSON('map', 'assets/map/main.tmj')
 
         this.load.image('player', 'assets/player.png');
         
