@@ -35,6 +35,8 @@
         "webpack-merge": "^5.10.0"
     },
     "dependencies": {
-        "phaser": "^3.87.0"
+        "phaser": "^3.87.0",
+        "phaser-ui-tools": "^2.0.0-beta",
+        "phaser-utility": "^1.0.7"
     }
 }
