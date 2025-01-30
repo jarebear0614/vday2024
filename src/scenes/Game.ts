@@ -60,9 +60,14 @@ export class Game extends BaseScene
         const map = this.make.tilemap({key: 'map'});
         const tileset = map.addTilesetImage('overworld', 'overworldTiles', 16, 16, 1, 3)!;
         const interior = map.addTilesetImage('interior', 'interiorTiles', 16, 16, 1, 3)!;
-        map.createLayer('background', tileset, 0, 0);
-        map.createLayer('backgroundjuice', tileset, 0, 0);
-        map.createLayer('scenery', interior, 0, 0);
+        let backgroundLayer = map.createLayer('background', tileset, 0, 0);
+        let backgroundJuiceLayer = map.createLayer('backgroundjuice', tileset, 0, 0);
+        let sceneryLayer = map.createLayer('scenery', interior, 0, 0);
+
+        Align.scaleToGameW(backgroundLayer!, 2, this);
+        Align.scaleToGameW(backgroundJuiceLayer!, 2, this);
+        Align.scaleToGameW(sceneryLayer!, 2, this);
+        
         //map.createFromObjects
 
         this.xLimit = map.widthInPixels;
