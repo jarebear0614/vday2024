@@ -49,7 +49,7 @@ export class Game extends BaseScene
 
         this.load.image('player', 'assets/player.png');
 
-        this.load.spritesheet('characters', '/assets/characters.png', {frameWidth: 16, frameHeight: 16, spacing: 1});
+        this.load.spritesheet('characters', 'assets/characters.png', {frameWidth: 16, frameHeight: 16, spacing: 1});
         
     }
 
