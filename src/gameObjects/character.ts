@@ -8,7 +8,7 @@ export class CharacterConfig
 
     bodyFrame?: number = 0;
 
-    shirtFrame: number = 6;
+    shirtFrame?: number = 6;
 
     pantsFrame?: number = 57;
 
@@ -44,7 +44,7 @@ export class Character
         this.config = config;        
     }
 
-    create() {
+    create(): Character {
         this.bodySprite = this.scene.add.sprite(this.x, this.y, 'characters', this.config.bodyFrame);
         this.shirtSprite = this.scene.add.sprite(this.x, this.y, 'characters', this.config.shirtFrame);
         this.pantsSprite = this.scene.add.sprite(this.x, this.y, 'characters', this.config.pantsFrame);
@@ -56,6 +56,8 @@ export class Character
         this.applyScaling(this.pantsSprite, TILE_SCALE, this.scene);
         this.applyScaling(this.shoesSprite, TILE_SCALE, this.scene);
         this.applyScaling(this.hairSprite, TILE_SCALE, this.scene);
+
+        return this;
     }
 
     applyScaling(obj: Phaser.GameObjects.Sprite, scale: number, scene: Phaser.Scene) 

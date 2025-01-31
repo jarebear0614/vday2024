@@ -11,12 +11,18 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "#overworld": {
+            "scaleInDock": 1
+        },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx": {
-            "scale": 3,
+            "expandedObjectLayers": [
+                6
+            ],
+            "scale": 1.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 160.83333333333334,
-                "y": 127.66666666666669
+                "x": 249.66666666666669,
+                "y": 203.99999999999997
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx#interior": {
@@ -25,6 +31,17 @@
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx#overworld": {
             "scaleInDock": 2
+        },
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/houses.tmx": {
+            "scale": 1,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 343.5,
+                "y": 264
+            }
+        },
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/houses.tmx#overworld": {
+            "scaleInDock": 1
         }
     },
     "last.exportedFilePath": "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map",
@@ -36,10 +53,12 @@
     "map.tileWidth": 16,
     "map.width": 60,
     "openFiles": [
-        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx"
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx",
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/houses.tmx"
     ],
     "project": "main.tiled-project",
     "recentFiles": [
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/houses.tmx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx"
     ],
     "tileset.embedInMap": true,

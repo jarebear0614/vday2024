@@ -30,6 +30,11 @@ export class Game extends BaseScene
 
     character: Character;
 
+    map: Phaser.Tilemaps.Tilemap;
+    overworldTileset: Phaser.Tilemaps.Tileset;
+    backgroundJuiceLayer: Phaser.Tilemaps.TilemapLayer;
+    backgroundCollidersLayer: Phaser.Tilemaps.TilemapLayer;
+
     constructor ()
     {
         super('Game');
@@ -42,6 +47,8 @@ export class Game extends BaseScene
         this.load.image('dpaddown', 'assets/controls/dpad-down.png');
         this.load.image('dpadleft', 'assets/controls/dpad-left.png');
         this.load.image('dpadright', 'assets/controls/dpad-right.png');
+
+        this.load.image('dpadfull', 'assets/controls/dpadfull.png');
 
         this.load.image('overworldTiles', 'assets/map/overworld-extruded.png');
         this.load.image('interiorTiles', 'assets/map/interior-extruded.png');
@@ -57,24 +64,19 @@ export class Game extends BaseScene
     {
         super.create();
 
-        //this.character = new Character(this, 'char1', 50, 50);
-        //(<any>this.add).character(this, 200, 200);
-        //this.
         this.camera = this.cameras.main;
-        this.camera.setBackgroundColor(0x00ff00);
+        this.camera.setBackgroundColor(0x00ff00);        
         
         this.configureTilemaps();
 
         let cols = this.getW() / (TILE_SIZE * this.tilemapScale);
         let rows = this.getH() / (TILE_SIZE * this.tilemapScale);
 
-        this.makeGrid(rows, cols);
-
-        this.configurePlayer();        
-        this.configureInput();
-
+        this.makeGrid(rows, cols);  
+        this.configureInput();        
+        this.configurePlayer();
         
-        this.getGrid().placeAt(2,2, this.player);
+        this.getGrid().placeAt(10,10, this.player);
     }
 
     update() 
@@ -121,96 +123,90 @@ export class Game extends BaseScene
     configurePlayer() {
         this.player = this.physics.add.sprite(100, 100, "characters", 0);
 
-        let c = new Character(this, 200, 200);
-        c.create();
+        let c = new Character(this, 200, 200).create();
         
         this.cursors = this.input.keyboard?.createCursorKeys();
-        Align.scaleToGameW(this.player, TILE_SCALE, this);
+        Align.scaleToGameW(this.player, TILE_SCALE, this);        
+
+        
+        this.backgroundJuiceLayer = this.map.createLayer('above', this.overworldTileset, 0, 0)!;
+        this.backgroundCollidersLayer = this.map.createLayer('colliders', this.overworldTileset, 0, 0)!;
+
+        
+        this.backgroundJuiceLayer?.setScale(this.tilemapScale, this.tilemapScale);
+        this.backgroundCollidersLayer.setScale(this.tilemapScale, this.tilemapScale);
+
+        this.physics.add.collider(this.player, this.backgroundCollidersLayer);
+        this.backgroundCollidersLayer.setCollisionBetween(2, 646, true, false);
     }
 
     configureTilemaps() {        
-        const map = this.make.tilemap({key: 'map'});
-        const tileset = map.addTilesetImage('overworld', 'overworldTiles', 16, 16, 1, 3)!;
-        const interior = map.addTilesetImage('interior', 'interiorTiles', 16, 16, 1, 3)!;
-        let backgroundLayer = map.createLayer('background', tileset, 0, 0);
-        let backgroundJuiceLayer = map.createLayer('backgroundjuice', tileset, 0, 0);
-        let sceneryLayer = map.createLayer('scenery', interior, 0, 0);        
+        this.map = this.make.tilemap({key: 'map'});
+        this.overworldTileset = this.map.addTilesetImage('overworld', 'overworldTiles', 16, 16, 1, 3)!;
+        const interior = this.map.addTilesetImage('interior', 'interiorTiles', 16, 16, 1, 3)!;
+        let backgroundLayer = this.map.createLayer('ground', this.overworldTileset, 0, 0);
+        let sceneryLayer = this.map.createLayer('scenery', interior, 0, 0);        
 
         this.tilemapScale = (this.getW() * TILE_SCALE) / TILE_SIZE;
         backgroundLayer?.setScale(this.tilemapScale, this.tilemapScale);
-        backgroundJuiceLayer?.setScale(this.tilemapScale, this.tilemapScale);
         sceneryLayer?.setScale(this.tilemapScale, this.tilemapScale); 
 
-        this.xLimit = map.widthInPixels * this.tilemapScale;
-        this.yLimit = map.heightInPixels * this.tilemapScale;
+
+        this.xLimit = this.map.widthInPixels * this.tilemapScale;
+        this.yLimit = this.map.heightInPixels * this.tilemapScale;
     }
 
     configureInput() {
 
-        let dpadTopLeft = {x: this.getW() * .10, y: this.getH() * .80};
+        let dpadTopLeft = {x: this.getW() * .20, y: this.getH() * .80};
         let dpadPadding = 0;
+        let dpadfull = this.add.image(0, 0, 'dpadfull').setScrollFactor(0);
+        
 
-        let dpadup = this.add.image(0, 0, "dpadup").setInteractive({ useHandCursor: true }).setScrollFactor(0);
-        let dpaddown = this.add.image(0, 0, "dpaddown").setInteractive({ useHandCursor: true }).setScrollFactor(0);        
-        let dpadleft = this.add.image(0, 0, "dpadleft").setInteractive({ useHandCursor: true }).setScrollFactor(0);
-        let dpadright = this.add.image(0, 0, "dpadright").setInteractive({ useHandCursor: true }).setScrollFactor(0);
+        Align.scaleToGameW(dpadfull, 0.18, this);
 
-        Align.scaleToGameW(dpadup, TILE_SCALE, this);
-        dpaddown.setScale(dpadup.scaleX, dpadup.scaleY);
-        dpadleft.setScale(dpadup.scaleX, dpadup.scaleY);
-        dpadright.setScale(dpadup.scaleX, dpadup.scaleY);
+        let dpadWidth = dpadfull.scaleX * 80;
+        this.add.rectangle(dpadTopLeft.x, dpadTopLeft.y - 5, dpadWidth / 2, dpadWidth - 10, 0xff0000).setScrollFactor(0);
 
-        dpadup.setX(dpadTopLeft.x + dpadleft.displayWidth + dpadPadding);
-        dpadup.setY(dpadTopLeft.y);
+        console.log(dpadTopLeft);
+        console.log(dpadWidth);
+        dpadfull.setPosition(dpadTopLeft.x, dpadTopLeft.y + dpadWidth  /2);
 
-        dpaddown.setX(dpadTopLeft.x + dpadleft.displayWidth + dpadPadding);
-        dpaddown.setY(dpadTopLeft.y + dpadup.displayHeight + dpadup.displayHeight + dpadPadding);
+        this.add.zone(dpadTopLeft.x, dpadTopLeft.y - 5, dpadWidth / 2, dpadWidth - 10).setInteractive({useHandCursor: true}).setName('controlsUp').setScrollFactor(0);
+        this.add.zone(dpadTopLeft.x - dpadWidth / 2 - 5, dpadTopLeft.y + dpadWidth / 2, dpadWidth - 10, dpadWidth / 2).setInteractive({useHandCursor: true}).setName('controlsLeft').setScrollFactor(0);
+        this.add.zone(dpadTopLeft.x, dpadTopLeft.y + dpadWidth + 5, dpadWidth / 2, dpadWidth - 10).setInteractive({useHandCursor: true}).setName('controlsDown').setScrollFactor(0);
+        this.add.zone(dpadTopLeft.x + dpadWidth / 2 + 5, dpadTopLeft.y + dpadWidth / 2, dpadWidth - 10, dpadWidth / 2).setInteractive({useHandCursor: true}).setName('controlsRight').setScrollFactor(0);
 
-        dpadleft.setX(dpadTopLeft.x);
-        dpadleft.setY(dpadTopLeft.y + dpadup.displayHeight + dpadPadding);
+        this.add.rectangle(dpadTopLeft.x, dpadTopLeft.y - 5, dpadWidth / 2, dpadWidth - 10, 0xff0000).setScrollFactor(0);
+        this.add.rectangle(dpadTopLeft.x - dpadWidth / 2 - 5, dpadTopLeft.y + dpadWidth / 2, dpadWidth - 10, dpadWidth / 2, 0x00ff00).setScrollFactor(0);
+        this.add.rectangle(dpadTopLeft.x, dpadTopLeft.y + dpadWidth + 5, dpadWidth / 2, dpadWidth - 10, 0x0000ff).setScrollFactor(0);
+        this.add.rectangle(dpadTopLeft.x + dpadWidth / 2 + 5, dpadTopLeft.y + dpadWidth / 2, dpadWidth - 10, dpadWidth / 2, 0xffff00).setScrollFactor(0);
+        
+        this.input.on('gameobjectdown', (pointer: Object, gameObject: Phaser.GameObjects.GameObject) => {
+            let name = gameObject.name;
 
-        dpadright.setX(dpadTopLeft.x + dpadleft.displayWidth + dpadleft.displayWidth + dpadPadding);
-        dpadright.setY(dpadTopLeft.y + dpadup.displayHeight + dpadPadding);
-
-        dpadup.on('pointerdown', () => {
-            this.player.setVelocityY(-this.playerVelocity);
-        });
-        dpadup.on('pointerup', () => {
-            this.player.setVelocity(0, 0);
-        });
-        dpadup.on('pointerout', () => {
-            this.player.setVelocity(0, 0);
-        });
-
-        dpaddown.on('pointerdown', () => {
-            this.player.setVelocityY(this.playerVelocity);
-        });
-        dpaddown.on('pointerup', () => {
-            this.player.setVelocity(0, 0);
-        });        
-        dpaddown.on('pointerout', () => {
-            this.player.setVelocity(0, 0);
+            switch(name) {
+                case 'controlsUp':
+                    this.player.setVelocityY(-this.playerVelocity);
+                    break;
+                case 'controlsDown':
+                    this.player.setVelocityY(this.playerVelocity);
+                    break;
+                case 'controlsLeft':
+                    this.player.setVelocityX(-this.playerVelocity);
+                    break;
+                case 'controlsRight':
+                    this.player.setVelocityX(this.playerVelocity);
+                    break;
+            }
         });
 
-        dpadleft.on('pointerdown', () => {
-            this.player.setVelocityX(-this.playerVelocity);
-        });
-        dpadleft.on('pointerup', () => {
-            this.player.setVelocity(0, 0);
-        });
-        dpadleft.on('pointerout', () => {
-            this.player.setVelocity(0, 0);
+        this.input.on('gameobjectup', (pointer: Object, gameObject: Phaser.GameObjects.GameObject) => {
+            this.player.setVelocity(0,0);
         });
 
-        dpadright.on('pointerdown', () => {
-            this.player.setVelocityX(this.playerVelocity);
+        this.input.on('gameobjectout', (pointer: Object, gameObject: Phaser.GameObjects.GameObject) => {
+            this.player.setVelocity(0,0);
         });
-        dpadright.on('pointerup', () => {
-            this.player.setVelocity(0, 0);
-        });
-        dpadright.on('pointerout', () => {
-            this.player.setVelocity(0, 0);
-        });
-
     }
 }
