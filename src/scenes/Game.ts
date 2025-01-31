@@ -91,22 +91,30 @@ export class Game extends BaseScene
         this.isRightDown = this.cursors!.right.isDown;
         this.isDownDown = this.cursors!.down.isDown;
 
+        let vel: Phaser.Math.Vector2 = new Phaser.Math.Vector2();
+
         if (this.isUpDown) 
         {
-            this.player.setVelocityY(-this.playerVelocity);
+            vel.y = -this.playerVelocity;
         }
         if (this.isDownDown) 
         {
-            this.player.setVelocityY(this.playerVelocity);
+            vel.y = this.playerVelocity;
         }
 
         if (this.isRightDown) 
         {
-            this.player.setVelocityX(this.playerVelocity);
+            vel.x = this.playerVelocity;
         }
         if (this.isLeftDown) 
         {
-            this.player.setVelocityX(-this.playerVelocity);
+            vel.x = -this.playerVelocity;
+        }
+
+        vel = vel.normalize().scale(this.playerVelocity);
+
+        if(vel.lengthSq() > 0) {
+            this.player.setVelocity(vel.x, vel.y);        
         }
 
         if( (!this.isUpDown && this.isPreviousUpDown) ||
@@ -159,14 +167,11 @@ export class Game extends BaseScene
     configureInput() {
 
         let dpadTopLeft = {x: this.getW() * .20, y: this.getH() * .80};
-        let dpadPadding = 0;
-        let dpadfull = this.add.image(0, 0, 'dpadfull').setScrollFactor(0);
-        
+        let dpadfull = this.add.image(0, 0, 'dpadfull').setScrollFactor(0);        
 
         Align.scaleToGameW(dpadfull, 0.18, this);
 
         let dpadWidth = dpadfull.scaleX * 80;
-        this.add.rectangle(dpadTopLeft.x, dpadTopLeft.y - 5, dpadWidth / 2, dpadWidth - 10, 0xff0000).setScrollFactor(0);
 
         console.log(dpadTopLeft);
         console.log(dpadWidth);
@@ -177,27 +182,60 @@ export class Game extends BaseScene
         this.add.zone(dpadTopLeft.x, dpadTopLeft.y + dpadWidth + 5, dpadWidth / 2, dpadWidth - 10).setInteractive({useHandCursor: true}).setName('controlsDown').setScrollFactor(0);
         this.add.zone(dpadTopLeft.x + dpadWidth / 2 + 5, dpadTopLeft.y + dpadWidth / 2, dpadWidth - 10, dpadWidth / 2).setInteractive({useHandCursor: true}).setName('controlsRight').setScrollFactor(0);
 
-        this.add.rectangle(dpadTopLeft.x, dpadTopLeft.y - 5, dpadWidth / 2, dpadWidth - 10, 0xff0000).setScrollFactor(0);
-        this.add.rectangle(dpadTopLeft.x - dpadWidth / 2 - 5, dpadTopLeft.y + dpadWidth / 2, dpadWidth - 10, dpadWidth / 2, 0x00ff00).setScrollFactor(0);
-        this.add.rectangle(dpadTopLeft.x, dpadTopLeft.y + dpadWidth + 5, dpadWidth / 2, dpadWidth - 10, 0x0000ff).setScrollFactor(0);
-        this.add.rectangle(dpadTopLeft.x + dpadWidth / 2 + 5, dpadTopLeft.y + dpadWidth / 2, dpadWidth - 10, dpadWidth / 2, 0xffff00).setScrollFactor(0);
+        this.add.zone(dpadTopLeft.x - dpadWidth / 2 - 5, dpadTopLeft.y - 5, dpadWidth - 10, dpadWidth - 10).setInteractive({useHandCursor: true}).setName('controlsUpLeft').setScrollFactor(0);
+        this.add.zone(dpadTopLeft.x + dpadWidth / 2 + 5, dpadTopLeft.y - 5, dpadWidth - 10, dpadWidth - 10).setInteractive({useHandCursor: true}).setName('controlsUpRight').setScrollFactor(0);
+        this.add.zone(dpadTopLeft.x - dpadWidth / 2 - 5, dpadTopLeft.y + dpadWidth + 5, dpadWidth - 10, dpadWidth - 10).setInteractive({useHandCursor: true}).setName('controlsDownLeft').setScrollFactor(0);
+        this.add.zone(dpadTopLeft.x + dpadWidth / 2 + 5, dpadTopLeft.y + dpadWidth + 5, dpadWidth - 10, dpadWidth - 10).setInteractive({useHandCursor: true}).setName('controlsDownRight').setScrollFactor(0);
+
+        // this.add.rectangle(dpadTopLeft.x, dpadTopLeft.y - 5, dpadWidth / 2, dpadWidth - 10, 0xff0000).setScrollFactor(0);
+        // this.add.rectangle(dpadTopLeft.x - dpadWidth / 2 - 5, dpadTopLeft.y + dpadWidth / 2, dpadWidth - 10, dpadWidth / 2, 0x00ff00).setScrollFactor(0);
+        // this.add.rectangle(dpadTopLeft.x, dpadTopLeft.y + dpadWidth + 5, dpadWidth / 2, dpadWidth - 10, 0x0000ff).setScrollFactor(0);
+        // this.add.rectangle(dpadTopLeft.x + dpadWidth / 2 + 5, dpadTopLeft.y + dpadWidth / 2, dpadWidth - 10, dpadWidth / 2, 0xffff00).setScrollFactor(0);
+
+        // this.add.rectangle(dpadTopLeft.x - dpadWidth / 2 - 5, dpadTopLeft.y - 5, dpadWidth - 10, dpadWidth - 10, 0xff00ff).setScrollFactor(0);
+        // this.add.rectangle(dpadTopLeft.x + dpadWidth / 2 + 5, dpadTopLeft.y - 5, dpadWidth - 10, dpadWidth - 10, 0x00ffff).setScrollFactor(0);
+        // this.add.rectangle(dpadTopLeft.x - dpadWidth / 2 - 5, dpadTopLeft.y + dpadWidth + 5, dpadWidth - 10, dpadWidth - 10, 0x000000).setScrollFactor(0);
+        // this.add.rectangle(dpadTopLeft.x + dpadWidth / 2 + 5, dpadTopLeft.y + dpadWidth + 5, dpadWidth - 10, dpadWidth - 10, 0x333333).setScrollFactor(0);
         
         this.input.on('gameobjectdown', (pointer: Object, gameObject: Phaser.GameObjects.GameObject) => {
             let name = gameObject.name;
+            let vel: Phaser.Math.Vector2 = new Phaser.Math.Vector2();
 
             switch(name) {
                 case 'controlsUp':
-                    this.player.setVelocityY(-this.playerVelocity);
+                    vel.y = -this.playerVelocity;
                     break;
                 case 'controlsDown':
-                    this.player.setVelocityY(this.playerVelocity);
+                    vel.y = this.playerVelocity;
                     break;
                 case 'controlsLeft':
-                    this.player.setVelocityX(-this.playerVelocity);
+                    vel.x = -this.playerVelocity;
                     break;
                 case 'controlsRight':
-                    this.player.setVelocityX(this.playerVelocity);
+                    vel.x = this.playerVelocity;
                     break;
+                case 'controlsUpLeft':
+                    vel.x = -this.playerVelocity;
+                    vel.y = -this.playerVelocity;
+                    break;
+                case 'controlsUpRight':
+                    vel.x = this.playerVelocity;
+                    vel.y = -this.playerVelocity;
+                    break;
+                case 'controlsDownLeft':
+                    vel.x = -this.playerVelocity;
+                    vel.y = this.playerVelocity;
+                    break;
+                case 'controlsDownRight':
+                    vel.x = this.playerVelocity;
+                    vel.y = this.playerVelocity;
+                    break;
+            }
+
+            vel = vel.normalize().scale(this.playerVelocity);
+
+            if(vel.lengthSq() > 0) {
+                this.player.setVelocity(vel.x, vel.y);        
             }
         });
 
