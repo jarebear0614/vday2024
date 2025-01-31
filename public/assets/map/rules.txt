@@ -1,1 +1,2 @@
-./tilsets/houses.tmx
+tilesets/houses.tmx
+tilesets/trees.tmx

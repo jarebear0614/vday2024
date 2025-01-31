@@ -4,6 +4,7 @@
         "width": 2
     },
     "activeFile": "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx",
+    "automapping.whileDrawing": true,
     "expandedProjectPaths": [
     ],
     "fileStates": {
@@ -14,15 +15,15 @@
         "#overworld": {
             "scaleInDock": 1
         },
+        ":/automap-tiles.tsx": {
+            "scaleInDock": 1
+        },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx": {
-            "expandedObjectLayers": [
-                6
-            ],
-            "scale": 1.5,
-            "selectedLayer": 2,
+            "scale": 2,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 249.66666666666669,
-                "y": 203.99999999999997
+                "x": 205.25,
+                "y": 212
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx#interior": {
@@ -36,32 +37,51 @@
             "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 343.5,
-                "y": 264
+                "x": 484,
+                "y": 320.5
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/houses.tmx#overworld": {
             "scaleInDock": 1
+        },
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/overworld.tsx": {
+            "scaleInEditor": 1
+        },
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/trees.tmx": {
+            "scale": 2,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 73.25,
+                "y": 17.5
+            }
+        },
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/trees.tmx#overworld": {
+            "scaleInDock": 1
         }
     },
     "last.exportedFilePath": "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map",
+    "last.externalTilesetPath": "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets",
     "last.imagePath": "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map",
-    "map.height": 40,
+    "map.height": 10,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
-    "map.width": 60,
+    "map.width": 10,
     "openFiles": [
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx",
-        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/houses.tmx"
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/houses.tmx",
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/trees.tmx"
     ],
     "project": "main.tiled-project",
     "recentFiles": [
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/overworld.tsx",
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/trees.tmx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/houses.tmx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx"
     ],
-    "tileset.embedInMap": true,
+    "tileset.embedInMap": false,
+    "tileset.lastUsedFormat": "tsx",
     "tileset.margin": 0,
     "tileset.spacing": 1,
     "tileset.tileSize": {
