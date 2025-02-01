@@ -1,5 +1,6 @@
 import "phaser";
 import { TILE_SCALE } from "../util/const";
+import { BaseScene } from "../scenes/BaseScene";
 
 export class CharacterConfig 
 {
@@ -18,20 +19,22 @@ export class CharacterConfig
 
 export class Character
 {
-    x: number;
-    y: number;
+    spriteGroup: Phaser.Physics.Arcade.Group;
 
-    bodySprite: Phaser.GameObjects.Sprite;
-    shirtSprite: Phaser.GameObjects.Sprite;
-    pantsSprite: Phaser.GameObjects.Sprite;
-    shoesSprite: Phaser.GameObjects.Sprite;
-    hairSprite: Phaser.GameObjects.Sprite;
+    private x: number;
+    private y: number;
 
-    config: CharacterConfig;
+    private bodySprite: Phaser.GameObjects.Sprite;
+    private shirtSprite: Phaser.GameObjects.Sprite;
+    private pantsSprite: Phaser.GameObjects.Sprite;
+    private shoesSprite: Phaser.GameObjects.Sprite;
+    private hairSprite: Phaser.GameObjects.Sprite;
 
-    scene: Phaser.Scene;
+    private config: CharacterConfig;
 
-    constructor(scene: Phaser.Scene, x: number, y: number, config?: CharacterConfig | undefined | null) 
+    protected scene: BaseScene;
+
+    constructor(scene: BaseScene, x: number, y: number, config?: CharacterConfig | undefined | null) 
     {
         this.scene = scene;
         this.x = x;
@@ -44,6 +47,7 @@ export class Character
     }
 
     create(): Character {
+        
         this.bodySprite = this.scene.add.sprite(this.x, this.y, 'characters', this.config.bodyFrame);
         this.shirtSprite = this.scene.add.sprite(this.x, this.y, 'characters', this.config.shirtFrame);
         this.pantsSprite = this.scene.add.sprite(this.x, this.y, 'characters', this.config.pantsFrame);
@@ -55,6 +59,8 @@ export class Character
         this.applyScaling(this.pantsSprite, TILE_SCALE, this.scene);
         this.applyScaling(this.shoesSprite, TILE_SCALE, this.scene);
         this.applyScaling(this.hairSprite, TILE_SCALE, this.scene);
+
+        this.spriteGroup = this.scene.physics.add.group([this.bodySprite, this.shirtSprite, this.pantsSprite, this.shoesSprite, this.hairSprite]);
 
         return this;
     }
@@ -68,12 +74,18 @@ export class Character
         obj.scaleY = obj.scaleX;
     }
 
+    setPositionX(x: number) 
+    {
+        this.spriteGroup.setX(x);
+    }
+
+    setPositionY(y: number) 
+    {
+        this.spriteGroup.setY(y);
+    }
+
     setPosition(x: number, y: number) 
     {
-        this.bodySprite.setPosition(x, y);
-        this.shirtSprite.setPosition(x, y);
-        this.pantsSprite.setPosition(x, y);
-        this.shoesSprite.setPosition(x, y);
-        this.hairSprite.setPosition(x, y);
+        this.spriteGroup.setXY(x, y);
     }
 }

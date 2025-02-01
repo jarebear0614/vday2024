@@ -1,12 +1,11 @@
-//import { Scene } from 'phaser';
+import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 
 import { TILE_SCALE, TILE_SIZE } from '../util/const';
 import { Character } from '../gameObjects/character';
 import { BaseScene } from './BaseScene';
 import { Align } from '../util/align';
-
-import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 import { GameState } from '../gameObjects/GameState';
+import { Player } from '../gameObjects/player';
 
 export class Game extends BaseScene
 {
@@ -15,7 +14,7 @@ export class Game extends BaseScene
     camera: Phaser.Cameras.Scene2D.Camera;
     background: Phaser.GameObjects.Image;
     msg_text : Phaser.GameObjects.Text;
-    player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    player: Player;
     cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
 
     gameState: GameState = new GameState();
@@ -60,12 +59,10 @@ export class Game extends BaseScene
         if(data && data.gameState && data.gameState instanceof GameState) 
         {
             this.gameState = data.gameState;
-            console.log(this.gameState);
         }
 
         this.load.on('progress', (progress: number) => 
         {
-
             if(progress >= 1) 
             {
                 this.cameras.main.fadeIn(300);
@@ -106,16 +103,13 @@ export class Game extends BaseScene
         
         this.configureTilemaps();          
         this.configurePlayer();
-        this.configureInput();      
+        this.configureInput();
+        this.configureTransportMapObjects();
         
         let playerXSpawn = TILE_SIZE * this.tilemapScale * (this.gameState.spawnX ?? 10);
         let playerYSpawn = TILE_SIZE * this.tilemapScale * (this.gameState.spawnY ?? 10);
 
-        console.log(playerXSpawn);
-        console.log(playerYSpawn);
-        this.player.setPosition(playerXSpawn, playerYSpawn);
-        
-        
+        this.player.setPosition(playerXSpawn, playerYSpawn);       
 
         // this.rexUI.add.dialog({
         //     x: this.getGameWidth() * 0.10 + (this.getGameWidth() * 0.85) / 2,
@@ -210,17 +204,17 @@ export class Game extends BaseScene
                 this.player.setVelocity(0, 0);
         }
 
-        this.cameras.main.centerOn(this.player.x, this.player.y);      
+        this.cameras.main.centerOn(this.player.getX(), this.player.getY());      
         this.cameras.main.setBounds(0, 0, this.xLimit, this.yLimit);
+
+        this.player.update();
     }
 
-    configurePlayer() {
-        this.player = this.physics.add.sprite(100, 100, "characters", 0);
-
-        let c = new Character(this, 400, 400).create();
+    private configurePlayer() {
+        this.player = new Player(this, 100, 100);
+        this.player.create();
         
         this.cursors = this.input.keyboard?.createCursorKeys();
-        Align.scaleToGameWidth(this.player, TILE_SCALE, this); 
         
         this.backgroundJuiceLayer = this.map.createLayer('above', this.overworldTileset, 0, 0)!;
         this.backgroundCollidersLayer = this.map.createLayer('colliders', this.overworldTileset, 0, 0)!;
@@ -232,21 +226,23 @@ export class Game extends BaseScene
         aboveDecorationLayer.setScale(this.tilemapScale, this.tilemapScale);
         aboveDecorationLayer2.setScale(this.tilemapScale, this.tilemapScale);
 
-        this.physics.add.collider(this.player, this.backgroundCollidersLayer);
+        this.physics.add.collider(this.player.getBody(), this.backgroundCollidersLayer);
         this.backgroundCollidersLayer.setCollisionByExclusion([-1], true);
+    }
 
+    private configureTransportMapObjects() {
         let transportObjects = this.map.getObjectLayer('map_transport')!.objects;
 
-        for(const transportTile of transportObjects) 
-        {
-            const {x, y, width, height, properties } = transportTile;
+        for (const transportTile of transportObjects) {
+            const { x, y, width, height, properties } = transportTile;
+
+            console.log(transportTile);
+            console.log(properties);
 
             let gameState = new GameState();
 
-            for(const property of properties) 
-            {
-                switch(property.name) 
-                {
+            for (const property of properties) {
+                switch (property.name) {
                     case 'to_map':
                         gameState.tilemap = property.value;
                         break;
@@ -263,7 +259,7 @@ export class Game extends BaseScene
             sprite.body.setSize(width, height, false);
             Align.scaleToGameWidth(sprite, TILE_SCALE, this);
 
-            let collider = this.physics.add.overlap(this.player, sprite, () => {
+            let collider = this.physics.add.overlap(this.player.getBody(), sprite, () => {
                 this.camera.fadeOut(300);
 
                 this.physics.world.removeCollider(collider);
@@ -273,27 +269,26 @@ export class Game extends BaseScene
                         gameState: gameState
                     });
                 });
-            });            
+            });
         }
     }
 
-    configureTilemaps() {        
+    private configureTilemaps() {        
         this.map = this.make.tilemap({key: this.gameState.tilemap ?? 'map'});
         this.overworldTileset = this.map.addTilesetImage('overworld', 'overworldTiles', 16, 16, 1, 3)!;
        // const interior = this.map.addTilesetImage('interior', 'interiorTiles', 16, 16, 1, 3)!;
         let backgroundLayer = this.map.createLayer('ground', this.overworldTileset, 0, 0);
-        let sceneryLayer = this.map.createLayer('ground_decoration', this.overworldTileset, 0, 0);        
+        let groundDecorationLayer = this.map.createLayer('ground_decoration', this.overworldTileset, 0, 0);        
 
         this.tilemapScale = (this.getGameWidth() * TILE_SCALE) / TILE_SIZE;
         backgroundLayer?.setScale(this.tilemapScale, this.tilemapScale);
-        sceneryLayer?.setScale(this.tilemapScale, this.tilemapScale); 
-
+        groundDecorationLayer?.setScale(this.tilemapScale, this.tilemapScale); 
 
         this.xLimit = this.map.widthInPixels * this.tilemapScale;
         this.yLimit = this.map.heightInPixels * this.tilemapScale;
     }
 
-    configureInput() {
+    private configureInput() {
 
         let dpadTopLeft = {x: this.getGameWidth() * .85, y: this.getGameHeight() * .05};
         let dpadfull = this.add.image(0, 0, 'dpadfull').setScrollFactor(0);        
