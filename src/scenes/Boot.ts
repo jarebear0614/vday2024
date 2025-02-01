@@ -1,5 +1,4 @@
 import { Scene } from 'phaser';
-import { Character, CharacterConfig } from '../gameObjects/character';
 
 export class Boot extends Scene
 {

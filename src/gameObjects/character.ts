@@ -1,5 +1,4 @@
 import "phaser";
-import { Align } from 'phaser-utility';
 import { TILE_SCALE } from "../util/const";
 
 export class CharacterConfig 
