@@ -188,7 +188,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -465,9 +465,108 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":11,
+         "name":"map_interactive",
+         "objects":[
+                {
+                 "height":24,
+                 "id":22,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"message",
+                         "type":"string",
+                         "value":"Megans House - All Ugly People Keep Out"
+                        }],
+                 "rotation":0,
+                 "type":"sign",
+                 "visible":true,
+                 "width":24,
+                 "x":412,
+                 "y":684
+                }, 
+                {
+                 "height":24,
+                 "id":23,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"message",
+                         "type":"string",
+                         "value":"Btw Jared you're ugly so don't come in"
+                        }],
+                 "rotation":0,
+                 "type":"sign",
+                 "visible":true,
+                 "width":24,
+                 "x":460,
+                 "y":684
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":12,
+         "name":"map_character",
+         "objects":[
+                {
+                 "gid":1773,
+                 "height":16,
+                 "id":24,
+                 "name":"Jared",
+                 "properties":[
+                        {
+                         "name":"bodyFrame",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"dialog",
+                         "type":"string",
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": \"0\",\n      \"dialog\": [\n        \"Hello\",\n        \"My Name is Jared\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    },\n    {\n      \"eventKey\": \"1\",\n      \"dialog\": [\n        \"Welcome to the game\"\n      ],\n      \"onEnd\": \"nop\"\n    }\n  ]\n}"
+                        }, 
+                        {
+                         "name":"hairFrame",
+                         "type":"int",
+                         "value":22
+                        }, 
+                        {
+                         "name":"pantsFrame",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"shirtFrame",
+                         "type":"int",
+                         "value":286
+                        }, 
+                        {
+                         "name":"shoesFrame",
+                         "type":"int",
+                         "value":4
+                        }],
+                 "rotation":0,
+                 "type":"character",
+                 "visible":true,
+                 "width":16,
+                 "x":528,
+                 "y":800
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":11,
- "nextobjectid":8,
+ "nextlayerid":13,
+ "nextobjectid":25,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -544,6 +643,19 @@
          "name":"overworld",
          "spacing":1,
          "tilecount":1767,
+         "tileheight":16,
+         "tilewidth":16
+        }, 
+        {
+         "columns":54,
+         "firstgid":1773,
+         "image":"..\/characters.png",
+         "imageheight":203,
+         "imagewidth":917,
+         "margin":0,
+         "name":"characters",
+         "spacing":1,
+         "tilecount":648,
          "tileheight":16,
          "tilewidth":16
         }],

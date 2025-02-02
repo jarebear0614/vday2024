@@ -1,6 +1,8 @@
 import "phaser";
 import { TILE_SCALE } from "../util/const";
 import { BaseScene } from "../scenes/BaseScene";
+import { CharacterEvent } from "./dialog";
+import { Align } from "../util/align";
 
 export class CharacterConfig 
 {
@@ -15,26 +17,24 @@ export class CharacterConfig
     shoesFrame?: number = 58;
 
     hairFrame?: number = 19;
+
+    dialog?: CharacterEvent;
 }
 
 export class Character
 {
-    spriteGroup: Phaser.Physics.Arcade.Group;
+    public spriteGroup: Phaser.Physics.Arcade.StaticGroup;
 
     private x: number;
     private y: number;
 
-    private bodySprite: Phaser.GameObjects.Sprite;
-    private shirtSprite: Phaser.GameObjects.Sprite;
-    private pantsSprite: Phaser.GameObjects.Sprite;
-    private shoesSprite: Phaser.GameObjects.Sprite;
-    private hairSprite: Phaser.GameObjects.Sprite;
+    overlapDialogSprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
     private config: CharacterConfig;
 
     protected scene: BaseScene;
 
-    constructor(scene: BaseScene, x: number, y: number, config?: CharacterConfig | undefined | null) 
+    constructor(scene: BaseScene, x: number, y: number, name: string, config?: CharacterConfig | undefined | null) 
     {
         this.scene = scene;
         this.x = x;
@@ -46,21 +46,27 @@ export class Character
         this.config = config;        
     }
 
-    create(): Character {
+    create(): Character 
+    {       
+        let width = parseInt(this.scene.game.config.width.toString());
+        let newWidth = width * TILE_SCALE;
+        let scale = newWidth / 16;
+
+        this.spriteGroup = this.scene.physics.add.staticGroup();
         
-        this.bodySprite = this.scene.add.sprite(this.x, this.y, 'characters', this.config.bodyFrame);
-        this.shirtSprite = this.scene.add.sprite(this.x, this.y, 'characters', this.config.shirtFrame);
-        this.pantsSprite = this.scene.add.sprite(this.x, this.y, 'characters', this.config.pantsFrame);
-        this.shoesSprite = this.scene.add.sprite(this.x, this.y, 'characters', this.config.shoesFrame);
-        this.hairSprite = this.scene.add.sprite(this.x, this.y, 'characters', this.config.hairFrame);
+        this.spriteGroup.create(0, 0, 'characters', this.config.bodyFrame, true, true).setScale(scale, scale).refreshBody();
+        this.spriteGroup.create(0, 0, 'characters', this.config.shirtFrame, true, true).setScale(scale, scale).refreshBody();
+        this.spriteGroup.create(0, 0, 'characters', this.config.pantsFrame, true, true).setScale(scale, scale).refreshBody();
+        this.spriteGroup.create(0, 0, 'characters', this.config.shoesFrame, true, true).setScale(scale, scale).refreshBody();
+        this.spriteGroup.create(0, 0, 'characters', this.config.hairFrame, true, true).setScale(scale, scale).refreshBody();
+        
+        this.spriteGroup.setXY(this.x, this.y); 
+        this.spriteGroup.refresh();
 
-        this.applyScaling(this.bodySprite, TILE_SCALE, this.scene);
-        this.applyScaling(this.shirtSprite, TILE_SCALE, this.scene);
-        this.applyScaling(this.pantsSprite, TILE_SCALE, this.scene);
-        this.applyScaling(this.shoesSprite, TILE_SCALE, this.scene);
-        this.applyScaling(this.hairSprite, TILE_SCALE, this.scene);
-
-        this.spriteGroup = this.scene.physics.add.group([this.bodySprite, this.shirtSprite, this.pantsSprite, this.shoesSprite, this.hairSprite]);
+        this.overlapDialogSprite = this.scene.physics.add.sprite(this.x, this.y, "transparent", 0);
+        this.overlapDialogSprite.setSize(24, 24);
+        
+        Align.scaleToGameWidth(this.overlapDialogSprite, TILE_SCALE, this.scene); 
 
         return this;
     }
@@ -87,5 +93,7 @@ export class Character
     setPosition(x: number, y: number) 
     {
         this.spriteGroup.setXY(x, y);
+        this.spriteGroup.refresh();
+        this.overlapDialogSprite.setPosition(x, y);
     }
 }

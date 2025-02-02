@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="60" height="60" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="8">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="60" height="60" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="25">
  <editorsettings>
   <export target="main.tmj" format="json"/>
  </editorsettings>
  <tileset firstgid="1" source=":/automap-tiles.tsx"/>
  <tileset firstgid="6" source="tilesets/overworld.tsx"/>
+ <tileset firstgid="1773" source="tilesets/characters.tsx"/>
  <layer id="1" name="ground" width="60" height="60">
   <data encoding="csv">
 68,68,68,11,68,11,68,68,11,11,68,68,11,11,68,11,68,68,68,68,11,68,68,68,68,11,11,68,11,68,11,11,68,11,68,68,11,11,68,11,68,68,11,11,68,11,68,11,11,11,68,68,68,11,68,11,68,11,68,11,
@@ -178,7 +179,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,25,0,0,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -395,6 +396,48 @@
     <property name="map_spawn_x" type="int" value="19"/>
     <property name="map_spawn_y" type="int" value="17"/>
     <property name="to_map" value="meganshouse"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="11" name="map_interactive">
+  <object id="22" type="sign" x="412" y="684" width="24" height="24">
+   <properties>
+    <property name="message" value="Megans House - All Ugly People Keep Out"/>
+   </properties>
+  </object>
+  <object id="23" type="sign" x="460" y="684" width="24" height="24">
+   <properties>
+    <property name="message" value="Btw Jared you're ugly so don't come in"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="12" name="map_character">
+  <object id="24" name="Jared" type="character" gid="1773" x="528" y="800" width="16" height="16">
+   <properties>
+    <property name="bodyFrame" type="int" value="0"/>
+    <property name="dialog">{
+  &quot;events&quot;: [
+    {
+      &quot;eventKey&quot;: &quot;0&quot;,
+      &quot;dialog&quot;: [
+        &quot;Hello&quot;,
+        &quot;My Name is Jared&quot;
+      ],
+      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+    },
+    {
+      &quot;eventKey&quot;: &quot;1&quot;,
+      &quot;dialog&quot;: [
+        &quot;Welcome to the game&quot;
+      ],
+      &quot;onEnd&quot;: &quot;nop&quot;
+    }
+  ]
+}</property>
+    <property name="hairFrame" type="int" value="22"/>
+    <property name="pantsFrame" type="int" value="3"/>
+    <property name="shirtFrame" type="int" value="286"/>
+    <property name="shoesFrame" type="int" value="4"/>
    </properties>
   </object>
  </objectgroup>

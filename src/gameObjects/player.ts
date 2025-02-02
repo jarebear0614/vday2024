@@ -7,9 +7,9 @@ export class Player extends Character
 {
     body: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
-    constructor(scene: BaseScene, x: number, y: number) 
+    constructor(scene: BaseScene, x: number, y: number, name: string) 
     {
-        super(scene, x, y, {
+        super(scene, x, y, name, {
             bodyFrame: 1,
             pantsFrame: 3,
             shoesFrame: 4,

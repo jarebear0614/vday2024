@@ -6,10 +6,13 @@ import { BaseScene } from './BaseScene';
 import { Align } from '../util/align';
 import { GameState } from '../gameObjects/GameState';
 import { Player } from '../gameObjects/player';
+import { Interactive } from '../gameObjects/interactive';
+import { CharacterEvent } from '../gameObjects/dialog';
 
 export class Game extends BaseScene
 {
     rexUI: RexUIPlugin;
+    dialog: RexUIPlugin.Dialog | null;
 
     camera: Phaser.Cameras.Scene2D.Camera;
     background: Phaser.GameObjects.Image;
@@ -40,12 +43,19 @@ export class Game extends BaseScene
     isPreviousRightDown: boolean = false;
     isPreviousDownDown: boolean = false;
 
+    interactKey: Phaser.Input.Keyboard.Key | undefined;
+
+    isInteractKeyDown: boolean = false;
+    isPreviousInteractKeyDown: boolean = false;
+
     character: Character;
 
     map: Phaser.Tilemaps.Tilemap;
     overworldTileset: Phaser.Tilemaps.Tileset;
     backgroundJuiceLayer: Phaser.Tilemaps.TilemapLayer;
     backgroundCollidersLayer: Phaser.Tilemaps.TilemapLayer;
+
+    currentInteractiveObject: Interactive | null = null;
 
     constructor ()
     {
@@ -82,6 +92,7 @@ export class Game extends BaseScene
         this.load.image('transparent', 'assets/transparent.png');
 
         this.load.image('dpadfull', 'assets/controls/dpadfull.png');
+        this.load.image('interact', '/assets/controls/A.png');
 
         this.load.image('overworldTiles', 'assets/map/overworld-extruded.png');
         this.load.image('interiorTiles', 'assets/map/interior-extruded.png');
@@ -102,61 +113,17 @@ export class Game extends BaseScene
         this.camera.setBackgroundColor(0x000000);   
         
         this.configureTilemaps();          
-        this.configurePlayer();
+        this.configurePlayer();   
         this.configureInput();
+
         this.configureTransportMapObjects();
+        this.configureInteractiveObjects();
+        this.configureCharacterObjects();
         
         let playerXSpawn = TILE_SIZE * this.tilemapScale * (this.gameState.spawnX ?? 10);
         let playerYSpawn = TILE_SIZE * this.tilemapScale * (this.gameState.spawnY ?? 10);
 
-        this.player.setPosition(playerXSpawn, playerYSpawn);       
-
-        // this.rexUI.add.dialog({
-        //     x: this.getGameWidth() * 0.10 + (this.getGameWidth() * 0.85) / 2,
-        //     y: this.getGameHeight() * 0.80,
-        //     width: this.getGameWidth() * 0.85,
-
-        //     background: this.rexUI.add.roundRectangle(0, 0, 40, 100, 20, 0xA1A05E),
-        //     title: this.rexUI.add.label({
-        //         background: this.rexUI.add.roundRectangle(0, 0, 40, 40, 20, 0xC1BA71),
-        //         text: this.add.text(0, 0, 'Jared', {fontSize: '24px'}),
-        //         space: {
-        //             left: 10,
-        //             right: 10,
-        //             top: 10,
-        //             bottom: 10
-        //         }
-        //     }),
-
-        //     content: this.add.text(0, 0, 'Stop trying to fuck my dad.'),
-
-        //     space: {
-        //         left: 20,
-        //         right: 20,
-        //         top: -20,
-        //         bottom: 20,
-
-        //         title: 25,
-        //         content: 25,
-        //         description: 25,
-        //         descriptionLeft: 20,
-        //         descriptionRight: 20,
-        //         choices: 25,
-
-        //         toolbarItem: 5,
-        //         choice: 15,
-        //         action: 15,
-        //     },
-
-        //     expand:
-        //     {
-        //         content: true
-        //     },
-
-        //     align: {
-        //         title: 'center'
-        //     }
-        // }).layout().setScrollFactor(0).popUp(1000);
+        this.player.setPosition(playerXSpawn, playerYSpawn);
     }
 
     update() 
@@ -208,10 +175,32 @@ export class Game extends BaseScene
         this.cameras.main.setBounds(0, 0, this.xLimit, this.yLimit);
 
         this.player.update();
+
+        if(this.interactKey)
+        {
+            this.isPreviousInteractKeyDown = this.isInteractKeyDown;
+            this.isInteractKeyDown = this.interactKey.isDown;
+        }
+
+        if(!this.isPreviousInteractKeyDown && this.isInteractKeyDown)
+        {
+            if(this.currentInteractiveObject !== null)
+            {
+                this.showDialog(this.currentInteractiveObject.messages, !!this.currentInteractiveObject.title, this.currentInteractiveObject.title);
+            }
+        }
+
+        let touching = !this.player.body.body.touching.none;
+        let wasTouching = !this.player.body.body.wasTouching.none;
+
+        if(wasTouching && !touching) 
+        {
+            this.currentInteractiveObject = null;
+        }
     }
 
     private configurePlayer() {
-        this.player = new Player(this, 100, 100);
+        this.player = new Player(this, 100, 100, 'Megan');
         this.player.create();
         
         this.cursors = this.input.keyboard?.createCursorKeys();
@@ -235,9 +224,6 @@ export class Game extends BaseScene
 
         for (const transportTile of transportObjects) {
             const { x, y, width, height, properties } = transportTile;
-
-            console.log(transportTile);
-            console.log(properties);
 
             let gameState = new GameState();
 
@@ -273,6 +259,95 @@ export class Game extends BaseScene
         }
     }
 
+    private configureInteractiveObjects() 
+    {
+        let interactiveObjects = this.map.getObjectLayer('map_interactive')!.objects;
+
+        for(const interactive of interactiveObjects) 
+        {
+            const {x, y, width, height, properties } = interactive;
+
+            let message: string = '';
+
+            for (const property of properties) {
+                switch (property.name) {
+                    case 'message':
+                        message = property.value;
+                        break;
+                }
+            }
+
+            let sprite = this.physics.add.sprite(x! * this.tilemapScale, y! * this.tilemapScale, 'transparent').setOrigin(0, 0);
+            sprite.body.setSize(width, height, false);
+            Align.scaleToGameWidth(sprite, TILE_SCALE, this);
+
+            this.physics.add.overlap(this.player.body, sprite, () => 
+            {
+                console.log('overlapstart');
+                this.currentInteractiveObject = new Interactive([message]);
+            });
+        }
+    }
+
+    private configureCharacterObjects() 
+    {
+        let characterObjects = this.map.getObjectLayer('map_character')!.objects;
+
+        for(const character of characterObjects) 
+        {
+            const {x, y, width, height, name, properties } = character;
+
+            let dialog: CharacterEvent = null!;
+            
+            let bodyFrame: number = 0;
+            let hairFrame: number = 0;
+            let shirtFrame: number = 0;
+            let pantsFrame: number = 0;
+            let shoesFrame: number = 0;
+
+            for (const property of properties) {
+                switch (property.name) {
+                    case 'bodyFrame':
+                        bodyFrame = parseInt(property.value);
+                        break;
+                    case 'hairFrame':
+                        hairFrame = parseInt(property.value);
+                        break;
+                    case 'shirtFrame':
+                        shirtFrame = parseInt(property.value);
+                        break;
+                    case 'pantsFrame':
+                        pantsFrame = parseInt(property.value);
+                        break;
+                    case 'shoesFrame':
+                        shoesFrame = parseInt(property.value);
+                        break;
+                    case 'dialog':
+                        dialog = JSON.parse(property.value.toString());
+                        console.log(dialog);
+                        break;
+                }
+            }
+            let newCharacter = new Character(this, x! * this.tilemapScale, y! * this.tilemapScale, name, 
+            {
+                bodyFrame: bodyFrame,
+                hairFrame: hairFrame,
+                shirtFrame: shirtFrame,
+                pantsFrame: pantsFrame,
+                shoesFrame: shoesFrame,
+                dialog: dialog
+            }).create();
+
+            this.physics.add.collider(this.player.getBody(), newCharacter.spriteGroup, () => {
+                console.log('collide');
+            });
+
+            this.physics.add.overlap(this.player.getBody(), newCharacter.overlapDialogSprite, () => {
+                this.currentInteractiveObject = new Interactive(dialog.events[0].dialog, name);
+            })
+        }
+    }
+
     private configureTilemaps() {        
         this.map = this.make.tilemap({key: this.gameState.tilemap ?? 'map'});
         this.overworldTileset = this.map.addTilesetImage('overworld', 'overworldTiles', 16, 16, 1, 3)!;
@@ -291,9 +366,12 @@ export class Game extends BaseScene
     private configureInput() {
 
         let dpadTopLeft = {x: this.getGameWidth() * .85, y: this.getGameHeight() * .05};
-        let dpadfull = this.add.image(0, 0, 'dpadfull').setScrollFactor(0);        
+        let dpadfull = this.add.image(0, 0, 'dpadfull').setScrollFactor(0);     
+        
+        let interactButton = this.add.image(this.getGameWidth() * 0.85, this.getGameHeight() * 0.20, 'interact').setInteractive({useHandCursor: true}).setScrollFactor(0);
 
         Align.scaleToGameWidth(dpadfull, 0.18, this);
+        Align.scaleToGameWidth(interactButton, 0.18, this);
 
         let dpadWidth = dpadfull.scaleX * 80;
         dpadfull.setPosition(dpadTopLeft.x, dpadTopLeft.y + dpadWidth  /2);
@@ -318,6 +396,13 @@ export class Game extends BaseScene
         // this.add.rectangle(dpadTopLeft.x - dpadWidth / 2 - 5, dpadTopLeft.y + dpadWidth + 5, dpadWidth - 10, dpadWidth - 10, 0x000000).setScrollFactor(0);
         // this.add.rectangle(dpadTopLeft.x + dpadWidth / 2 + 5, dpadTopLeft.y + dpadWidth + 5, dpadWidth - 10, dpadWidth - 10, 0x333333).setScrollFactor(0);
         
+        interactButton.on('pointerup', () => {
+            if(this.currentInteractiveObject !== null)
+            {
+                this.showDialog(this.currentInteractiveObject.messages, !!this.currentInteractiveObject.title, this.currentInteractiveObject.title);
+            }
+        });
+
         this.input.on('gameobjectover', (pointer: Object, gameObject: Phaser.GameObjects.GameObject) => {
 
             let name = gameObject.name;
@@ -367,5 +452,134 @@ export class Game extends BaseScene
             this.isTouchRightDown = false;
             this.isTouchDownDown = false;
         });
+
+        this.interactKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+    }
+
+    private showDialog(messages: string[], showTitle: boolean = false, title: string = '')
+    {             
+        if(this.dialog != null) 
+        {
+            return;
+        }
+
+        let messagesIndex = 0;
+
+        this.dialog = this.rexUI.add.dialog({
+            x: this.getGameWidth() * 0.10 + (this.getGameWidth() * 0.85) / 2,
+            y: this.getGameHeight() * 0.80,
+            width: this.getGameWidth() * 0.85,
+
+            background: this.rexUI.add.roundRectangle(0, 0, 40, 100, 20, 0xA1A05E),
+            title: !showTitle ? undefined : this.rexUI.add.label({
+                background: this.rexUI.add.roundRectangle(0, 0, 40, 40, 20, 0xC1BA71),
+                text: this.add.text(0, 0, title, {fontSize: '24px'}),
+                space: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
+                }
+            }),
+
+            toolbar: [
+                this.rexUI.add.label({
+                    background: this.rexUI.add.roundRectangle(0, 0, 40, 40, 20, 0xC1BA71),
+                    text: this.add.text(0, 0, 'X'),
+                    space: {
+                        left: 10,
+                        right: 10,
+                        top: 10,
+                        bottom: 10
+                    }
+                })
+            ],
+
+            content: this.add.text(0, 0, messages[messagesIndex]),
+
+            actions: messages.length <= 1 ? undefined : [this.rexUI.add.label({
+                background: this.rexUI.add.roundRectangle(0, 0, 40, 40, 20, 0xC1BA71),
+                text: this.add.text(0, 0, 'Next'),
+                space: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
+                }
+            })],
+
+            space: {
+                left: 20,
+                right: 20,
+                top: -20,
+                bottom: 20,
+
+                title: 25,
+                content: 25,
+                description: 25,
+                descriptionLeft: 20,
+                descriptionRight: 20,
+                choices: 25,
+
+                toolbarItem: 5,
+                choice: 15,
+                action: 15,
+            },
+
+            expand:
+            {
+                content: true,
+                title: false
+            },
+
+            align: {
+                title: 'left',
+                actions: 'right'
+            },
+
+            click: {
+                mode: 'release'
+            }
+        }).layout().setScrollFactor(0).popUp(1000);
+
+        this.dialog
+            .on('button.click', (button: any, groupName: string, index: number, pointer: Phaser.Input.Pointer, event: Event) => 
+            {
+                if(groupName === 'actions')
+                {
+                    messagesIndex = messagesIndex + 1;
+
+                    if(messagesIndex == messages.length - 1)
+                    {
+                        let actions = this.dialog?.getElement('actions') as RexUIPlugin.Label[];
+                        actions[0].text = "Close";
+                        this.dialog?.layout();
+                    }
+                    else if(messagesIndex == messages.length) 
+                    {
+                        this.dialog?.scaleDownDestroy(300);
+                        this.dialog = null;
+                        return;
+                    }
+
+                    let text = this.dialog?.getElement('content') as Phaser.GameObjects.Text;
+                    text.text = messages[messagesIndex];
+                    
+                    return;
+                }
+
+                this.dialog?.scaleDownDestroy(300);
+                this.dialog = null;
+            })
+            .on('button.over', function (button: any, groupName: string, index: number, pointer: Phaser.Input.Pointer, event: Event) 
+            {
+                button.getElement('background').setStrokeStyle(1, 0xffffff);
+            })
+            .on('button.out', function (button: any, groupName: string, index: number, pointer: Phaser.Input.Pointer, event: Event) 
+            {
+                button.getElement('background').setStrokeStyle();
+            });
+
+            
     }
 }
