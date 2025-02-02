@@ -216,17 +216,39 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":30.3333333333333,
+                 "width":30.3333,
                  "x":305,
-                 "y":288.333333333333
+                 "y":288.333
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":8,
+         "name":"map_interactive",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":9,
+         "name":"map_character",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":8,
+ "nextlayerid":10,
  "nextobjectid":3,
  "orientation":"orthogonal",
  "renderorder":"right-down",
