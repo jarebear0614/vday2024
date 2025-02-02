@@ -92,7 +92,7 @@ export class Game extends BaseScene
         this.load.image('transparent', 'assets/transparent.png');
 
         this.load.image('dpadfull', 'assets/controls/dpadfull.png');
-        this.load.image('interact', '/assets/controls/A.png');
+        this.load.image('interact', 'assets/controls/A.png');
 
         this.load.image('overworldTiles', 'assets/map/overworld-extruded.png');
         this.load.image('interiorTiles', 'assets/map/interior-extruded.png');
