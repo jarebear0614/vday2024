@@ -533,11 +533,6 @@
                          "value":"{\n  \"events\": [\n    {\n      \"eventKey\": \"0\",\n      \"dialog\": [\n        \"Hello\",\n        \"My Name is Jared\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    },\n    {\n      \"eventKey\": \"1\",\n      \"dialog\": [\n        \"Welcome to the game\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    }\n  ]\n}"
                         }, 
                         {
-                         "name":"eventKeyCondition",
-                         "type":"string",
-                         "value":"exact"
-                        }, 
-                        {
                          "name":"eventKeyEnd",
                          "type":"int",
                          "value":2
@@ -551,6 +546,11 @@
                          "name":"hairFrame",
                          "type":"int",
                          "value":22
+                        }, 
+                        {
+                         "name":"movement",
+                         "type":"string",
+                         "value":"{\n  \"type\": \"waypoint\",\n  \"loop\": true,\n  \"waypoints\": [\n    {\"x\": 33, \"y\": 46 }, \n    {\"x\": 37, \"y\": 46 },\n    {\"x\": 37, \"y\": 50 },\n    {\"x\": 33, \"y\": 50 }\n  ]\n}"
                         }, 
                         {
                          "name":"pantsFrame",
@@ -591,11 +591,6 @@
                          "value":"{\n  \"events\": [\n    {\n      \"eventKey\": \"2\",\n      \"dialog\": [\n        \"You made it\",\n        \"I promise I won't push you in\"\n      ],\n      \"onEnd\": \"nop\"\n    }\n  ]\n}"
                         }, 
                         {
-                         "name":"eventKeyCondition",
-                         "type":"string",
-                         "value":"exact"
-                        }, 
-                        {
                          "name":"eventKeyEnd",
                          "type":"int",
                          "value":3
@@ -609,6 +604,11 @@
                          "name":"hairFrame",
                          "type":"int",
                          "value":22
+                        }, 
+                        {
+                         "name":"movement",
+                         "type":"string",
+                         "value":"{\n  \"type\": \"random\"\n}"
                         }, 
                         {
                          "name":"pantsFrame",

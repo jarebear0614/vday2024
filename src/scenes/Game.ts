@@ -7,7 +7,9 @@ import { Align } from '../util/align';
 import { GameState } from '../gameObjects/GameState';
 import { Player } from '../gameObjects/player';
 import { Interactive } from '../gameObjects/interactive';
-import { CharacterEvent, CharacterEventUtility, EndAction, EventKeyCondition } from '../gameObjects/dialog';
+import { CharacterEvent, CharacterEventUtility, EndAction } from '../gameObjects/dialog';
+import { RandomInRadiusCharacterMovement, CharacterMovementConfig, WaypointCharacterMovement } from '../gameObjects/CharacterMovementComponents';
+import { ICharacterMovement } from '../gameObjects/ICharacterMovement';
 
 export class Game extends BaseScene
 {
@@ -130,7 +132,7 @@ export class Game extends BaseScene
         this.configureEvent();
     }
 
-    update() 
+    update(_: number, delta: number) 
     {   
         this.isPreviousUpDown = this.isUpDown;
         this.isPreviousLeftDown = this.isLeftDown;
@@ -178,7 +180,7 @@ export class Game extends BaseScene
         this.cameras.main.centerOn(this.player.getX(), this.player.getY());      
         this.cameras.main.setBounds(0, 0, this.xLimit, this.yLimit);
 
-        this.player.update();
+        this.player.update(delta);
 
         if(this.interactKey)
         {
@@ -200,6 +202,14 @@ export class Game extends BaseScene
         if(wasTouching && !touching) 
         {
             this.currentInteractiveObject = null;
+        }
+
+        for(let character of this.characterEvents)
+        {
+            if(character.isCreated())
+            {
+                character.update(delta);
+            }
         }
     }
 
@@ -309,6 +319,7 @@ export class Game extends BaseScene
             let shoesFrame: number = 0;
             let eventKeyTrigger: number = 0;
             let eventKeyEnd: number = 0;
+            let movement: CharacterMovementConfig = new CharacterMovementConfig();
 
             for (const property of properties) {
                 switch (property.name) {
@@ -336,6 +347,9 @@ export class Game extends BaseScene
                     case 'eventKeyEnd':
                         eventKeyEnd = parseInt(property.value);
                         break;
+                    case 'movement':
+                        movement = JSON.parse(property.value.toString());
+                        break;
                 }
             }
             let newCharacter = new Character(this, x! * this.tilemapScale, y! * this.tilemapScale, name, 
@@ -356,10 +370,23 @@ export class Game extends BaseScene
                     {
                         this.currentInteractiveObject = new Interactive(ev.dialog, ev.onEnd, name);
                     }
-                }
+                },
+                movement: this.getMovementFromConfig(x!, y!, movement)
+
             });
 
             this.characterEvents.push(newCharacter);
+        }
+    }
+
+    private getMovementFromConfig(x: number, y: number, config: CharacterMovementConfig): ICharacterMovement
+    {
+        switch(config.type)
+        {
+            case "waypoint":
+                return new WaypointCharacterMovement(this.tilemapScale, config);
+            default:
+                return new RandomInRadiusCharacterMovement(x * this.tilemapScale, y * this.tilemapScale, 16 * this.tilemapScale * 5)
         }
     }
 

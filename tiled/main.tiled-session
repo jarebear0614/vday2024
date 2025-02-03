@@ -88,19 +88,25 @@
             "scaleInDock": 1
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx": {
-            "scale": 2,
+            "expandedObjectLayers": [
+                12
+            ],
+            "scale": 3,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 437.75,
-                "y": 620.5
+                "x": 557.8333333333333,
+                "y": 766.3333333333333
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx": {
-            "scale": 1.3463281249999999,
-            "selectedLayer": 0,
+            "expandedObjectLayers": [
+                9
+            ],
+            "scale": 2,
+            "selectedLayer": 8,
             "viewCenter": {
-                "x": 319.758602680903,
-                "y": 159.32223060407358
+                "x": 338.25,
+                "y": 168
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/characters.tsx": {
@@ -124,7 +130,7 @@
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx"
     ],
     "project": "main.tiled-project",
-    "property.type": "int",
+    "property.type": "string",
     "recentFiles": [
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx",

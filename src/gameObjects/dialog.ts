@@ -1,11 +1,3 @@
-export enum EventKeyCondition
-{
-    exact = "exact",
-
-    greaterThanEqual = "greaterThanEqual"
-}
-
-
 export enum EndAction
 {
     nop = "nop",

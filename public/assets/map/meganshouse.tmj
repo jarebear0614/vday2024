@@ -241,7 +241,123 @@
          "draworder":"topdown",
          "id":9,
          "name":"map_character",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":1984,
+                 "height":16,
+                 "id":3,
+                 "name":"Mittens",
+                 "properties":[
+                        {
+                         "name":"bodyFrame",
+                         "type":"int",
+                         "value":216
+                        }, 
+                        {
+                         "name":"dialog",
+                         "type":"string",
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": \"0\",\n      \"dialog\": [\n        \"Meow\",\n        \"Meow Meow\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    }\n  ]\n}"
+                        }, 
+                        {
+                         "name":"eventKeyEnd",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"eventKeyTrigger",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"hairFrame",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"movement",
+                         "type":"string",
+                         "value":"{\n  \"type\": \"random\"\n}"
+                        }, 
+                        {
+                         "name":"pantsFrame",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"shirtFrame",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"shoesFrame",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"character",
+                 "visible":true,
+                 "width":16,
+                 "x":464,
+                 "y":192
+                }, 
+                {
+                 "gid":1985,
+                 "height":16,
+                 "id":4,
+                 "name":"Reese",
+                 "properties":[
+                        {
+                         "name":"bodyFrame",
+                         "type":"int",
+                         "value":217
+                        }, 
+                        {
+                         "name":"dialog",
+                         "type":"string",
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": \"0\",\n      \"dialog\": [\n        \"Meow\",\n        \"I'm a huge pain in the butt\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    }\n  ]\n}"
+                        }, 
+                        {
+                         "name":"eventKeyEnd",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"eventKeyTrigger",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"hairFrame",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"movement",
+                         "type":"string",
+                         "value":"{\n  \"type\": \"random\"\n}"
+                        }, 
+                        {
+                         "name":"pantsFrame",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"shirtFrame",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"shoesFrame",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"character",
+                 "visible":true,
+                 "width":16,
+                 "x":145,
+                 "y":128
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -249,7 +365,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":3,
+ "nextobjectid":5,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -265,6 +381,19 @@
          "name":"overworld",
          "spacing":1,
          "tilecount":1767,
+         "tileheight":16,
+         "tilewidth":16
+        }, 
+        {
+         "columns":54,
+         "firstgid":1768,
+         "image":"..\/characters.png",
+         "imageheight":203,
+         "imagewidth":917,
+         "margin":0,
+         "name":"characters",
+         "spacing":1,
+         "tilecount":648,
          "tileheight":16,
          "tilewidth":16
         }],

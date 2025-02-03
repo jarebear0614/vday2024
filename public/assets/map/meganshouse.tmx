@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="40" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="3">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="40" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="5">
  <editorsettings>
   <export target="meganshouse.tmj" format="json"/>
  </editorsettings>
  <tileset firstgid="1" source="tilesets/overworld.tsx"/>
+ <tileset firstgid="1768" source="tilesets/characters.tsx"/>
  <layer id="1" name="ground" width="40" height="20">
   <data encoding="csv">
 123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,
@@ -158,5 +159,58 @@
   </object>
  </objectgroup>
  <objectgroup id="8" name="map_interactive"/>
- <objectgroup id="9" name="map_character"/>
+ <objectgroup id="9" name="map_character">
+  <object id="3" name="Mittens" type="character" gid="1984" x="464" y="192" width="16" height="16">
+   <properties>
+    <property name="bodyFrame" type="int" value="216"/>
+    <property name="dialog">{
+  &quot;events&quot;: [
+    {
+      &quot;eventKey&quot;: &quot;0&quot;,
+      &quot;dialog&quot;: [
+        &quot;Meow&quot;,
+        &quot;Meow Meow&quot;
+      ],
+      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+    }
+  ]
+}</property>
+    <property name="eventKeyEnd" type="int" value="2"/>
+    <property name="eventKeyTrigger" type="int" value="0"/>
+    <property name="hairFrame" type="int" value="2"/>
+    <property name="movement">{
+  &quot;type&quot;: &quot;random&quot;
+}</property>
+    <property name="pantsFrame" type="int" value="2"/>
+    <property name="shirtFrame" type="int" value="2"/>
+    <property name="shoesFrame" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="4" name="Reese" type="character" gid="1985" x="145" y="128" width="16" height="16">
+   <properties>
+    <property name="bodyFrame" type="int" value="217"/>
+    <property name="dialog">{
+  &quot;events&quot;: [
+    {
+      &quot;eventKey&quot;: &quot;0&quot;,
+      &quot;dialog&quot;: [
+        &quot;Meow&quot;,
+        &quot;I'm a huge pain in the butt&quot;
+      ],
+      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+    }
+  ]
+}</property>
+    <property name="eventKeyEnd" type="int" value="2"/>
+    <property name="eventKeyTrigger" type="int" value="0"/>
+    <property name="hairFrame" type="int" value="2"/>
+    <property name="movement">{
+  &quot;type&quot;: &quot;random&quot;
+}</property>
+    <property name="pantsFrame" type="int" value="2"/>
+    <property name="shirtFrame" type="int" value="2"/>
+    <property name="shoesFrame" type="int" value="2"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

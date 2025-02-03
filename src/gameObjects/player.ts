@@ -77,7 +77,7 @@ export class Player extends Character
         return this.body.y;
     }
 
-    update() 
+    update(delta: number) 
     {
         super.setPosition(this.body.x, this.body.y);
     }

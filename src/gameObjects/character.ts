@@ -1,8 +1,9 @@
 import "phaser";
 import { TILE_SCALE } from "../util/const";
 import { BaseScene } from "../scenes/BaseScene";
-import { CharacterEvent, EventKeyCondition as EventKeyCondition } from "./dialog";
+import { CharacterEvent } from "./dialog";
 import { Align } from "../util/align";
+import { ICharacterMovement } from "./ICharacterMovement";
 
 export class CharacterConfig 
 {
@@ -28,7 +29,7 @@ export class CharacterConfig
 
     eventKeyEnd?: number = 0;
 
-    eventKeyCondition?: EventKeyCondition;
+    movement?: ICharacterMovement;
 }
 
 export class Character
@@ -39,6 +40,8 @@ export class Character
     private y: number;
 
     private created: boolean = false;
+
+    private movement?: ICharacterMovement = undefined;
 
     overlapDialogSprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 
@@ -58,7 +61,7 @@ export class Character
         if(config === null || config === undefined) {
             config = new CharacterConfig();
         }
-        this.config = config;        
+        this.config = config;
     }
 
     create(): Character 
@@ -87,6 +90,13 @@ export class Character
         {
             this.collider = this.scene.physics.add.collider(this.config.player, this.spriteGroup);
             this.overlapCollider = this.scene.physics.add.overlap(this.config.player, this.overlapDialogSprite, this.config.overlapCallback);
+        }
+
+        this.movement = this.config.movement;
+
+        if(this.movement)
+        {
+            this.movement.setCharacter(this);
         }
 
         this.created = true;
@@ -135,16 +145,16 @@ export class Character
         return this.config.eventKeyEnd ?? 0;
     }
 
-    getEventKeyCondition(): EventKeyCondition
-    {
-        return this.config.eventKeyCondition ?? EventKeyCondition.exact;
-    }
-
     tearDown() 
     {
         this.scene.physics.world.removeCollider(this.collider);
         this.scene.physics.world.removeCollider(this.overlapCollider);
         this.spriteGroup.clear(true, true);
         this.overlapDialogSprite.destroy();
+    }
+
+    update(delta: number) 
+    {
+        this.movement?.update(delta);
     }
 }

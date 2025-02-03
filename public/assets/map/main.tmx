@@ -434,10 +434,19 @@
     }
   ]
 }</property>
-    <property name="eventKeyCondition" value="exact"/>
     <property name="eventKeyEnd" type="int" value="2"/>
     <property name="eventKeyTrigger" type="int" value="0"/>
     <property name="hairFrame" type="int" value="22"/>
+    <property name="movement">{
+  &quot;type&quot;: &quot;waypoint&quot;,
+  &quot;loop&quot;: true,
+  &quot;waypoints&quot;: [
+    {&quot;x&quot;: 33, &quot;y&quot;: 46 }, 
+    {&quot;x&quot;: 37, &quot;y&quot;: 46 },
+    {&quot;x&quot;: 37, &quot;y&quot;: 50 },
+    {&quot;x&quot;: 33, &quot;y&quot;: 50 }
+  ]
+}</property>
     <property name="pantsFrame" type="int" value="3"/>
     <property name="shirtFrame" type="int" value="286"/>
     <property name="shoesFrame" type="int" value="4"/>
@@ -458,10 +467,12 @@
     }
   ]
 }</property>
-    <property name="eventKeyCondition" value="exact"/>
     <property name="eventKeyEnd" type="int" value="3"/>
     <property name="eventKeyTrigger" type="int" value="2"/>
     <property name="hairFrame" type="int" value="22"/>
+    <property name="movement">{
+  &quot;type&quot;: &quot;random&quot;
+}</property>
     <property name="pantsFrame" type="int" value="3"/>
     <property name="shirtFrame" type="int" value="286"/>
     <property name="shoesFrame" type="int" value="4"/>
