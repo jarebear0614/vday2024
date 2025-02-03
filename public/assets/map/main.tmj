@@ -530,7 +530,22 @@
                         {
                          "name":"dialog",
                          "type":"string",
-                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": \"0\",\n      \"dialog\": [\n        \"Hello\",\n        \"My Name is Jared\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    },\n    {\n      \"eventKey\": \"1\",\n      \"dialog\": [\n        \"Welcome to the game\"\n      ],\n      \"onEnd\": \"nop\"\n    }\n  ]\n}"
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": \"0\",\n      \"dialog\": [\n        \"Hello\",\n        \"My Name is Jared\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    },\n    {\n      \"eventKey\": \"1\",\n      \"dialog\": [\n        \"Welcome to the game\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    }\n  ]\n}"
+                        }, 
+                        {
+                         "name":"eventKeyCondition",
+                         "type":"string",
+                         "value":"exact"
+                        }, 
+                        {
+                         "name":"eventKeyEnd",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"eventKeyTrigger",
+                         "type":"int",
+                         "value":0
                         }, 
                         {
                          "name":"hairFrame",
@@ -558,6 +573,64 @@
                  "width":16,
                  "x":528,
                  "y":800
+                }, 
+                {
+                 "gid":1773,
+                 "height":16,
+                 "id":25,
+                 "name":"Jared",
+                 "properties":[
+                        {
+                         "name":"bodyFrame",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"dialog",
+                         "type":"string",
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": \"2\",\n      \"dialog\": [\n        \"You made it\",\n        \"I promise I won't push you in\"\n      ],\n      \"onEnd\": \"nop\"\n    }\n  ]\n}"
+                        }, 
+                        {
+                         "name":"eventKeyCondition",
+                         "type":"string",
+                         "value":"exact"
+                        }, 
+                        {
+                         "name":"eventKeyEnd",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"eventKeyTrigger",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"hairFrame",
+                         "type":"int",
+                         "value":22
+                        }, 
+                        {
+                         "name":"pantsFrame",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"shirtFrame",
+                         "type":"int",
+                         "value":286
+                        }, 
+                        {
+                         "name":"shoesFrame",
+                         "type":"int",
+                         "value":4
+                        }],
+                 "rotation":0,
+                 "type":"character",
+                 "visible":true,
+                 "width":16,
+                 "x":50.1666666666667,
+                 "y":394.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -566,7 +639,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":25,
+ "nextobjectid":26,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

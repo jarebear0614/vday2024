@@ -1,7 +1,7 @@
 import "phaser";
 import { TILE_SCALE } from "../util/const";
 import { BaseScene } from "../scenes/BaseScene";
-import { CharacterEvent } from "./dialog";
+import { CharacterEvent, EventKeyCondition as EventKeyCondition } from "./dialog";
 import { Align } from "../util/align";
 
 export class CharacterConfig 
@@ -19,6 +19,16 @@ export class CharacterConfig
     hairFrame?: number = 19;
 
     dialog?: CharacterEvent;
+
+    player?: Phaser.Types.Physics.Arcade.ArcadeColliderType;
+
+    overlapCallback?: Phaser.Types.Physics.Arcade.ArcadePhysicsCallback;
+
+    eventKey?: number = 0;
+
+    eventKeyEnd?: number = 0;
+
+    eventKeyCondition?: EventKeyCondition;
 }
 
 export class Character
@@ -28,7 +38,12 @@ export class Character
     private x: number;
     private y: number;
 
+    private created: boolean = false;
+
     overlapDialogSprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+
+    collider: Phaser.Physics.Arcade.Collider;
+    overlapCollider: Phaser.Physics.Arcade.Collider;
 
     private config: CharacterConfig;
 
@@ -68,6 +83,14 @@ export class Character
         
         Align.scaleToGameWidth(this.overlapDialogSprite, TILE_SCALE, this.scene); 
 
+        if(this.config.player) 
+        {
+            this.collider = this.scene.physics.add.collider(this.config.player, this.spriteGroup);
+            this.overlapCollider = this.scene.physics.add.overlap(this.config.player, this.overlapDialogSprite, this.config.overlapCallback);
+        }
+
+        this.created = true;
+
         return this;
     }
 
@@ -95,5 +118,33 @@ export class Character
         this.spriteGroup.setXY(x, y);
         this.spriteGroup.refresh();
         this.overlapDialogSprite.setPosition(x, y);
+    }
+
+    isCreated() : boolean 
+    {
+        return this.created;
+    }
+
+    getEventKeyTrigger(): number
+    {
+        return this.config.eventKey ?? 0;
+    }
+
+    getEventKeyEnd(): number
+    {
+        return this.config.eventKeyEnd ?? 0;
+    }
+
+    getEventKeyCondition(): EventKeyCondition
+    {
+        return this.config.eventKeyCondition ?? EventKeyCondition.exact;
+    }
+
+    tearDown() 
+    {
+        this.scene.physics.world.removeCollider(this.collider);
+        this.scene.physics.world.removeCollider(this.overlapCollider);
+        this.spriteGroup.clear(true, true);
+        this.overlapDialogSprite.destroy();
     }
 }

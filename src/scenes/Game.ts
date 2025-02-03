@@ -7,7 +7,7 @@ import { Align } from '../util/align';
 import { GameState } from '../gameObjects/GameState';
 import { Player } from '../gameObjects/player';
 import { Interactive } from '../gameObjects/interactive';
-import { CharacterEvent } from '../gameObjects/dialog';
+import { CharacterEvent, CharacterEventUtility, EndAction, EventKeyCondition } from '../gameObjects/dialog';
 
 export class Game extends BaseScene
 {
@@ -48,14 +48,16 @@ export class Game extends BaseScene
     isInteractKeyDown: boolean = false;
     isPreviousInteractKeyDown: boolean = false;
 
-    character: Character;
-
     map: Phaser.Tilemaps.Tilemap;
     overworldTileset: Phaser.Tilemaps.Tileset;
     backgroundJuiceLayer: Phaser.Tilemaps.TilemapLayer;
     backgroundCollidersLayer: Phaser.Tilemaps.TilemapLayer;
 
     currentInteractiveObject: Interactive | null = null;
+
+    eventKey: number = 0;
+
+    characterEvents: Character[] = [];
 
     constructor ()
     {
@@ -124,6 +126,8 @@ export class Game extends BaseScene
         let playerYSpawn = TILE_SIZE * this.tilemapScale * (this.gameState.spawnY ?? 10);
 
         this.player.setPosition(playerXSpawn, playerYSpawn);
+
+        this.configureEvent();
     }
 
     update() 
@@ -283,7 +287,6 @@ export class Game extends BaseScene
 
             this.physics.add.overlap(this.player.body, sprite, () => 
             {
-                console.log('overlapstart');
                 this.currentInteractiveObject = new Interactive([message]);
             });
         }
@@ -304,6 +307,8 @@ export class Game extends BaseScene
             let shirtFrame: number = 0;
             let pantsFrame: number = 0;
             let shoesFrame: number = 0;
+            let eventKeyTrigger: number = 0;
+            let eventKeyEnd: number = 0;
 
             for (const property of properties) {
                 switch (property.name) {
@@ -324,7 +329,12 @@ export class Game extends BaseScene
                         break;
                     case 'dialog':
                         dialog = JSON.parse(property.value.toString());
-                        console.log(dialog);
+                        break;
+                    case 'eventKeyTrigger':
+                        eventKeyTrigger = parseInt(property.value);
+                        break;
+                    case 'eventKeyEnd':
+                        eventKeyEnd = parseInt(property.value);
                         break;
                 }
             }
@@ -335,16 +345,21 @@ export class Game extends BaseScene
                 shirtFrame: shirtFrame,
                 pantsFrame: pantsFrame,
                 shoesFrame: shoesFrame,
-                dialog: dialog
-            }).create();
+                eventKey: eventKeyTrigger,
+                eventKeyEnd: eventKeyEnd,
+                dialog: dialog,
+                player: this.player.getBody(),
+                overlapCallback: () => {
+                    let ev = CharacterEventUtility.findEventByKey(dialog, this.eventKey);
 
-            this.physics.add.collider(this.player.getBody(), newCharacter.spriteGroup, () => {
-                console.log('collide');
+                    if(ev !== undefined)
+                    {
+                        this.currentInteractiveObject = new Interactive(ev.dialog, ev.onEnd, name);
+                    }
+                }
             });
 
-            this.physics.add.overlap(this.player.getBody(), newCharacter.overlapDialogSprite, () => {
-                this.currentInteractiveObject = new Interactive(dialog.events[0].dialog, name);
-            })
+            this.characterEvents.push(newCharacter);
         }
     }
 
@@ -482,24 +497,24 @@ export class Game extends BaseScene
                 }
             }),
 
-            toolbar: [
-                this.rexUI.add.label({
-                    background: this.rexUI.add.roundRectangle(0, 0, 40, 40, 20, 0xC1BA71),
-                    text: this.add.text(0, 0, 'X'),
-                    space: {
-                        left: 10,
-                        right: 10,
-                        top: 10,
-                        bottom: 10
-                    }
-                })
-            ],
+            // toolbar: [
+            //     this.rexUI.add.label({
+            //         background: this.rexUI.add.roundRectangle(0, 0, 40, 40, 20, 0xC1BA71),
+            //         text: this.add.text(0, 0, 'X'),
+            //         space: {
+            //             left: 10,
+            //             right: 10,
+            //             top: 10,
+            //             bottom: 10
+            //         }
+            //     })
+            // ],
 
             content: this.add.text(0, 0, messages[messagesIndex]),
 
-            actions: messages.length <= 1 ? undefined : [this.rexUI.add.label({
+            actions: [this.rexUI.add.label({
                 background: this.rexUI.add.roundRectangle(0, 0, 40, 40, 20, 0xC1BA71),
-                text: this.add.text(0, 0, 'Next'),
+                text: this.add.text(0, 0, messages.length > 1 ? 'Next' : 'Close'),
                 space: {
                     left: 10,
                     right: 10,
@@ -559,6 +574,12 @@ export class Game extends BaseScene
                     {
                         this.dialog?.scaleDownDestroy(300);
                         this.dialog = null;
+
+                        if(this.currentInteractiveObject?.endAction == EndAction.incrementEvent) 
+                        {
+                            this.incrementEvent();
+                        }
+                        this.currentInteractiveObject = null;
                         return;
                     }
 
@@ -578,8 +599,46 @@ export class Game extends BaseScene
             .on('button.out', function (button: any, groupName: string, index: number, pointer: Phaser.Input.Pointer, event: Event) 
             {
                 button.getElement('background').setStrokeStyle();
-            });
+            });            
+    }
 
-            
+    private configureEvent() 
+    {
+        for(let character of this.characterEvents)
+        {
+            let trigger = character.getEventKeyTrigger();
+            let end = character.getEventKeyEnd();
+
+            if(this.eventKey >= trigger && this.eventKey <= end && !character.isCreated())
+            {
+                character.create();
+            }
+        }
+    }
+
+    private incrementEvent() 
+    {
+        this.eventKey++;
+
+        let charactersToRemove: number[] = [];
+
+        for(let i = 0; i < this.characterEvents.length; ++i)
+        {
+            let character = this.characterEvents[i];
+            let end = character.getEventKeyEnd();
+
+            if(this.eventKey >= end && character.isCreated())
+            {
+                character.tearDown();
+                charactersToRemove.push(i);
+            }
+        }
+
+        for(let character of charactersToRemove)
+        {
+            this.characterEvents.splice(character, 1);
+        }
+
+        this.configureEvent();
     }
 }

@@ -1,8 +1,16 @@
+export enum EventKeyCondition
+{
+    exact = "exact",
+
+    greaterThanEqual = "greaterThanEqual"
+}
+
+
 export enum EndAction
 {
-    nop = 0,
+    nop = "nop",
 
-    incrementEvent = 1
+    incrementEvent = "incrementEvent"
 }
 
 export class CharacterEventDialog
@@ -18,4 +26,14 @@ export class CharacterEventDialog
 export class CharacterEvent
 {
     events: CharacterEventDialog[];
+}
+
+export class CharacterEventUtility 
+{
+    static findEventByKey(CharacterEvent: CharacterEvent, key: number) : CharacterEventDialog | undefined
+    {
+        return CharacterEvent.events.find((e) => {
+            return e.eventKey == key;
+        });
+    }
 }
