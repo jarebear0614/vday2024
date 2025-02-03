@@ -36,6 +36,8 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
 
     private velocity: number = 256;
 
+    private name: string = '';
+
     constructor(xCenter: number, yCenter: number, radius: number)
     {
         this.xCenter = xCenter;
@@ -43,15 +45,21 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
         this.radius = radius;
 
         this.waitUntil = Math.round(Math.random() * this.waitTimeRange.max - this.waitTimeRange.min) + this.waitTimeRange.min;
+
+        this.startX = this.xCenter;
+        this.startY = this.yCenter;
+
+        this.destination = new Phaser.Math.Vector2(this.xCenter, this.yCenter);
     }
 
     setCharacter(character: Character): void {
         this.character = character;
+        this.name = this.character.name;
     }
 
     update(delta: number): void 
     {
-        if(!this.character)
+        if(!this.character || !this.character.spriteGroup.children)
         {
             return;
         }
@@ -80,14 +88,13 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
             {
                 this.currentWaitTime = 0;
                 this.moveTime = 0;
-                this.isMoving = true;                
+                this.isMoving = true;     
+           
+                this.startX = this.destination.x;
+                this.startY = this.destination.y;
                 
                 this.destination.x = Math.round(Math.random() * this.radius) + this.xCenter - this.radius;
                 this.destination.y = Math.round(Math.random() * this.radius) + this.yCenter - this.radius;
-
-                let transform = <unknown>this.character.spriteGroup.children.getArray()[0] as Phaser.GameObjects.Components.Transform;
-                this.startX = transform.x;
-                this.startY = transform.y;
             }
         }
     }
@@ -124,13 +131,16 @@ export class WaypointCharacterMovement implements ICharacterMovement
 
     private velocity: number = 256;
 
-    constructor(scale: number, config: CharacterMovementConfig)
+    constructor(xCenter: number, yCenter: number, scale: number, config: CharacterMovementConfig)
     {
         this.waypoints = config.waypoints;
         this.loop = config.loop;
         this.scale = scale;
 
         this.destination = this.waypoints[0];
+
+        this.start = new Phaser.Math.Vector2(xCenter, yCenter);
+        this.destination = new Phaser.Math.Vector2(xCenter, yCenter);
     }
 
     setCharacter(character: Character): void 
@@ -140,12 +150,11 @@ export class WaypointCharacterMovement implements ICharacterMovement
 
     update(delta: number): void 
     {
-        if(!this.character)
+        if(!this.character || !this.character.spriteGroup.children)
         {
             return;
         }
-    
-        let transform = <unknown>this.character.spriteGroup.children.getArray()[0] as Phaser.GameObjects.Components.Transform;
+        
         if(this.isMoving)
         {
             let velScale = this.velocity / this.start.distance(this.destination);
@@ -171,13 +180,10 @@ export class WaypointCharacterMovement implements ICharacterMovement
                 this.isMoving = true;
                 this.moveTime = 0;
 
-                this.start = new Phaser.Math.Vector2(transform.x, transform.y);
+                this.start = new Phaser.Math.Vector2(this.destination.x, this.destination.y);
                 this.destination = new Phaser.Math.Vector2(
                     this.waypoints[this.waypointIndex].x * (16 * this.scale), 
                     this.waypoints[this.waypointIndex].y * (16 * this.scale));
-
-                console.log(this.waypoints[this.waypointIndex]);
-                console.log(this.destination);
             }
         }
     }    

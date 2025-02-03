@@ -36,8 +36,10 @@ export class Character
 {
     public spriteGroup: Phaser.Physics.Arcade.StaticGroup;
 
-    private x: number;
-    private y: number;
+    public name: string = 'Unknown Name';
+
+    x: number;
+    y: number;
 
     private created: boolean = false;
 
@@ -57,6 +59,7 @@ export class Character
         this.scene = scene;
         this.x = x;
         this.y = y;
+        this.name = name;
 
         if(config === null || config === undefined) {
             config = new CharacterConfig();
@@ -125,6 +128,9 @@ export class Character
 
     setPosition(x: number, y: number) 
     {
+        this.x = x;
+        this.y = y;
+
         this.spriteGroup.setXY(x, y);
         this.spriteGroup.refresh();
         this.overlapDialogSprite.setPosition(x, y);

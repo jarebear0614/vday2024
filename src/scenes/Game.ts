@@ -75,6 +75,9 @@ export class Game extends BaseScene
             this.gameState = data.gameState;
         }
 
+        this.characterEvents = [];
+        this.currentInteractiveObject = null;
+
         this.load.on('progress', (progress: number) => 
         {
             if(progress >= 1) 
@@ -208,6 +211,7 @@ export class Game extends BaseScene
         {
             if(character.isCreated())
             {
+                
                 character.update(delta);
             }
         }
@@ -384,7 +388,7 @@ export class Game extends BaseScene
         switch(config.type)
         {
             case "waypoint":
-                return new WaypointCharacterMovement(this.tilemapScale, config);
+                return new WaypointCharacterMovement(x * this.tilemapScale, y * this.tilemapScale, this.tilemapScale, config);
             default:
                 return new RandomInRadiusCharacterMovement(x * this.tilemapScale, y * this.tilemapScale, 16 * this.tilemapScale * 5)
         }
