@@ -7,6 +7,7 @@ import { Preloader } from './scenes/Preloader';
 import { Game, Types } from "phaser";
 
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
+import { Tetris } from './scenes/Tetris';
 
 
 let requestedHeight = 1024;
@@ -33,7 +34,8 @@ const config: Types.Core.GameConfig = {
         Preloader,
         MainMenu,
         MainGame,
-        GameOver
+        GameOver,
+        Tetris
     ],
     physics: {
         default: "arcade",
