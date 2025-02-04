@@ -68,6 +68,8 @@ export class Tetris extends BaseScene
 
     private currentGameplayState: GameplayState;
 
+    public static minoScale: number = 1;
+
     //text flasher
 
     constructor()
@@ -96,10 +98,32 @@ export class Tetris extends BaseScene
     preload()
     {
         this.load.spritesheet('minos', 'assets/tetris/minos.png', {frameWidth: 32, frameHeight: 32, spacing: 0, margin: 1});
+        
     }
 
     create()
     {
+        super.create();
+
+        let gameWidth = this.getGameWidth();
+        let newWidth = gameWidth * .068;
+        let scale = newWidth / 32;
+
+        Tetris.minoScale = scale;
+
+        this.cameras.main.setBackgroundColor(0x666666);   
+
+        let minoWidth = 32 * scale;
+        let rectangleWidth = minoWidth * this.field.blockWidth;
+        let rectangleHeight = minoWidth * this.field.blockHeight;
+
+        let fieldTopLeftX = this.getGameWidth() * .05;
+        let fieldTopLeftY = this.getGameHeight() / 2 - rectangleHeight / 2;
+
+        this.add.rectangle(fieldTopLeftX, fieldTopLeftY, rectangleWidth, rectangleHeight, 0x333333).setOrigin(0, 0);
+
+        this.field.fieldTopleft = new Phaser.Math.Vector2(fieldTopLeftX, fieldTopLeftY);
+        
         this.nextQueue.push(this.factory.generateRandomTetromino());
     }
 
@@ -135,7 +159,7 @@ export class Tetris extends BaseScene
 
         if(this.currentTetromino)
         {
-            this.currentTetromino.transform.setPosition(this.cursorPosition.x * 32, this.cursorPosition.y * 32);
+            this.currentTetromino.transform.setPosition(this.field.fieldTopleft.x + this.cursorPosition.x * 32 * Tetris.minoScale, this.field.fieldTopleft.y + this.cursorPosition.y * 32 * Tetris.minoScale);
         }
     }
 
@@ -177,8 +201,6 @@ export class Tetris extends BaseScene
             {
                 this.currentGameplayState = GameplayState.LockDown;
             }
-
-            console.log(this.cursorPosition);
         }
     }
 

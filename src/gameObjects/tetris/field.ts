@@ -4,7 +4,7 @@ export class Field
 {
     private fieldLines: number[][];
 
-    private fieldTopleft: Phaser.Math.Vector2;
+    public fieldTopleft: Phaser.Math.Vector2;
 
     private readonly ghostTetrominoAlphaFactor = 0.25;
 
@@ -85,7 +85,6 @@ export class Field
 
     public insertTetrominoAt(tetromino: Tetromino, point: Phaser.Math.Vector2)
     {
-        debugger;
         if(this.isTetrominoInsertableAt(tetromino, point))
         {
             this.setMinos(tetromino, point);

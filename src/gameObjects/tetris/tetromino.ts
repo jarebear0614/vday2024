@@ -1,3 +1,4 @@
+import { Tetris } from "../../scenes/Tetris";
 import { TetrominoWallKickData } from "./tetrominoFactory";
 
 export enum RotationState
@@ -56,7 +57,7 @@ export class TetrominoTransform implements Phaser.GameObjects.Components.Transfo
         for(let i = 0; i < 4; ++i)
         {
             let mino = this.tetromino.get(i);
-            this.group.create(mino.x * 32, mino.y * 32, 'minos', tetromino.getTetrominoType());
+            this.group.create(mino.x * 32 * Tetris.minoScale, mino.y * 32 * Tetris.minoScale, 'minos', tetromino.getTetrominoType()).setScale(Tetris.minoScale).setOrigin(0, 0);
         }
 
         this.setPosition(this.x, this.y);
@@ -71,7 +72,7 @@ export class TetrominoTransform implements Phaser.GameObjects.Components.Transfo
         {
             let child = <unknown>childrenArray[i] as Phaser.GameObjects.Components.Transform;
             let mino = this.tetromino.get(i);
-            child.setPosition(this.x + mino.x * 32, this.y + mino.y * 32);
+            child.setPosition(this.x + mino.x * 32 * Tetris.minoScale, this.y + mino.y * 32 * Tetris.minoScale);
         }
 
         return this;
