@@ -43,7 +43,7 @@ export class Character
 
     private created: boolean = false;
 
-    private movement?: ICharacterMovement = undefined;
+    movement?: ICharacterMovement = undefined;
 
     overlapDialogSprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 

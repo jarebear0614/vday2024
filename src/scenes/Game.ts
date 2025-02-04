@@ -6,9 +6,9 @@ import { BaseScene } from './BaseScene';
 import { Align } from '../util/align';
 import { GameState } from '../gameObjects/GameState';
 import { Player } from '../gameObjects/player';
-import { Interactive } from '../gameObjects/interactive';
+import { Interactive, InteractiveConfig } from '../gameObjects/interactive';
 import { CharacterEvent, CharacterEventUtility, EndAction } from '../gameObjects/dialog';
-import { RandomInRadiusCharacterMovement, CharacterMovementConfig, WaypointCharacterMovement } from '../gameObjects/CharacterMovementComponents';
+import { RandomInRadiusCharacterMovement, CharacterMovementConfig, WaypointCharacterMovement, NopCharacterMovement } from '../gameObjects/CharacterMovementComponents';
 import { ICharacterMovement } from '../gameObjects/ICharacterMovement';
 
 export class Game extends BaseScene
@@ -195,7 +195,11 @@ export class Game extends BaseScene
         {
             if(this.currentInteractiveObject !== null)
             {
-                this.showDialog(this.currentInteractiveObject.messages, !!this.currentInteractiveObject.title, this.currentInteractiveObject.title);
+                this.showDialog(this.currentInteractiveObject.messages, {
+                    title: this.currentInteractiveObject.title,
+                    endAction: this.currentInteractiveObject.endAction,
+                    sourceCharacter: this.currentInteractiveObject.sourceCharacter
+                });
             }
         }
 
@@ -372,7 +376,11 @@ export class Game extends BaseScene
 
                     if(ev !== undefined)
                     {
-                        this.currentInteractiveObject = new Interactive(ev.dialog, ev.onEnd, name);
+                        this.currentInteractiveObject = new Interactive(ev.dialog, {
+                            title: name,
+                            endAction: ev.onEnd,
+                            sourceCharacter: newCharacter
+                        });
                     }
                 },
                 movement: this.getMovementFromConfig(x!, y!, movement)
@@ -387,10 +395,12 @@ export class Game extends BaseScene
     {
         switch(config.type)
         {
+            case "random":
+                return new RandomInRadiusCharacterMovement(x * this.tilemapScale, y * this.tilemapScale, 16 * this.tilemapScale * 5);
             case "waypoint":
                 return new WaypointCharacterMovement(x * this.tilemapScale, y * this.tilemapScale, this.tilemapScale, config);
             default:
-                return new RandomInRadiusCharacterMovement(x * this.tilemapScale, y * this.tilemapScale, 16 * this.tilemapScale * 5)
+                return new NopCharacterMovement();
         }
     }
 
@@ -442,10 +452,15 @@ export class Game extends BaseScene
         // this.add.rectangle(dpadTopLeft.x - dpadWidth / 2 - 5, dpadTopLeft.y + dpadWidth + 5, dpadWidth - 10, dpadWidth - 10, 0x000000).setScrollFactor(0);
         // this.add.rectangle(dpadTopLeft.x + dpadWidth / 2 + 5, dpadTopLeft.y + dpadWidth + 5, dpadWidth - 10, dpadWidth - 10, 0x333333).setScrollFactor(0);
         
-        interactButton.on('pointerup', () => {
+        interactButton.on('pointerup', () => 
+        {
             if(this.currentInteractiveObject !== null)
             {
-                this.showDialog(this.currentInteractiveObject.messages, !!this.currentInteractiveObject.title, this.currentInteractiveObject.title);
+                this.showDialog(this.currentInteractiveObject.messages, {
+                    title: this.currentInteractiveObject.title,
+                    endAction: this.currentInteractiveObject.endAction,
+                    sourceCharacter: this.currentInteractiveObject.sourceCharacter
+                });
             }
         });
 
@@ -502,12 +517,14 @@ export class Game extends BaseScene
         this.interactKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.E);
     }
 
-    private showDialog(messages: string[], showTitle: boolean = false, title: string = '')
+    private showDialog(messages: string[], config?: InteractiveConfig)
     {             
         if(this.dialog != null) 
         {
             return;
         }
+        
+        config?.sourceCharacter?.movement?.pause();
 
         let messagesIndex = 0;
 
@@ -517,9 +534,9 @@ export class Game extends BaseScene
             width: this.getGameWidth() * 0.85,
 
             background: this.rexUI.add.roundRectangle(0, 0, 40, 100, 20, 0xA1A05E),
-            title: !showTitle ? undefined : this.rexUI.add.label({
+            title: config?.title === undefined ? undefined : this.rexUI.add.label({
                 background: this.rexUI.add.roundRectangle(0, 0, 40, 40, 20, 0xC1BA71),
-                text: this.add.text(0, 0, title, {fontSize: '24px'}),
+                text: this.add.text(0, 0, config?.title ?? 'Error', {fontSize: '24px'}),
                 space: {
                     left: 10,
                     right: 10,
@@ -527,19 +544,6 @@ export class Game extends BaseScene
                     bottom: 10
                 }
             }),
-
-            // toolbar: [
-            //     this.rexUI.add.label({
-            //         background: this.rexUI.add.roundRectangle(0, 0, 40, 40, 20, 0xC1BA71),
-            //         text: this.add.text(0, 0, 'X'),
-            //         space: {
-            //             left: 10,
-            //             right: 10,
-            //             top: 10,
-            //             bottom: 10
-            //         }
-            //     })
-            // ],
 
             content: this.add.text(0, 0, messages[messagesIndex]),
 
@@ -557,7 +561,7 @@ export class Game extends BaseScene
             space: {
                 left: 20,
                 right: 20,
-                top: -20,
+                top: config?.title === undefined ? 20 : -20,
                 bottom: 20,
 
                 title: 25,
@@ -605,6 +609,8 @@ export class Game extends BaseScene
                     {
                         this.dialog?.scaleDownDestroy(300);
                         this.dialog = null;
+
+                        config?.sourceCharacter?.movement?.unpause();
 
                         if(this.currentInteractiveObject?.endAction == EndAction.incrementEvent) 
                         {

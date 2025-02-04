@@ -3,6 +3,16 @@ import { ICharacterMovement } from "./ICharacterMovement";
 
 export class NopCharacterMovement implements ICharacterMovement
 {
+    pause(): void 
+    {
+        
+    }
+
+    unpause(): void 
+    {
+        
+    }
+
     setCharacter(character: Character): void 
     {
         
@@ -34,9 +44,9 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
     private destination: Phaser.Math.Vector2 = Phaser.Math.Vector2.ZERO;
     private moveTime: number = 0;
 
-    private velocity: number = 256;
+    private velocity: number = 128;
 
-    private name: string = '';
+    private isPaused: boolean = false;
 
     constructor(xCenter: number, yCenter: number, radius: number)
     {
@@ -51,15 +61,24 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
 
         this.destination = new Phaser.Math.Vector2(this.xCenter, this.yCenter);
     }
+    
+    pause(): void 
+    {
+        this.isPaused = true;
+    }
+
+    unpause(): void 
+    {
+        this.isPaused = false;
+    }
 
     setCharacter(character: Character): void {
         this.character = character;
-        this.name = this.character.name;
     }
 
     update(delta: number): void 
     {
-        if(!this.character || !this.character.spriteGroup.children)
+        if(!this.character || !this.character.spriteGroup.children || this.isPaused)
         {
             return;
         }
@@ -129,7 +148,9 @@ export class WaypointCharacterMovement implements ICharacterMovement
     private isMoving: boolean = false;
     private moveTime: number = 0;
 
-    private velocity: number = 256;
+    private velocity: number = 128;
+
+    private isPaused: boolean = false;
 
     constructor(xCenter: number, yCenter: number, scale: number, config: CharacterMovementConfig)
     {
@@ -142,6 +163,16 @@ export class WaypointCharacterMovement implements ICharacterMovement
         this.start = new Phaser.Math.Vector2(xCenter, yCenter);
         this.destination = new Phaser.Math.Vector2(xCenter, yCenter);
     }
+    
+    pause(): void 
+    {
+        this.isPaused = true;
+    }
+
+    unpause(): void 
+    {
+        this.isPaused = false;
+    }
 
     setCharacter(character: Character): void 
     {
@@ -150,7 +181,7 @@ export class WaypointCharacterMovement implements ICharacterMovement
 
     update(delta: number): void 
     {
-        if(!this.character || !this.character.spriteGroup.children)
+        if(!this.character || !this.character.spriteGroup.children || this.isPaused)
         {
             return;
         }
