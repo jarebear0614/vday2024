@@ -88,6 +88,13 @@ export class Tetris extends BaseScene
     private nextTetrominoTransform: TetrominoTransform;
     private holdTetrominoTransform: TetrominoTransform;
 
+
+    private placeSound: Phaser.Sound.BaseSound;
+    private lineClearSound: Phaser.Sound.BaseSound;
+    private tetrisSound: Phaser.Sound.BaseSound;
+    private levelUpSound: Phaser.Sound.BaseSound;
+    private music: Phaser.Sound.BaseSound;
+
     //text flasher
 
     constructor()
@@ -140,6 +147,12 @@ export class Tetris extends BaseScene
         this.load.image('input_left_clicked', 'assets/tetris/left_clicked.png');
         this.load.image('input_right_clicked', 'assets/tetris/right_clicked.png');
         this.load.image('input_clockwise_clicked', 'assets/tetris/clockwise_clicked.png');
+
+        this.load.audio('levelup', 'assets/tetris/levelup.wav');
+        this.load.audio('lineclear', 'assets/tetris/lineclear.wav');
+        this.load.audio('tetris', 'assets/tetris/tetris.wav');
+        this.load.audio('place', 'assets/tetris/place.wav');
+        this.load.audio('music', 'assets/tetris/song.mp3');
     }
 
     create()
@@ -148,7 +161,15 @@ export class Tetris extends BaseScene
 
         this.createFont();
         this.configureInput();
-        this.setUpField();        
+        this.setUpField();       
+        
+        this.lineClearSound = this.sound.add('lineclear', { loop: false });
+        this.placeSound = this.sound.add('place', { loop: false });
+        this.tetrisSound = this.sound.add('tetris', { loop: false });
+        this.levelUpSound = this.sound.add('levelup', { loop: false });
+        this.music = this.sound.add('music', {loop: true });
+
+        this.music.play();
     }
 
     update(time: number, delta: number)
@@ -478,7 +499,7 @@ export class Tetris extends BaseScene
             this.field.insertTetrominoAt(this.currentTetromino, this.cursorPosition);
             this.currentGameplayState = GameplayState.LinesClearing;
 
-            //TODO: Lockdown audio
+            this.placeSound.play();
         }
 
         let down = new Phaser.Math.Vector2(this.cursorPosition.x, this.cursorPosition.y + 1);
@@ -499,12 +520,12 @@ export class Tetris extends BaseScene
             if(linesClearedCount == 4)
             {
                 this.linesClearedDelta -= 8;
-                //TODO: Tetris Sound
+                this.tetrisSound.play();
             }
             else
             {
                 this.linesClearedDelta -= linesClearedCount;
-                //TODO: Line clear sound
+                this.lineClearSound.play();
             }
         }
 
@@ -545,7 +566,7 @@ export class Tetris extends BaseScene
         {
             this.fallSpeed = this.fallSpeeds[this.level];
             this.linesClearedDelta = this.levelGoals[++this.level];
-            //TODO: Audio level up
+            this.levelUpSound.play();
         }
     }
 
