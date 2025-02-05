@@ -1,12 +1,12 @@
-import { Tetromino } from "./tetromino";
+import { Tetris } from "../../scenes/Tetris";
+import { Tetromino, TetrominoTransform } from "./tetromino";
 
 export class Field 
 {
     private fieldLines: number[][];
+    private minoImages: Phaser.GameObjects.Components.Transform[][];
 
     public fieldTopleft: Phaser.Math.Vector2;
-
-    private readonly ghostTetrominoAlphaFactor = 0.25;
 
     private surfaceHeights: number[] = [];
 
@@ -29,6 +29,7 @@ export class Field
         this.height = blockHeight;
         this.surfaceHeights = new Array(this.width).fill(0);
         this.fieldLines = [];
+        this.minoImages = [];
         this.initializeInitialField();
     }
 
@@ -49,6 +50,31 @@ export class Field
         {
             this.fieldLines.splice(fullLines[i], 1);
             this.addNewLine();
+
+            let removed = this.minoImages.splice(fullLines[i], 1);
+            this.addNewLineImages();
+
+            for(let i = 0; i < removed.length; ++i)
+            {
+                for(let j = 0; j < removed[i].length; ++j)
+                {
+                    if('destroy' in removed[i][j])
+                    {
+                        (<any>removed[i][j]).destroy();
+                    }
+                }
+            }
+        }        
+
+        for(let i = 0; i < this.minoImages.length; ++i) 
+        {
+            for(let j = 0; j < this.minoImages[i].length; ++j)
+            {
+                if(this.minoImages[i][j] !== null)
+                {
+                    this.minoImages[i][j].setY(this.minoImages[i][j].y + 32 * Tetris.minoScale * fullLines.length)
+                }
+            }
         }
 
         if(fullLines.length > 0)
@@ -88,8 +114,6 @@ export class Field
         if(this.isTetrominoInsertableAt(tetromino, point))
         {
             this.setMinos(tetromino, point);
-
-            console.log(this.fieldLines);
             return true;
         }
         return false;
@@ -137,13 +161,20 @@ export class Field
         for(let i = 0; i < this.height; ++i)
         {
             this.addNewLine();
+            this.addNewLineImages();
         }
     }
 
     private addNewLine() 
     {
         let newLine: number[] = new Array(this.width).fill(-1);
-        this.fieldLines.push(newLine);
+        this.fieldLines.unshift(newLine);
+    }
+
+    private addNewLineImages()
+    {
+        let newLine: Phaser.GameObjects.Components.Transform[] = new Array(this.width).fill(null);
+        this.minoImages.unshift(newLine);
     }
 
     private updateSurfaceHeights(num: number)
@@ -156,12 +187,16 @@ export class Field
 
     private setMinos(tetromino: Tetromino, insertPosition: Phaser.Math.Vector2)
     {
+        let transform = tetromino.transform;
+        let minos = transform.removeChildren();
+
         for(let i = 0; i < 4; ++i)
         {
             let minoPosition = tetromino.get(i);
             let translatedMino = new Phaser.Math.Vector2(insertPosition.x + minoPosition.x, insertPosition.y + minoPosition.y);
 
             this.fieldLines[translatedMino.y][translatedMino.x] = tetromino.getTetrominoType();
+            this.minoImages[translatedMino.y][translatedMino.x] = <unknown>minos[i] as Phaser.GameObjects.Components.Transform;
 
             this.surfaceHeights[translatedMino.x] = Math.max(this.height - translatedMino.y, this.surfaceHeights[translatedMino.x]);
         }

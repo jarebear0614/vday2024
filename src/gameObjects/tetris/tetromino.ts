@@ -4,35 +4,36 @@ import { TetrominoWallKickData } from "./tetrominoFactory";
 export enum RotationState
 {
     /// The rotation state from the default rotation to the clockwise rotation
-    Kick_0R, 
+    Kick_0R = 'Kick_0R', 
     
     /// The rotation state from the right clockwise rotation state to the default rotation state
-    Kick_R0, 
+    Kick_R0 = 'Kick_R0', 
     
     /// The clockwise rotation state to the state of rotation that is 2 rotations from the default state. That is, either two clock wise rotations or two counter clock wise rotations
-    Kick_R2, 
+    Kick_R2 = 'Kick_R2', 
     
     /// The 2 rotation state to the clockwise rotations tate
-    Kick_2R, 
+    Kick_2R = 'Kick_2R', 
     
     /// The 2 rotation state to the counter clockwise rotation state
-    Kick_2L, 
+    Kick_2L = 'Kick_2L', 
     
     /// The counter clockwise rotation state to the 2 rotation state
-    Kick_L2, 
+    Kick_L2 = 'Kick_L2', 
     
     /// The counter clockwise state to the default rotation state
-    Kick_L0, 
+    Kick_L0 = 'Kick_L0', 
     
     /// The default rotation state moving to the counter clockwise rotation state. That is, one counter clockwise from the default took place
-    Kick_0L
+    Kick_0L = 'Kick_0L'
 }
 
 export class TetrominoTransform implements Phaser.GameObjects.Components.Transform
 {
     scene: Phaser.Scene;
     tetromino: Tetromino;
-    group: Phaser.Physics.Arcade.StaticGroup;    
+    group: Phaser.Physics.Arcade.StaticGroup | null;    
+    additionalScale: number = 1.0;
 
     hasTransformComponent: boolean;
     x: number;
@@ -45,19 +46,24 @@ export class TetrominoTransform implements Phaser.GameObjects.Components.Transfo
     angle: number;
     rotation: number;
 
-    constructor(scene: Phaser.Scene, tetromino: Tetromino, inX?: number, inY?: number)
+    constructor(scene: Phaser.Scene, tetromino: Tetromino, inX?: number, inY?: number, isGhost: boolean = false, isVisible: boolean = false, additionalScale: number = 1.0)
     {
         this.scene = scene;
         this.tetromino = tetromino;
         this.x = inX ?? 0;
         this.y = inY ?? 0;
+        this.additionalScale = additionalScale;
 
         this.group = this.scene.physics.add.staticGroup();
         
         for(let i = 0; i < 4; ++i)
         {
             let mino = this.tetromino.get(i);
-            this.group.create(mino.x * 32 * Tetris.minoScale, mino.y * 32 * Tetris.minoScale, 'minos', tetromino.getTetrominoType()).setScale(Tetris.minoScale).setOrigin(0, 0);
+            this.group.create(mino.x * 32 * Tetris.minoScale, mino.y * 32 * Tetris.minoScale, 'minos', tetromino.getTetrominoType())
+                .setScale(Tetris.minoScale * additionalScale)
+                .setOrigin(0, 0)
+                .setAlpha(isGhost ? Tetris.ghostTetrominoAlphaFactor : 1)
+                .setVisible(isVisible);
         }
 
         this.setPosition(this.x, this.y);
@@ -67,12 +73,15 @@ export class TetrominoTransform implements Phaser.GameObjects.Components.Transfo
         this.x = x ?? 0;
         this.y = y ?? this.x;
 
-        let childrenArray = this.group.children.getArray();
-        for(let i = 0; i < childrenArray.length; ++i) 
+        if(this.group)
         {
-            let child = <unknown>childrenArray[i] as Phaser.GameObjects.Components.Transform;
-            let mino = this.tetromino.get(i);
-            child.setPosition(this.x + mino.x * 32 * Tetris.minoScale, this.y + mino.y * 32 * Tetris.minoScale);
+            let childrenArray = this.group.children.getArray();
+            for(let i = 0; i < childrenArray.length; ++i) 
+            {
+                let child = <unknown>childrenArray[i] as Phaser.GameObjects.Components.Transform;
+                let mino = this.tetromino.get(i);
+                child.setPosition(this.x + mino.x * 32 * Tetris.minoScale * this.additionalScale, this.y + mino.y * 32 * Tetris.minoScale * this.additionalScale);
+            }
         }
 
         return this;
@@ -95,12 +104,10 @@ export class TetrominoTransform implements Phaser.GameObjects.Components.Transfo
     }
     setX(value?: number): this {
         this.x = value ?? 0;
-        this.group.setX(this.x);
         return this;
     }
     setY(value?: number): this {
         this.y = value ?? 0;
-        this.group.setY(this.y);
         return this;
     }
     setZ(value?: number): this {
@@ -121,6 +128,29 @@ export class TetrominoTransform implements Phaser.GameObjects.Components.Transfo
     getParentRotation(): number {
         throw new Error("Method not implemented.");
     }
+
+    removeChildren() : Phaser.GameObjects.GameObject[]
+    {
+        if(this.group)
+        {
+            return this.group.children.getArray();
+        }
+
+        return [];
+    }
+
+    setVisible(visible: boolean) 
+    {
+        this.group?.setVisible(visible);
+    }
+
+    destroy() 
+    {
+        if(this.group)
+        {
+            this.group.clear(true, true);
+        }
+    }
 }
 
 export class Tetromino
@@ -136,6 +166,8 @@ export class Tetromino
     private tetrominoType: number;
 
     public transform: TetrominoTransform;
+
+    public ghostTransform: TetrominoTransform;
 
     constructor(scene: Phaser.Scene, rotationMatrix: Phaser.Math.Vector2[][], wallKickData: TetrominoWallKickData, type: number)
     {
@@ -220,6 +252,25 @@ export class Tetromino
 
     public getRotationState()
     {
-        return this.currentRotationState;
+        return this.currentRotationState.toString();
+    }
+
+    public createGhostTransform(scene: Phaser.Scene, inX: number, inY: number)
+    {
+        this.ghostTransform = new TetrominoTransform(scene, this, inX, inY, true, true);
+    }
+
+    public setPosition(inX: number, inY: number, ghostX: number, ghostY: number)
+    {
+        this.transform.setPosition(inX, inY);
+        this.ghostTransform.setPosition(ghostX, ghostY);
+    }
+
+    public destroyGhost()
+    {
+        if(this.ghostTransform)
+        {
+            this.ghostTransform.destroy();
+        }
     }
 }
