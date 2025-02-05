@@ -37,7 +37,7 @@ export class TetrominoFactory
     constructor(scene: Phaser.Scene)
     {
         this.scene = scene;
-        this.bag = new RandomBag(6);
+        this.bag = new RandomBag(7);
 
         TetrominoFactory.tetrominoNames =  ['o', 'i', 't', 'l', 'j', 's', 'z'];
         TetrominoFactory.tetrominoMapping = new TetrominoMapping();

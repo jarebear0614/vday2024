@@ -14,7 +14,9 @@ export class RandomBag
 
     public next() : number
     {
+
         let next = Math.round(Math.random() * (this.bag.length - 1)) + 0;
+
         let ret = this.bag[next];
 
         this.bag.splice(next, 1);
