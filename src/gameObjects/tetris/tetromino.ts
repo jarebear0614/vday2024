@@ -146,7 +146,7 @@ export class TetrominoTransform implements Phaser.GameObjects.Components.Transfo
 
     destroy() 
     {
-        if(this.group)
+        if(this.group && this.group.children)
         {
             this.group.clear(true, true);
         }
@@ -263,7 +263,11 @@ export class Tetromino
     public setPosition(inX: number, inY: number, ghostX: number, ghostY: number)
     {
         this.transform.setPosition(inX, inY);
-        this.ghostTransform.setPosition(ghostX, ghostY);
+
+        if(this.ghostTransform)
+        {
+            this.ghostTransform.setPosition(ghostX, ghostY);
+        }
     }
 
     public destroyGhost()

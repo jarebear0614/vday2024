@@ -193,14 +193,7 @@ export class Game extends BaseScene
 
         if(!this.isPreviousInteractKeyDown && this.isInteractKeyDown)
         {
-            if(this.currentInteractiveObject !== null)
-            {
-                this.showDialog(this.currentInteractiveObject.messages, {
-                    title: this.currentInteractiveObject.title,
-                    endAction: this.currentInteractiveObject.endAction,
-                    sourceCharacter: this.currentInteractiveObject.sourceCharacter
-                });
-            }
+            this.triggrInteractiveEvent(this.currentInteractiveObject);
         }
 
         let touching = !this.player.body.body.touching.none;
@@ -247,18 +240,20 @@ export class Game extends BaseScene
         for (const transportTile of transportObjects) {
             const { x, y, width, height, properties } = transportTile;
 
-            let gameState = new GameState();
+            let tilemap : string | undefined;
+            let spawnX: number | undefined;
+            let spawnY: number | undefined;
 
             for (const property of properties) {
                 switch (property.name) {
                     case 'to_map':
-                        gameState.tilemap = property.value;
+                        tilemap = property.value;
                         break;
                     case 'map_spawn_x':
-                        gameState.spawnX = parseInt(property.value);
+                        spawnX = parseInt(property.value);
                         break;
                     case 'map_spawn_y':
-                        gameState.spawnY = parseInt(property.value);
+                        spawnY = parseInt(property.value);
                         break;
                 }
             }
@@ -268,14 +263,18 @@ export class Game extends BaseScene
             Align.scaleToGameWidth(sprite, TILE_SCALE, this);
 
             let collider = this.physics.add.overlap(this.player.getBody(), sprite, () => {
+                let gameState: GameState = new GameState();
+                gameState.tilemap = tilemap;
+                gameState.spawnX = spawnX;
+                gameState.spawnY = spawnY;
+                gameState.fromScene = this.scene.key;
+
                 this.camera.fadeOut(300);
 
                 this.physics.world.removeCollider(collider);
 
                 this.time.delayedCall(300, () => {
-                    this.scene.restart({
-                        gameState: gameState
-                    });
+                    this.scene.restart({ gameState: gameState });
                 });
             });
         }
@@ -290,12 +289,16 @@ export class Game extends BaseScene
             const {x, y, width, height, properties } = interactive;
 
             let message: string = '';
+            let type: string = interactive.type;
 
-            for (const property of properties) {
-                switch (property.name) {
-                    case 'message':
-                        message = property.value;
-                        break;
+            if(properties)
+            {
+                for (const property of properties) {
+                    switch (property.name) {
+                        case 'message':
+                            message = property.value;
+                            break;
+                    }
                 }
             }
 
@@ -305,7 +308,7 @@ export class Game extends BaseScene
 
             this.physics.add.overlap(this.player.body, sprite, () => 
             {
-                this.currentInteractiveObject = new Interactive([message]);
+                this.currentInteractiveObject = new Interactive([message], type);
             });
         }
     }
@@ -376,7 +379,7 @@ export class Game extends BaseScene
 
                     if(ev !== undefined)
                     {
-                        this.currentInteractiveObject = new Interactive(ev.dialog, {
+                        this.currentInteractiveObject = new Interactive(ev.dialog, "message", {
                             title: name,
                             endAction: ev.onEnd,
                             sourceCharacter: newCharacter
@@ -454,14 +457,7 @@ export class Game extends BaseScene
         
         interactButton.on('pointerup', () => 
         {
-            if(this.currentInteractiveObject !== null)
-            {
-                this.showDialog(this.currentInteractiveObject.messages, {
-                    title: this.currentInteractiveObject.title,
-                    endAction: this.currentInteractiveObject.endAction,
-                    sourceCharacter: this.currentInteractiveObject.sourceCharacter
-                });
-            }
+            this.triggrInteractiveEvent(this.currentInteractiveObject);
         });
 
         this.input.on('gameobjectover', (pointer: Object, gameObject: Phaser.GameObjects.GameObject) => {
@@ -515,6 +511,30 @@ export class Game extends BaseScene
         });
 
         this.interactKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+    }
+
+    private triggrInteractiveEvent(interactiveObject: Interactive | null) {
+        if (interactiveObject !== null) {
+            switch (interactiveObject.type) {
+                case "sign":
+                    this.showDialog(interactiveObject.messages, {
+                        title: interactiveObject.title,
+                        endAction: interactiveObject.endAction,
+                        sourceCharacter: interactiveObject.sourceCharacter
+                    });
+                    break;
+
+                case "tetris":
+                    this.gameState.fromScene = this.scene.key;
+                    this.gameState.spawnX = 19;
+                    this.gameState.spawnY = 2;
+
+                    this.scene.start("Tetris", {
+                        gameState: this.gameState
+                    });
+                    break;
+            }
+        }
     }
 
     private showDialog(messages: string[], config?: InteractiveConfig)

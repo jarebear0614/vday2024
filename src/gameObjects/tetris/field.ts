@@ -151,8 +151,11 @@ export class Field
 
     public resetField()
     {
+        this.destroyMinos();
+
         this.surfaceHeights = new Array(this.width).fill(0);
         this.fieldLines = [];
+        this.minoImages = [];
         this.initializeInitialField();
     }
 
@@ -218,5 +221,19 @@ export class Field
     private isLockOut(): boolean 
     {
         return this.containsMinos(0) || this.containsMinos(1);
+    }
+
+    private destroyMinos()
+    {
+        for(let i = 0; i < this.minoImages.length; ++i)
+        {
+            for(let j = 0; j < this.minoImages[j].length; ++j)
+            {
+                if(this.minoImages[i][j])
+                {
+                    (<any>this.minoImages[i][j]).destroy();
+                }
+            }
+        }
     }
 }

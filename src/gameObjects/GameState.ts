@@ -5,4 +5,8 @@ export class GameState
     spawnX?: number = 35;
 
     spawnY?: number = 45;
+
+    tetrisScore?: number = 0;
+
+    fromScene?: string = '';
 }

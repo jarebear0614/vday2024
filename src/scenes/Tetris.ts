@@ -1,3 +1,4 @@
+import { GameState } from "../gameObjects/GameState";
 import { Field } from "../gameObjects/tetris/field";
 import { Tetromino, TetrominoTransform } from "../gameObjects/tetris/tetromino";
 import { TetrominoFactory } from "../gameObjects/tetris/tetrominoFactory";
@@ -8,6 +9,8 @@ import WebFont from 'webfontloader';
 
 export enum GameplayState
 {
+    Menu, 
+
     PlayerStart,
 
     DemoStart,
@@ -27,54 +30,33 @@ export enum GameplayState
 
 export class Tetris extends BaseScene
 {
+    private gameState: GameState = new GameState();
+
     private fieldWidth: number = 10;
-
     private fieldHeight: number = 20;
-
     private currentTetromino: Tetromino;
-
     private currentHoldTetromino: Tetromino | null;
-
     private nextQueue: Tetromino[];
-
     private usedHold: boolean;
-
     private factory: TetrominoFactory;
-
     private field: Field;
-
     private fallSpeed: number;
-
     private fallSpeedDelta: number;
-
     private fallSpeeds: number[];
-
     private levelGoals: number[];
-
     private level: number;
-
     private linesClearedDelta: number = 0;
-
-    private score: number;
-
+    private score: number = 0;
+    private highScore: number = 0;
     private readonly lockdownTime: number = 150;
-
     private lockdownTimer: number = this.lockdownTime;
-
-    private cursorPosition: Phaser.Math.Vector2;
-
     private readonly cursorStart: Phaser.Math.Vector2 = new Phaser.Math.Vector2(5, 1);
-
+    private cursorPosition: Phaser.Math.Vector2 = this.cursorStart;
     private inputFromUpdate: boolean = false;
-
     private buttonClicks: boolean[] = new Array(4).fill(false);
-
     private currentGameplayState: GameplayState;
-
-    public static minoScale: number = 1;
-    
+    public static minoScale: number = 1;    
     private scaledMinoWidth: number = 32;
-
     private nextTopLeft: Phaser.Math.Vector2 = Phaser.Math.Vector2.ZERO;
     private holdTopLeft: Phaser.Math.Vector2 = Phaser.Math.Vector2.ZERO;
     private nextHoldBoxWidth: number = 32;
@@ -89,7 +71,6 @@ export class Tetris extends BaseScene
     private levelText: Phaser.GameObjects.Text;
 
     private timeBetweenInput: number = 75;
-
     private currentTimeBetweenInput: number = this.timeBetweenInput;    
 
     public static readonly ghostTetrominoAlphaFactor = 0.25;
@@ -105,6 +86,8 @@ export class Tetris extends BaseScene
     private levelUpSound: Phaser.Sound.BaseSound;
     private music: Phaser.Sound.BaseSound;
 
+    private menuGroup: Phaser.Physics.Arcade.StaticGroup;
+
     //text flasher
 
     constructor()
@@ -112,21 +95,26 @@ export class Tetris extends BaseScene
         super('Tetris');
     }
 
-    init()
+    init(data: any)
     {
         this.cameras.main.fadeOut(1);
+
+        if(data && data.gameState && data.gameState instanceof GameState) 
+        {
+            this.gameState = data.gameState;
+        }
 
         this.field = new Field(new Phaser.Math.Vector2(0, 0), this.fieldWidth, this.fieldHeight);
         this.factory = new TetrominoFactory(this);
         this.nextQueue = [];
-        this.currentGameplayState = GameplayState.PlayerStart;
+        this.currentGameplayState = GameplayState.Menu;
         this.level = 0;
 
         this.fallSpeed = 0;
         this.fallSpeedDelta = this.fallSpeed;
 
         this.levelGoals = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75];
-        this.fallSpeeds = [1200, 1100, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 25, 10];
+        this.fallSpeeds = [10, 1100, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 25, 10];
 
         this.linesClearedDelta = this.levelGoals[this.level];
         this.fallSpeed = this.fallSpeeds[this.level];
@@ -173,6 +161,75 @@ export class Tetris extends BaseScene
         this.createFont();
         this.configureInput();
         this.setUpField();       
+
+        this.textActiveFunctions.push(() => {
+            console.log(this.menuGroup);
+            this.menuGroup = this.physics.add.staticGroup();
+
+            let modal = this.add.rectangle(0, 0, this.getGameWidth(), this.getGameHeight(), 0x000000, 0.45).setOrigin(0, 0);
+
+            let rectWidth = this.getGameWidth() * 0.45;
+            let rectHeight = this.getGameHeight() * 0.05;
+            let playRect = this.add.rectangle(this.getGameWidth() / 2 - rectWidth / 2, this.getGameHeight() * 0.45, rectWidth, rectHeight, 0x999999)
+                                    .setOrigin(0, 0)
+                                    .setStrokeStyle(3, 0x000000)
+                                    .setInteractive();
+
+            let playText = this.add.text(0, 0, 'play', { fontFamily: 'quartz', fontSize: 24, color: '#ffffff' })
+            playText.setPosition(playRect.x + playRect.displayWidth / 2 - playText.displayWidth / 2, playRect.y + playRect.displayHeight / 2 - playText.displayHeight / 2,);
+
+            let quitRect = this.add.rectangle(this.getGameWidth() / 2 - rectWidth / 2, playRect.y + playRect.displayHeight + 10 * Tetris.minoScale, rectWidth, rectHeight, 0x999999)
+                                    .setOrigin(0, 0)
+                                    .setStrokeStyle(3, 0x000000)
+                                    .setInteractive();
+
+            let quitText = this.add.text(0, 0, 'quit', { fontFamily: 'quartz', fontSize: 24, color: '#ffffff' })
+            quitText.setPosition(quitRect.x + quitRect.displayWidth / 2 - playText.displayWidth / 2, quitRect.y + quitRect.displayHeight / 2 - quitText.displayHeight / 2,);
+            
+            playRect.addListener('pointerover', () =>
+            {
+                playRect.fillColor = 0x777777;
+            });
+
+            playRect.addListener('pointerout', () =>
+            {
+                playRect.fillColor = 0x999999;
+            });
+
+            playRect.addListener('pointerdown', () =>
+            {
+                this.currentGameplayState = GameplayState.PlayerStart;
+                this.menuGroup.setVisible(false);
+            });
+
+            quitRect.addListener('pointerover', () =>
+            {
+                quitRect.fillColor = 0x777777;
+            });
+
+            quitRect.addListener('pointerout', () =>
+            {
+                quitRect.fillColor = 0x999999;
+            });
+
+            quitRect.addListener('pointerdown', () =>
+            {
+                this.gameState.tetrisScore = this.highScore;
+                this.gameState.fromScene = this.scene.key;
+
+                this.destroy();
+
+                this.scene.start('Game', {
+                    gameState: this.gameState
+                });
+            });
+
+            this.menuGroup.add(modal, false);
+            this.menuGroup.add(playRect, false);
+            this.menuGroup.add(playText, false);
+            this.menuGroup.add(quitRect, false);
+            this.menuGroup.add(quitText, false);
+        });
         
         this.lineClearSound = this.sound.add('lineclear', { loop: false });
         this.placeSound = this.sound.add('place', { loop: false });
@@ -189,6 +246,8 @@ export class Tetris extends BaseScene
 
         switch(this.currentGameplayState)
         {
+            case GameplayState.Menu:
+                break;
             case GameplayState.PlayerStart:
                 this.setupGame();
                 this.currentGameplayState = GameplayState.InitializeTetromino;
@@ -223,6 +282,36 @@ export class Tetris extends BaseScene
                 break;
             case GameplayState.Paused:
                 break;
+        }
+    }
+
+    destroy()
+    {
+        if(this.nextTetrominoTransform)
+        {
+            this.nextTetrominoTransform.destroy();
+        }
+
+        if(this.holdTetrominoTransform)
+        {
+            this.holdTetrominoTransform.destroy();
+        }
+
+        this.field.resetField();
+        this.textActiveFunctions = [];
+
+        this.placeSound.destroy();
+        this.lineClearSound.destroy();
+        this.tetrisSound.destroy();
+        this.levelUpSound.destroy();
+        this.music.stop();
+        this.music.destroy();
+
+        if(this.menuGroup && this.menuGroup.children)
+        {
+            console.log('destroy menu group');
+            this.menuGroup.clear();
+            this.menuGroup = null!;
         }
     }
 
@@ -299,6 +388,7 @@ export class Tetris extends BaseScene
         this.field.fieldTopleft = new Phaser.Math.Vector2(fieldTopLeftX, fieldTopLeftY);
         
         this.nextQueue.push(this.factory.generateRandomTetromino());
+        this.nextQueue[0].transform.setVisible(false);
 
         if(this.nextQueue[0].getTetrominoType() == 3)
         {
@@ -311,7 +401,7 @@ export class Tetris extends BaseScene
         let logoScale = rectangleWidth / this.getGameWidth();
 
         logo.setScale(logoScale, logoScale);
-        logo.setX(fieldTopLeftX + rectangleWidth / 2 );
+        logo.setX(this.getGameWidth() / 2  );
         logo.setY(this.getGameHeight() * .10);
 
         this.textActiveFunctions.push(() =>
@@ -495,7 +585,9 @@ export class Tetris extends BaseScene
 
         this.currentTetromino = this.nextQueue.shift()!;
         this.currentTetromino.transform.setVisible(true);
+
         this.nextQueue.push(this.factory.generateRandomTetromino());
+        this.nextQueue[0].transform.setVisible(false);
 
         if(this.nextTetrominoTransform)
         {
@@ -505,6 +597,17 @@ export class Tetris extends BaseScene
         this.nextTetrominoTransform = this.boxTetrominoTransform(this.nextQueue[0], this.nextTopLeft);
 
         this.cursorPosition = new Phaser.Math.Vector2(this.cursorStart.x, this.cursorStart.y);
+        
+        if(this.currentTetromino)
+        {
+            let dropPosition = this.getDropTetrominoPosition();
+
+            this.currentTetromino.setPosition(
+                this.field.fieldTopleft.x + this.cursorPosition.x * 32 * Tetris.minoScale, 
+                this.field.fieldTopleft.y + this.cursorPosition.y * 32 * Tetris.minoScale,
+                this.field.fieldTopleft.x + dropPosition.x * 32 * Tetris.minoScale, 
+                this.field.fieldTopleft.y + dropPosition.y * 32 * Tetris.minoScale);
+        }
 
         let dropPosition = this.getDropTetrominoPosition();
         this.currentTetromino.createGhostTransform(this, this.field.fieldTopleft.x + dropPosition.x * 32 * Tetris.minoScale, this.field.fieldTopleft.y + dropPosition.y * 32 * Tetris.minoScale);
@@ -597,7 +700,15 @@ export class Tetris extends BaseScene
 
     public handleGameOverScreen()
     {
-        //TODO: Handle game over
+        this.menuGroup.setVisible(true);
+        this.menuGroup.setDepth(100000, 1);
+
+        this.currentGameplayState = GameplayState.Menu;
+
+        if(this.score >= this.highScore)
+        {
+            this.highScore = this.score;
+        }
     }
 
     public setupGame()
@@ -611,6 +722,16 @@ export class Tetris extends BaseScene
 
         //this.nextQueue = [];
         //this.nextQueue.push(this.factory.generateRandomTetromino());
+
+        if(this.currentTetromino)
+        {
+            this.currentTetromino.transform.destroy();
+        }
+
+        if(this.holdTetrominoTransform)
+        {
+            this.holdTetrominoTransform.destroy();
+        }
 
         this.currentHoldTetromino = null;
         this.usedHold = false;
@@ -725,7 +846,7 @@ export class Tetris extends BaseScene
 
     private holdTetromino()
     {
-        if(!this.usedHold)
+        if(!this.usedHold && this.currentGameplayState == GameplayState.TetrominoFalling)
         {
             this.currentTetromino.destroyGhost();
 

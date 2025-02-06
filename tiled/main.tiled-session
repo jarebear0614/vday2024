@@ -89,24 +89,28 @@
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx": {
             "expandedObjectLayers": [
+                11,
+                10,
                 12
             ],
-            "scale": 0.5,
-            "selectedLayer": 8,
+            "scale": 2,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 299,
-                "y": 560
+                "x": 521.75,
+                "y": 683
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx": {
             "expandedObjectLayers": [
-                9
+                9,
+                8,
+                7
             ],
             "scale": 2,
-            "selectedLayer": 8,
+            "selectedLayer": 7,
             "viewCenter": {
                 "x": 320.25,
-                "y": 159.75
+                "y": 159.5
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/characters.tsx": {
