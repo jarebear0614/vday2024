@@ -7,7 +7,6 @@ export enum EndAction
 
 export class CharacterEventDialog
 {
-
     eventKey: number = 0;
 
     dialog: string[] = [];

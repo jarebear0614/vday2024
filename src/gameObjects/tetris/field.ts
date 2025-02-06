@@ -1,5 +1,5 @@
 import { Tetris } from "../../scenes/Tetris";
-import { Tetromino, TetrominoTransform } from "./tetromino";
+import { Tetromino } from "./tetromino";
 
 export class Field 
 {

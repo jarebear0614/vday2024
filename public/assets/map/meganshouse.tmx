@@ -168,17 +168,18 @@
     <property name="dialog">{
   &quot;events&quot;: [
     {
-      &quot;eventKey&quot;: &quot;0&quot;,
+      &quot;eventKey&quot;: 0,
       &quot;dialog&quot;: [
         &quot;Meow&quot;,
         &quot;Meow Meow&quot;
       ],
-      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+      &quot;onEnd&quot;: &quot;nop&quot;
     }
   ]
 }</property>
-    <property name="eventKeyEnd" type="int" value="2"/>
+    <property name="eventKeyEnd" type="int" value="-1"/>
     <property name="eventKeyTrigger" type="int" value="0"/>
+    <property name="eventName" value="mittens"/>
     <property name="hairFrame" type="int" value="2"/>
     <property name="movement">{
   &quot;type&quot;: &quot;random&quot;
@@ -194,7 +195,7 @@
     <property name="dialog">{
   &quot;events&quot;: [
     {
-      &quot;eventKey&quot;: &quot;0&quot;,
+      &quot;eventKey&quot;: 0,
       &quot;dialog&quot;: [
         &quot;Meow&quot;,
         &quot;I'm a huge pain in the butt&quot;
@@ -203,8 +204,9 @@
     }
   ]
 }</property>
-    <property name="eventKeyEnd" type="int" value="2"/>
+    <property name="eventKeyEnd" type="int" value="-1"/>
     <property name="eventKeyTrigger" type="int" value="0"/>
+    <property name="eventName" value="reese"/>
     <property name="hairFrame" type="int" value="2"/>
     <property name="movement">{
   &quot;type&quot;: &quot;random&quot;

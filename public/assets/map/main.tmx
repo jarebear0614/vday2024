@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="60" height="60" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="26">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="60" height="60" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="29">
  <editorsettings>
   <export target="main.tmj" format="json"/>
  </editorsettings>
@@ -436,6 +436,48 @@
 }</property>
     <property name="eventKeyEnd" type="int" value="2"/>
     <property name="eventKeyTrigger" type="int" value="0"/>
+    <property name="eventName" value="intro"/>
+    <property name="hairFrame" type="int" value="22"/>
+    <property name="movement">{
+  &quot;type&quot;: &quot;waypoint&quot;,
+  &quot;loop&quot;: true,
+  &quot;waypoints&quot;: [
+    {&quot;x&quot;: 33, &quot;y&quot;: 46 }, 
+    {&quot;x&quot;: 37, &quot;y&quot;: 46 },
+    {&quot;x&quot;: 37, &quot;y&quot;: 50 },
+    {&quot;x&quot;: 33, &quot;y&quot;: 50 }
+  ]
+}</property>
+    <property name="pantsFrame" type="int" value="3"/>
+    <property name="shirtFrame" type="int" value="286"/>
+    <property name="shoesFrame" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="26" name="Jared" type="character" gid="1773" x="528" y="800" width="16" height="16">
+   <properties>
+    <property name="bodyFrame" type="int" value="0"/>
+    <property name="dialog">{
+  &quot;events&quot;: [
+    {
+      &quot;eventKey&quot;: 0,
+      &quot;dialog&quot;: [
+        &quot;Hello&quot;,
+        &quot;My Name is Jared&quot;
+      ],
+      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+    },
+    {
+      &quot;eventKey&quot;: 1,
+      &quot;dialog&quot;: [
+        &quot;Welcome to the game&quot;
+      ],
+      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+    }
+  ]
+}</property>
+    <property name="eventKeyEnd" type="int" value="2"/>
+    <property name="eventKeyTrigger" type="int" value="0"/>
+    <property name="eventName" value="intro"/>
     <property name="hairFrame" type="int" value="22"/>
     <property name="movement">{
   &quot;type&quot;: &quot;waypoint&quot;,
@@ -458,7 +500,7 @@
     <property name="dialog">{
   &quot;events&quot;: [
     {
-      &quot;eventKey&quot;: &quot;2&quot;,
+      &quot;eventKey&quot;: 2,
       &quot;dialog&quot;: [
         &quot;You made it&quot;,
         &quot;I promise I won't push you in&quot;
@@ -469,6 +511,48 @@
 }</property>
     <property name="eventKeyEnd" type="int" value="3"/>
     <property name="eventKeyTrigger" type="int" value="2"/>
+    <property name="eventName" value="intro"/>
+    <property name="hairFrame" type="int" value="22"/>
+    <property name="movement">{
+  &quot;type&quot;: &quot;random&quot;
+}</property>
+    <property name="pantsFrame" type="int" value="3"/>
+    <property name="shirtFrame" type="int" value="286"/>
+    <property name="shoesFrame" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="27" name="Bob" type="character" gid="1773" x="704" y="800" width="16" height="16">
+   <properties>
+    <property name="bodyFrame" type="int" value="0"/>
+    <property name="dialog">{
+  &quot;events&quot;: [
+    {
+      &quot;eventKey&quot;: 0,
+      &quot;dialog&quot;: [
+        &quot;Hello&quot;,
+        &quot;My Name is Bob&quot;
+      ],
+      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+    },
+    {
+      &quot;eventKey&quot;: 1,
+      &quot;dialog&quot;: [
+        &quot;Find my monkey&quot;
+      ],
+      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+    },
+    {
+      &quot;eventKey&quot;: 2,
+      &quot;dialog&quot;: [
+        &quot;Please I'm desperate&quot;
+      ],
+      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+    }
+  ]
+}</property>
+    <property name="eventKeyEnd" type="int" value="3"/>
+    <property name="eventKeyTrigger" type="int" value="0"/>
+    <property name="eventName" value="bobsquest"/>
     <property name="hairFrame" type="int" value="22"/>
     <property name="movement">{
   &quot;type&quot;: &quot;random&quot;

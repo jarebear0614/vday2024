@@ -267,17 +267,22 @@
                         {
                          "name":"dialog",
                          "type":"string",
-                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": \"0\",\n      \"dialog\": [\n        \"Meow\",\n        \"Meow Meow\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    }\n  ]\n}"
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"Meow\",\n        \"Meow Meow\"\n      ],\n      \"onEnd\": \"nop\"\n    }\n  ]\n}"
                         }, 
                         {
                          "name":"eventKeyEnd",
                          "type":"int",
-                         "value":2
+                         "value":-1
                         }, 
                         {
                          "name":"eventKeyTrigger",
                          "type":"int",
                          "value":0
+                        }, 
+                        {
+                         "name":"eventName",
+                         "type":"string",
+                         "value":"mittens"
                         }, 
                         {
                          "name":"hairFrame",
@@ -325,17 +330,22 @@
                         {
                          "name":"dialog",
                          "type":"string",
-                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": \"0\",\n      \"dialog\": [\n        \"Meow\",\n        \"I'm a huge pain in the butt\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    }\n  ]\n}"
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"Meow\",\n        \"I'm a huge pain in the butt\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    }\n  ]\n}"
                         }, 
                         {
                          "name":"eventKeyEnd",
                          "type":"int",
-                         "value":2
+                         "value":-1
                         }, 
                         {
                          "name":"eventKeyTrigger",
                          "type":"int",
                          "value":0
+                        }, 
+                        {
+                         "name":"eventName",
+                         "type":"string",
+                         "value":"reese"
                         }, 
                         {
                          "name":"hairFrame",

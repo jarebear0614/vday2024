@@ -10,6 +10,7 @@ import { Interactive, InteractiveConfig } from '../gameObjects/interactive';
 import { CharacterEvent, CharacterEventUtility, EndAction } from '../gameObjects/dialog';
 import { RandomInRadiusCharacterMovement, CharacterMovementConfig, WaypointCharacterMovement, NopCharacterMovement } from '../gameObjects/CharacterMovementComponents';
 import { ICharacterMovement } from '../gameObjects/ICharacterMovement';
+import { GameEvent, GameEventManager, GameEvents } from '../gameObjects/GameEvent';
 
 export class Game extends BaseScene
 {
@@ -59,7 +60,9 @@ export class Game extends BaseScene
 
     eventKey: number = 0;
 
-    characterEvents: Character[] = [];
+    //characterEvents: Character[] = [];
+    gameEvents: GameEvents = {};
+    gameEventManager: GameEventManager = new GameEventManager();
 
     constructor ()
     {
@@ -73,9 +76,10 @@ export class Game extends BaseScene
         if(data && data.gameState && data.gameState instanceof GameState) 
         {
             this.gameState = data.gameState;
+            this.eventKey = this.gameState.eventKey ?? 0;
         }
 
-        this.characterEvents = [];
+        this.gameEvents = {};
         this.currentInteractiveObject = null;
 
         this.load.on('progress', (progress: number) => 
@@ -84,7 +88,6 @@ export class Game extends BaseScene
             {
                 this.cameras.main.fadeIn(300);
             }
-
         });
     }
 
@@ -204,13 +207,10 @@ export class Game extends BaseScene
             this.currentInteractiveObject = null;
         }
 
-        for(let character of this.characterEvents)
+        let events = this.gameEventManager.getCurrentGameEvents();
+        for(let ev of events)
         {
-            if(character.isCreated())
-            {
-                
-                character.update(delta);
-            }
+            ev.update(delta);
         }
     }
 
@@ -316,10 +316,11 @@ export class Game extends BaseScene
     private configureCharacterObjects() 
     {
         let characterObjects = this.map.getObjectLayer('map_character')!.objects;
+        let characters: Character[] = [];
 
         for(const character of characterObjects) 
         {
-            const {x, y, width, height, name, properties } = character;
+            const {x, y, width, height, name, properties, type } = character;
 
             let dialog: CharacterEvent = null!;
             
@@ -328,6 +329,7 @@ export class Game extends BaseScene
             let shirtFrame: number = 0;
             let pantsFrame: number = 0;
             let shoesFrame: number = 0;
+            let eventName: string = 'test';
             let eventKeyTrigger: number = 0;
             let eventKeyEnd: number = 0;
             let movement: CharacterMovementConfig = new CharacterMovementConfig();
@@ -351,6 +353,10 @@ export class Game extends BaseScene
                         break;
                     case 'dialog':
                         dialog = JSON.parse(property.value.toString());
+                        console.log(dialog);
+                        break;
+                    case 'eventName':
+                        eventName = property.value;
                         break;
                     case 'eventKeyTrigger':
                         eventKeyTrigger = parseInt(property.value);
@@ -375,22 +381,48 @@ export class Game extends BaseScene
                 dialog: dialog,
                 player: this.player.getBody(),
                 overlapCallback: () => {
-                    let ev = CharacterEventUtility.findEventByKey(dialog, this.eventKey);
+                    // let ev = CharacterEventUtility.findEventByKey(dialog, this.eventKey);
 
+                    // if(ev !== undefined)
+                    // {
+                    //     this.currentInteractiveObject = new Interactive(ev.dialog, "message", {
+                    //         title: name,
+                    //         endAction: ev.onEnd,
+                    //         sourceCharacter: newCharacter
+                    //     });
+                    // }
+                    let ev = this.gameEventManager.getCurrentEventProgress(eventName);
                     if(ev !== undefined)
                     {
-                        this.currentInteractiveObject = new Interactive(ev.dialog, "message", {
-                            title: name,
-                            endAction: ev.onEnd,
-                            sourceCharacter: newCharacter
-                        });
+                        let messages = CharacterEventUtility.findEventByKey(dialog, ev);
+                        if(messages !== undefined)
+                        {
+                            this.currentInteractiveObject = new Interactive(messages.dialog, type, eventName, {
+                                title: name,
+                                endAction: messages.onEnd,
+                                sourceCharacter: newCharacter
+                            });
+                        }
                     }
                 },
                 movement: this.getMovementFromConfig(x!, y!, movement)
 
             });
 
-            this.characterEvents.push(newCharacter);
+            
+            characters.push(newCharacter);
+            for(let d of dialog.events)
+            {
+                this.gameEventManager.addEvent(eventName, d.eventKey, [newCharacter]);                     
+
+                for(let character of characters)
+                {
+                    if(character.getEventKeyEnd() < eventKeyEnd)
+                    {
+                        this.gameEventManager.addEvent(eventName, d.eventKey, [character]);
+                    }
+                }
+            }      
         }
     }
 
@@ -517,6 +549,7 @@ export class Game extends BaseScene
         if (interactiveObject !== null) {
             switch (interactiveObject.type) {
                 case "sign":
+                case "character":
                     this.showDialog(interactiveObject.messages, {
                         title: interactiveObject.title,
                         endAction: interactiveObject.endAction,
@@ -528,6 +561,7 @@ export class Game extends BaseScene
                     this.gameState.fromScene = this.scene.key;
                     this.gameState.spawnX = 19;
                     this.gameState.spawnY = 2;
+                    this.gameState.eventKey = this.eventKey;
 
                     this.scene.start("Tetris", {
                         gameState: this.gameState
@@ -634,7 +668,8 @@ export class Game extends BaseScene
 
                         if(this.currentInteractiveObject?.endAction == EndAction.incrementEvent) 
                         {
-                            this.incrementEvent();
+                            console.log(this.currentInteractiveObject);
+                            this.incrementEvent(this.currentInteractiveObject.eventName ?? 'test');
                         }
                         this.currentInteractiveObject = null;
                         return;
@@ -661,41 +696,17 @@ export class Game extends BaseScene
 
     private configureEvent() 
     {
-        for(let character of this.characterEvents)
-        {
-            let trigger = character.getEventKeyTrigger();
-            let end = character.getEventKeyEnd();
+        let events = this.gameEventManager.getCurrentGameEvents();
 
-            if(this.eventKey >= trigger && this.eventKey <= end && !character.isCreated())
-            {
-                character.create();
-            }
+        for(let i = 0; i < events.length; ++i)
+        {
+            events[i].activate();
         }
     }
 
-    private incrementEvent() 
+    private incrementEvent(name: string) 
     {
-        this.eventKey++;
-
-        let charactersToRemove: number[] = [];
-
-        for(let i = 0; i < this.characterEvents.length; ++i)
-        {
-            let character = this.characterEvents[i];
-            let end = character.getEventKeyEnd();
-
-            if(this.eventKey >= end && character.isCreated())
-            {
-                character.tearDown();
-                charactersToRemove.push(i);
-            }
-        }
-
-        for(let character of charactersToRemove)
-        {
-            this.characterEvents.splice(character, 1);
-        }
-
+        this.gameEventManager.incrementEvent(name);      
         this.configureEvent();
     }
 }
