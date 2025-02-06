@@ -1,6 +1,7 @@
 import { Field } from "../gameObjects/tetris/field";
 import { Tetromino, TetrominoTransform } from "../gameObjects/tetris/tetromino";
 import { TetrominoFactory } from "../gameObjects/tetris/tetrominoFactory";
+import { Align } from "../util/align";
 import { BaseScene } from "./BaseScene";
 
 import WebFont from 'webfontloader';
@@ -96,6 +97,8 @@ export class Tetris extends BaseScene
     private nextTetrominoTransform: TetrominoTransform;
     private holdTetrominoTransform: TetrominoTransform;
 
+    private textActiveFunctions: Function[] = [];
+
     private placeSound: Phaser.Sound.BaseSound;
     private lineClearSound: Phaser.Sound.BaseSound;
     private tetrisSound: Phaser.Sound.BaseSound;
@@ -144,6 +147,7 @@ export class Tetris extends BaseScene
         this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
         this.load.spritesheet('minos', 'assets/tetris/minos.png', {frameWidth: 32, frameHeight: 32, spacing: 0, margin: 1});
 
+        this.load.image('tetris_logo', 'assets/tetris/logo.png');
         
         this.load.image('input_down', 'assets/tetris/down.png');
         this.load.image('input_left', 'assets/tetris/left.png');
@@ -246,9 +250,13 @@ export class Tetris extends BaseScene
             },
             active: () =>
             {
-                this.add.text(32, 32, 'Start', { fontFamily: 'quartz', fontSize: 80, color: '#ff0000' }).setShadow(2, 2, '#333333', 2, false, true);
                 this.add.text(this.holdTopLeft.x, this.holdTopLeft.y, 'Click here \nto hold piece', { fontFamily: 'quartz', fontSize: 16, color: '#ffffff' })
                 this.add.text(this.nextTopLeft.x, this.nextTopLeft.y, 'next', { fontFamily: 'quartz', fontSize: 16, color: '#ffffff' })
+
+                for(let f of this.textActiveFunctions)
+                {
+                    f();
+                }
             }
         });
     }
@@ -299,24 +307,35 @@ export class Tetris extends BaseScene
 
         this.nextTetrominoTransform = this.boxTetrominoTransform(this.nextQueue[0], this.nextTopLeft);
 
-        this.scoreTopLeft = new Phaser.Math.Vector2(fieldTopLeftX + rectangleWidth + (padding * scale), fieldTopLeftY + this.nextHoldBoxHeight * 2 + (padding * scale) * 2)
-        let scoreRectangle = this.add.rectangle(this.scoreTopLeft.x, this.scoreTopLeft.y, this.nextHoldBoxWidth, this.getGameHeight() * 0.045, 0x333333).setOrigin(0, 0);
-        this.scoreText = this.add.text(this.scoreTopLeft.x, this.scoreTopLeft.y, '0000000', {fontFamily: 'quartz', fontSize: 24, color: '#ffffff'});
-        this.scoreText.setPosition(this.scoreText.x + this.nextHoldBoxWidth / 2 - this.scoreText.displayWidth / 2, this.scoreText.y + (scoreRectangle.displayHeight / 2) - this.scoreText.displayHeight / 2);
+        let logo = this.add.image(0, 0, 'tetris_logo');
+        let logoScale = rectangleWidth / this.getGameWidth();
 
-        this.levelTopLeft = new Phaser.Math.Vector2(fieldTopLeftX + rectangleWidth + (padding * scale) + this.nextHoldBoxWidth - this.getGameWidth() * 0.08, fieldTopLeftY + this.nextHoldBoxHeight * 2 + scoreRectangle.displayHeight + (padding * scale) * 3)
-        let levelRectangle = this.add.rectangle(this.levelTopLeft.x, this.levelTopLeft.y, this.getGameWidth() * 0.08, scoreRectangle.displayHeight, 0x333333).setOrigin(0, 0);
-        let levelInfoText = this.add.text(fieldTopLeftX + rectangleWidth + (padding * scale), this.levelTopLeft.y, 'Level', {fontFamily: 'quartz', fontSize: 24, color: '#ffffff'});
-        levelInfoText.setY(levelInfoText.y + levelRectangle.displayHeight / 2 - levelInfoText.displayHeight / 2);
-        this.levelText = this.add.text(this.levelTopLeft.x, this.levelTopLeft.y, '00', {fontFamily: 'quartz', fontSize: 24, color: '#ffffff'});
-        this.levelText.setPosition(this.levelText.x + levelRectangle.displayWidth / 2 - this.levelText.displayWidth / 2, this.levelText.y + (this.getGameHeight() * 0.045 / 2) - this.levelText.displayHeight / 2);
+        logo.setScale(logoScale, logoScale);
+        logo.setX(fieldTopLeftX + rectangleWidth / 2 );
+        logo.setY(this.getGameHeight() * .10);
 
-        this.linesTopLeft = new Phaser.Math.Vector2(fieldTopLeftX + rectangleWidth + (padding * scale) + this.nextHoldBoxWidth - this.getGameWidth() * 0.08, fieldTopLeftY + this.nextHoldBoxHeight * 2 + scoreRectangle.displayHeight + levelRectangle.displayHeight + (padding * scale) * 4)
-        let linesRectangle = this.add.rectangle(this.linesTopLeft.x, this.linesTopLeft.y, this.getGameWidth() * 0.08, scoreRectangle.displayHeight, 0x333333).setOrigin(0, 0);
-        let linesInfoText = this.add.text(fieldTopLeftX + rectangleWidth + (padding * scale), this.linesTopLeft.y, 'Lines', {fontFamily: 'quartz', fontSize: 24, color: '#ffffff'});
-        linesInfoText.setY(linesInfoText.y + linesRectangle.displayHeight / 2 - levelInfoText.displayHeight / 2);
-        this.linesText = this.add.text(this.linesTopLeft.x, this.linesTopLeft.y, '00', {fontFamily: 'quartz', fontSize: 24, color: '#ffffff'});
-        this.linesText.setPosition(this.linesText.x + linesRectangle.displayWidth / 2 - this.linesText.displayWidth / 2, this.linesText.y + (this.getGameHeight() * 0.045 / 2) - this.linesText.displayHeight / 2);
+        this.textActiveFunctions.push(() =>
+        {
+            this.scoreTopLeft = new Phaser.Math.Vector2(fieldTopLeftX + rectangleWidth + (padding * scale), fieldTopLeftY + this.nextHoldBoxHeight * 2 + (padding * scale) * 2)
+            let scoreRectangle = this.add.rectangle(this.scoreTopLeft.x, this.scoreTopLeft.y, this.nextHoldBoxWidth, this.getGameHeight() * 0.045, 0x333333).setOrigin(0, 0);
+            this.scoreText = this.add.text(0, 0, '0000000', {fontFamily: 'quartz', fontSize: 24, color: '#ffffff'});
+            this.scoreText.setPosition(this.scoreTopLeft.x + this.nextHoldBoxWidth / 2 - this.scoreText.displayWidth / 2, this.scoreTopLeft.y + (scoreRectangle.displayHeight / 2) - this.scoreText.displayHeight / 2);
+    
+            this.levelTopLeft = new Phaser.Math.Vector2(fieldTopLeftX + rectangleWidth + (padding * scale) + this.nextHoldBoxWidth - this.getGameWidth() * 0.08, fieldTopLeftY + this.nextHoldBoxHeight * 2 + scoreRectangle.displayHeight + (padding * scale) * 3)
+            let levelRectangle = this.add.rectangle(this.levelTopLeft.x, this.levelTopLeft.y, this.getGameWidth() * 0.08, scoreRectangle.displayHeight, 0x333333).setOrigin(0, 0);
+            let levelInfoText = this.add.text(fieldTopLeftX + rectangleWidth + (padding * scale), this.levelTopLeft.y, 'Level', {fontFamily: 'quartz', fontSize: 24, color: '#ffffff'});
+            levelInfoText.setY(levelInfoText.y + levelRectangle.displayHeight / 2 - levelInfoText.displayHeight / 2);
+            this.levelText = this.add.text(0, 0, '00', {fontFamily: 'quartz', fontSize: 24, color: '#ffffff'});
+            this.levelText.setPosition(this.levelTopLeft.x + levelRectangle.displayWidth / 2 - this.levelText.displayWidth / 2, this.levelTopLeft.y + (this.getGameHeight() * 0.045 / 2) - this.levelText.displayHeight / 2);
+    
+            this.linesTopLeft = new Phaser.Math.Vector2(fieldTopLeftX + rectangleWidth + (padding * scale) + this.nextHoldBoxWidth - this.getGameWidth() * 0.08, fieldTopLeftY + this.nextHoldBoxHeight * 2 + scoreRectangle.displayHeight + levelRectangle.displayHeight + (padding * scale) * 4)
+            let linesRectangle = this.add.rectangle(this.linesTopLeft.x, this.linesTopLeft.y, this.getGameWidth() * 0.08, scoreRectangle.displayHeight, 0x333333).setOrigin(0, 0);
+            let linesInfoText = this.add.text(fieldTopLeftX + rectangleWidth + (padding * scale), this.linesTopLeft.y, 'Lines', {fontFamily: 'quartz', fontSize: 24, color: '#ffffff'});
+            this.linesText = this.add.text(0, 0, '00', {fontFamily: 'quartz', fontSize: 24, color: '#ffffff'});
+            linesInfoText.setY(linesInfoText.y + linesRectangle.displayHeight / 2 - levelInfoText.displayHeight / 2);
+            this.linesText.setPosition(this.linesTopLeft.x + linesRectangle.displayWidth / 2 - this.linesText.displayWidth / 2, this.linesTopLeft.y + (this.getGameHeight() * 0.045 / 2) - this.linesText.displayHeight / 2);
+            
+        });
     }
 
     private boxTetrominoTransform(tetromino: Tetromino, topLeft: Phaser.Math.Vector2) : TetrominoTransform
@@ -596,9 +615,12 @@ export class Tetris extends BaseScene
         this.currentHoldTetromino = null;
         this.usedHold = false;
 
-        this.scoreText.text = this.score.toString().padStart(7, '0');
-        this.levelText.text = this.level.toString().padStart(2, '0');
-        this.linesText.text = (this.linesClearedDelta < 0 ? 0 : this.linesClearedDelta).toString().padStart(2, '0');
+        if(this.scoreText && this.levelText && this.linesText)
+        {
+            this.scoreText.text = this.score.toString().padStart(7, '0');
+            this.levelText.text = this.level.toString().padStart(2, '0');
+            this.linesText.text = (this.linesClearedDelta < 0 ? 0 : this.linesClearedDelta).toString().padStart(2, '0');
+        }
     }
 
     public levelUp()
