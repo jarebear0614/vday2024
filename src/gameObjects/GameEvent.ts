@@ -16,8 +16,8 @@ export class GameEvent
     activate() 
     {
         for(let character of this.characters)
-        {
-            if(character.getEventKeyTrigger() >= this.key && !character.isCreated())
+        {            
+            if(this.key >= character.getEventKeyTrigger() && this.key < character.getEventKeyEnd() && !character.isCreated())
             {
                 character.create();
             }
@@ -84,7 +84,8 @@ export class GameEventManager
             {
                 for(let character of characters)
                 {
-                    if(existingEvent.characters.indexOf(character) >= 0)
+                    let existingCharacter = existingEvent.characters.find((c) => {return c.config.instance == character.config.instance});
+                    if(!existingCharacter)
                     {
                         existingEvent.characters.push(character);
                     }
@@ -95,6 +96,8 @@ export class GameEventManager
         {
             this.gameEvents[name].push(new GameEvent(name, eventKey, characters));
         }
+
+        console.log(this.gameEvents);
     }
 
     incrementEvent(name: string)
@@ -152,6 +155,20 @@ export class GameEventManager
         }
 
         return events;
+    }
+
+    purgeCharactersFromEvents() 
+    {
+        let events = this.getCurrentGameEvents();
+        for(let ev of events)
+        {
+            for(let c of ev.characters)
+            {
+                c.tearDown();
+            }
+            
+            ev.characters = [];
+        }
     }
 
     private getCurrentEventForName(name: string, progress: number) : GameEvent | undefined

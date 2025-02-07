@@ -10,5 +10,5 @@ export class GameState
 
     fromScene?: string = '';
 
-    eventKey?: number = 0;
+    lyricsPieces: number = 0;
 }

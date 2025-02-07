@@ -58,11 +58,9 @@ export class Game extends BaseScene
 
     currentInteractiveObject: Interactive | null = null;
 
-    eventKey: number = 0;
-
-    //characterEvents: Character[] = [];
-    gameEvents: GameEvents = {};
     gameEventManager: GameEventManager = new GameEventManager();
+
+    lyricCountText: Phaser.GameObjects.Text;
 
     constructor ()
     {
@@ -76,10 +74,8 @@ export class Game extends BaseScene
         if(data && data.gameState && data.gameState instanceof GameState) 
         {
             this.gameState = data.gameState;
-            this.eventKey = this.gameState.eventKey ?? 0;
         }
 
-        this.gameEvents = {};
         this.currentInteractiveObject = null;
 
         this.load.on('progress', (progress: number) => 
@@ -112,7 +108,8 @@ export class Game extends BaseScene
         this.load.image('player', 'assets/player.png');
 
         this.load.spritesheet('characters', 'assets/characters.png', {frameWidth: 16, frameHeight: 16, spacing: 1});
-        
+
+        this.load.image('lyricPieces', 'assets/paper.png');
     }
 
     create ()
@@ -135,7 +132,28 @@ export class Game extends BaseScene
 
         this.player.setPosition(playerXSpawn, playerYSpawn);
 
+        console.log(this.gameEventManager.gameEventProgress);
         this.configureEvent();
+
+        if(this.gameState.fromScene === "Tetris")
+        {
+            if(this.gameEventManager.getCurrentEventProgress("tetris") === 1 && (this.gameState.tetrisScore ?? 0) >= 5000)
+            {
+                this.gameEventManager.incrementEvent("tetris");
+                this.showDialog(['I better go talk to bob, I beat the high score!'], 
+                {
+                    endAction: EndAction.incrementEvent
+                });
+            }
+        }
+
+        let papers = this.add.image(this.getGameWidth() * 0.08, this.getGameHeight() * 0.05, 'lyricPieces').setOrigin(0, 0).setScrollFactor(0);
+        let xText = this.add.text(0, 0, ' x ', {fontFamily: 'Arial', fontSize: 20, color: '#ffffff'}).setOrigin(0, 0).setStroke('#000000', 2).setScrollFactor(0);
+
+        xText.setPosition(papers.x + papers.displayWidth + 7 * this.tilemapScale, papers.y + papers.displayHeight / 2 - xText.displayHeight / 2);
+
+        this.lyricCountText = this.add.text(0, 0, this.gameState.lyricsPieces.toString(), {fontFamily: 'Arial', fontSize: 20, color: '#ffffff'}).setStroke('#000000', 2).setScrollFactor(0);
+        this.lyricCountText.setPosition(xText.x + xText.displayWidth + 4 * this.tilemapScale, papers.y + papers.displayHeight / 2 - this.lyricCountText.displayHeight / 2)
     }
 
     update(_: number, delta: number) 
@@ -274,6 +292,7 @@ export class Game extends BaseScene
                 this.physics.world.removeCollider(collider);
 
                 this.time.delayedCall(300, () => {
+                    this.gameEventManager.purgeCharactersFromEvents();
                     this.scene.restart({ gameState: gameState });
                 });
             });
@@ -320,7 +339,7 @@ export class Game extends BaseScene
 
         for(const character of characterObjects) 
         {
-            const {x, y, width, height, name, properties, type } = character;
+            const {x, y, name, properties, type } = character;
 
             let dialog: CharacterEvent = null!;
             
@@ -332,6 +351,7 @@ export class Game extends BaseScene
             let eventName: string = 'test';
             let eventKeyTrigger: number = 0;
             let eventKeyEnd: number = 0;
+            let instance: string = '';
             let movement: CharacterMovementConfig = new CharacterMovementConfig();
 
             for (const property of properties) {
@@ -353,7 +373,6 @@ export class Game extends BaseScene
                         break;
                     case 'dialog':
                         dialog = JSON.parse(property.value.toString());
-                        console.log(dialog);
                         break;
                     case 'eventName':
                         eventName = property.value;
@@ -364,12 +383,21 @@ export class Game extends BaseScene
                     case 'eventKeyEnd':
                         eventKeyEnd = parseInt(property.value);
                         break;
+                    case 'instance':
+                        instance = property.value;
+                        break;
                     case 'movement':
                         movement = JSON.parse(property.value.toString());
                         break;
                 }
             }
-            let newCharacter = new Character(this, x! * this.tilemapScale, y! * this.tilemapScale, name, 
+
+            let possibleExistingCharacter = characters.find((c) =>
+            {
+                return c.name == name && c.config.instance == instance;
+            });
+
+            let newCharacter = possibleExistingCharacter ? possibleExistingCharacter : new Character(this, x! * this.tilemapScale, y! * this.tilemapScale, name, 
             {
                 bodyFrame: bodyFrame,
                 hairFrame: hairFrame,
@@ -378,19 +406,11 @@ export class Game extends BaseScene
                 shoesFrame: shoesFrame,
                 eventKey: eventKeyTrigger,
                 eventKeyEnd: eventKeyEnd,
+                eventName: eventName,
+                instance: instance,
                 dialog: dialog,
                 player: this.player.getBody(),
                 overlapCallback: () => {
-                    // let ev = CharacterEventUtility.findEventByKey(dialog, this.eventKey);
-
-                    // if(ev !== undefined)
-                    // {
-                    //     this.currentInteractiveObject = new Interactive(ev.dialog, "message", {
-                    //         title: name,
-                    //         endAction: ev.onEnd,
-                    //         sourceCharacter: newCharacter
-                    //     });
-                    // }
                     let ev = this.gameEventManager.getCurrentEventProgress(eventName);
                     if(ev !== undefined)
                     {
@@ -409,15 +429,18 @@ export class Game extends BaseScene
 
             });
 
-            
-            characters.push(newCharacter);
+            if(!possibleExistingCharacter)
+            {
+                characters.push(newCharacter);
+            }
+
             for(let d of dialog.events)
             {
                 this.gameEventManager.addEvent(eventName, d.eventKey, [newCharacter]);                     
 
                 for(let character of characters)
                 {
-                    if(character.getEventKeyEnd() < eventKeyEnd)
+                    if(character.config.eventName == eventName && character.getEventKeyEnd() < eventKeyEnd)
                     {
                         this.gameEventManager.addEvent(eventName, d.eventKey, [character]);
                     }
@@ -561,7 +584,8 @@ export class Game extends BaseScene
                     this.gameState.fromScene = this.scene.key;
                     this.gameState.spawnX = 19;
                     this.gameState.spawnY = 2;
-                    this.gameState.eventKey = this.eventKey;
+
+                    this.gameEventManager.purgeCharactersFromEvents();
 
                     this.scene.start("Tetris", {
                         gameState: this.gameState
@@ -599,7 +623,12 @@ export class Game extends BaseScene
                 }
             }),
 
-            content: this.add.text(0, 0, messages[messagesIndex]),
+            content: this.rexUI.add.label({
+                background: undefined,
+
+                text: this.rexUI.wrapExpandText(this.add.text(0, 0, messages[messagesIndex])),
+                expandTextWidth: true
+            }),
 
             actions: [this.rexUI.add.label({
                 background: this.rexUI.add.roundRectangle(0, 0, 40, 40, 20, 0xC1BA71),
@@ -668,8 +697,12 @@ export class Game extends BaseScene
 
                         if(this.currentInteractiveObject?.endAction == EndAction.incrementEvent) 
                         {
-                            console.log(this.currentInteractiveObject);
                             this.incrementEvent(this.currentInteractiveObject.eventName ?? 'test');
+                        }
+                        else if(this.currentInteractiveObject?.endAction == EndAction.giveLyricPiece)
+                        {
+                            console.log('here');
+                            this.addLyricPiece();
                         }
                         this.currentInteractiveObject = null;
                         return;
@@ -692,6 +725,12 @@ export class Game extends BaseScene
             {
                 button.getElement('background').setStrokeStyle();
             });            
+    }
+
+    private addLyricPiece()
+    {
+        this.gameState.lyricsPieces++;
+        this.lyricCountText.text = this.gameState.lyricsPieces.toString();
     }
 
     private configureEvent() 

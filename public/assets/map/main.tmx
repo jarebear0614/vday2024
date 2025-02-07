@@ -412,48 +412,7 @@
   </object>
  </objectgroup>
  <objectgroup id="12" name="map_character">
-  <object id="24" name="Jared" type="character" gid="1773" x="528" y="800" width="16" height="16">
-   <properties>
-    <property name="bodyFrame" type="int" value="0"/>
-    <property name="dialog">{
-  &quot;events&quot;: [
-    {
-      &quot;eventKey&quot;: &quot;0&quot;,
-      &quot;dialog&quot;: [
-        &quot;Hello&quot;,
-        &quot;My Name is Jared&quot;
-      ],
-      &quot;onEnd&quot;: &quot;incrementEvent&quot;
-    },
-    {
-      &quot;eventKey&quot;: &quot;1&quot;,
-      &quot;dialog&quot;: [
-        &quot;Welcome to the game&quot;
-      ],
-      &quot;onEnd&quot;: &quot;incrementEvent&quot;
-    }
-  ]
-}</property>
-    <property name="eventKeyEnd" type="int" value="2"/>
-    <property name="eventKeyTrigger" type="int" value="0"/>
-    <property name="eventName" value="intro"/>
-    <property name="hairFrame" type="int" value="22"/>
-    <property name="movement">{
-  &quot;type&quot;: &quot;waypoint&quot;,
-  &quot;loop&quot;: true,
-  &quot;waypoints&quot;: [
-    {&quot;x&quot;: 33, &quot;y&quot;: 46 }, 
-    {&quot;x&quot;: 37, &quot;y&quot;: 46 },
-    {&quot;x&quot;: 37, &quot;y&quot;: 50 },
-    {&quot;x&quot;: 33, &quot;y&quot;: 50 }
-  ]
-}</property>
-    <property name="pantsFrame" type="int" value="3"/>
-    <property name="shirtFrame" type="int" value="286"/>
-    <property name="shoesFrame" type="int" value="4"/>
-   </properties>
-  </object>
-  <object id="26" name="Jared" type="character" gid="1773" x="528" y="800" width="16" height="16">
+  <object id="26" name="Jared" type="character" gid="1773" x="512" y="784" width="16" height="16">
    <properties>
     <property name="bodyFrame" type="int" value="0"/>
     <property name="dialog">{
@@ -479,6 +438,7 @@
     <property name="eventKeyTrigger" type="int" value="0"/>
     <property name="eventName" value="intro"/>
     <property name="hairFrame" type="int" value="22"/>
+    <property name="instance" value="jared0"/>
     <property name="movement">{
   &quot;type&quot;: &quot;waypoint&quot;,
   &quot;loop&quot;: true,
@@ -513,6 +473,7 @@
     <property name="eventKeyTrigger" type="int" value="2"/>
     <property name="eventName" value="intro"/>
     <property name="hairFrame" type="int" value="22"/>
+    <property name="instance" value="jared1"/>
     <property name="movement">{
   &quot;type&quot;: &quot;random&quot;
 }</property>
@@ -521,7 +482,7 @@
     <property name="shoesFrame" type="int" value="4"/>
    </properties>
   </object>
-  <object id="27" name="Bob" type="character" gid="1773" x="704" y="800" width="16" height="16">
+  <object id="27" name="Bob" type="character" gid="1773" x="812.667" y="879.333" width="16" height="16">
    <properties>
     <property name="bodyFrame" type="int" value="0"/>
     <property name="dialog">{
@@ -529,37 +490,45 @@
     {
       &quot;eventKey&quot;: 0,
       &quot;dialog&quot;: [
-        &quot;Hello&quot;,
-        &quot;My Name is Bob&quot;
+        &quot;I hear if you examine a fireplace you'll be brought into a dream state where you can get a high score.&quot;,
+        &quot;Come see me if you can get 5000 points&quot;
       ],
       &quot;onEnd&quot;: &quot;incrementEvent&quot;
     },
     {
       &quot;eventKey&quot;: 1,
       &quot;dialog&quot;: [
-        &quot;Find my monkey&quot;
+        &quot;Come see me if you can get 5000 points&quot;
       ],
-      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+      &quot;onEnd&quot;: &quot;nop&quot;
     },
     {
       &quot;eventKey&quot;: 2,
       &quot;dialog&quot;: [
-        &quot;Please I'm desperate&quot;
+        &quot;Wow you did it!&quot;
       ],
-      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+      &quot;onEnd&quot;: &quot;giveLyricPiece&quot;
+    },
+    {
+      &quot;eventKey&quot;: 3,
+      &quot;dialog&quot;: [
+        &quot;Congrats again!&quot;
+      ],
+      &quot;onEnd&quot;: &quot;nop&quot;
     }
   ]
 }</property>
-    <property name="eventKeyEnd" type="int" value="3"/>
+    <property name="eventKeyEnd" type="int" value="4"/>
     <property name="eventKeyTrigger" type="int" value="0"/>
-    <property name="eventName" value="bobsquest"/>
-    <property name="hairFrame" type="int" value="22"/>
+    <property name="eventName" value="tetris"/>
+    <property name="hairFrame" type="int" value="454"/>
+    <property name="instance" value="bob0"/>
     <property name="movement">{
   &quot;type&quot;: &quot;random&quot;
 }</property>
-    <property name="pantsFrame" type="int" value="3"/>
-    <property name="shirtFrame" type="int" value="286"/>
-    <property name="shoesFrame" type="int" value="4"/>
+    <property name="pantsFrame" type="int" value="381"/>
+    <property name="shirtFrame" type="int" value="7"/>
+    <property name="shoesFrame" type="int" value="382"/>
    </properties>
   </object>
  </objectgroup>

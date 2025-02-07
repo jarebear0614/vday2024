@@ -200,7 +200,7 @@
         &quot;Meow&quot;,
         &quot;I'm a huge pain in the butt&quot;
       ],
-      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+      &quot;onEnd&quot;: &quot;nop&quot;
     }
   ]
 }</property>

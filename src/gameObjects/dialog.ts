@@ -2,7 +2,9 @@ export enum EndAction
 {
     nop = "nop",
 
-    incrementEvent = "incrementEvent"
+    incrementEvent = "incrementEvent",
+
+    giveLyricPiece = "giveLyricPiece"
 }
 
 export class CharacterEventDialog

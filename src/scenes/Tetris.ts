@@ -2,7 +2,6 @@ import { GameState } from "../gameObjects/GameState";
 import { Field } from "../gameObjects/tetris/field";
 import { Tetromino, TetrominoTransform } from "../gameObjects/tetris/tetromino";
 import { TetrominoFactory } from "../gameObjects/tetris/tetrominoFactory";
-import { Align } from "../util/align";
 import { BaseScene } from "./BaseScene";
 
 import WebFont from 'webfontloader';
@@ -714,6 +713,7 @@ export class Tetris extends BaseScene
     public setupGame()
     {
         this.score = this.level = 0;
+        this.score = 5000;
         this.linesClearedDelta = this.levelGoals[this.level];
         this.fallSpeed = this.fallSpeeds[this.level];
 

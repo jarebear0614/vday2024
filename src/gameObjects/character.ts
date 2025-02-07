@@ -29,6 +29,10 @@ export class CharacterConfig
 
     eventKeyEnd?: number = 0;
 
+    eventName?: string;
+
+    instance?: string;
+
     movement?: ICharacterMovement;
 }
 
@@ -42,6 +46,7 @@ export class Character
     y: number;
 
     private created: boolean = false;
+    private destroyed: boolean = false;
 
     movement?: ICharacterMovement = undefined;
 
@@ -50,7 +55,7 @@ export class Character
     collider: Phaser.Physics.Arcade.Collider;
     overlapCollider: Phaser.Physics.Arcade.Collider;
 
-    private config: CharacterConfig;
+    config: CharacterConfig;
 
     protected scene: BaseScene;
 
@@ -153,10 +158,20 @@ export class Character
 
     tearDown() 
     {
-        this.scene.physics.world.removeCollider(this.collider);
-        this.scene.physics.world.removeCollider(this.overlapCollider);
-        this.spriteGroup.clear(true, true);
-        this.overlapDialogSprite.destroy();
+        if(this.created && !this.destroyed)
+        {
+            this.destroyed = true;
+
+            this.scene.physics.world.removeCollider(this.collider);
+            this.scene.physics.world.removeCollider(this.overlapCollider);
+
+            if(this.spriteGroup.children)
+            {
+                this.spriteGroup.clear(true, true);
+            }
+
+            this.overlapDialogSprite.destroy();
+        }
     }
 
     update(delta: number) 

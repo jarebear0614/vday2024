@@ -519,69 +519,6 @@
                 {
                  "gid":1773,
                  "height":16,
-                 "id":24,
-                 "name":"Jared",
-                 "properties":[
-                        {
-                         "name":"bodyFrame",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"dialog",
-                         "type":"string",
-                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": \"0\",\n      \"dialog\": [\n        \"Hello\",\n        \"My Name is Jared\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    },\n    {\n      \"eventKey\": \"1\",\n      \"dialog\": [\n        \"Welcome to the game\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    }\n  ]\n}"
-                        }, 
-                        {
-                         "name":"eventKeyEnd",
-                         "type":"int",
-                         "value":2
-                        }, 
-                        {
-                         "name":"eventKeyTrigger",
-                         "type":"int",
-                         "value":0
-                        }, 
-                        {
-                         "name":"eventName",
-                         "type":"string",
-                         "value":"intro"
-                        }, 
-                        {
-                         "name":"hairFrame",
-                         "type":"int",
-                         "value":22
-                        }, 
-                        {
-                         "name":"movement",
-                         "type":"string",
-                         "value":"{\n  \"type\": \"waypoint\",\n  \"loop\": true,\n  \"waypoints\": [\n    {\"x\": 33, \"y\": 46 }, \n    {\"x\": 37, \"y\": 46 },\n    {\"x\": 37, \"y\": 50 },\n    {\"x\": 33, \"y\": 50 }\n  ]\n}"
-                        }, 
-                        {
-                         "name":"pantsFrame",
-                         "type":"int",
-                         "value":3
-                        }, 
-                        {
-                         "name":"shirtFrame",
-                         "type":"int",
-                         "value":286
-                        }, 
-                        {
-                         "name":"shoesFrame",
-                         "type":"int",
-                         "value":4
-                        }],
-                 "rotation":0,
-                 "type":"character",
-                 "visible":true,
-                 "width":16,
-                 "x":528,
-                 "y":800
-                }, 
-                {
-                 "gid":1773,
-                 "height":16,
                  "id":26,
                  "name":"Jared",
                  "properties":[
@@ -616,6 +553,11 @@
                          "value":22
                         }, 
                         {
+                         "name":"instance",
+                         "type":"string",
+                         "value":"jared0"
+                        }, 
+                        {
                          "name":"movement",
                          "type":"string",
                          "value":"{\n  \"type\": \"waypoint\",\n  \"loop\": true,\n  \"waypoints\": [\n    {\"x\": 33, \"y\": 46 }, \n    {\"x\": 37, \"y\": 46 },\n    {\"x\": 37, \"y\": 50 },\n    {\"x\": 33, \"y\": 50 }\n  ]\n}"
@@ -639,8 +581,8 @@
                  "type":"character",
                  "visible":true,
                  "width":16,
-                 "x":528,
-                 "y":800
+                 "x":512,
+                 "y":784
                 }, 
                 {
                  "gid":1773,
@@ -677,6 +619,11 @@
                          "name":"hairFrame",
                          "type":"int",
                          "value":22
+                        }, 
+                        {
+                         "name":"instance",
+                         "type":"string",
+                         "value":"jared1"
                         }, 
                         {
                          "name":"movement",
@@ -719,12 +666,12 @@
                         {
                          "name":"dialog",
                          "type":"string",
-                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"Hello\",\n        \"My Name is Bob\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    },\n    {\n      \"eventKey\": 1,\n      \"dialog\": [\n        \"Find my monkey\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    },\n    {\n      \"eventKey\": 2,\n      \"dialog\": [\n        \"Please I'm desperate\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    }\n  ]\n}"
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"I hear if you examine a fireplace you'll be brought into a dream state where you can get a high score.\",\n        \"Come see me if you can get 5000 points\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    },\n    {\n      \"eventKey\": 1,\n      \"dialog\": [\n        \"Come see me if you can get 5000 points\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 2,\n      \"dialog\": [\n        \"Wow you did it!\"\n      ],\n      \"onEnd\": \"giveLyricPiece\"\n    },\n    {\n      \"eventKey\": 3,\n      \"dialog\": [\n        \"Congrats again!\"\n      ],\n      \"onEnd\": \"nop\"\n    }\n  ]\n}"
                         }, 
                         {
                          "name":"eventKeyEnd",
                          "type":"int",
-                         "value":3
+                         "value":4
                         }, 
                         {
                          "name":"eventKeyTrigger",
@@ -734,12 +681,17 @@
                         {
                          "name":"eventName",
                          "type":"string",
-                         "value":"bobsquest"
+                         "value":"tetris"
                         }, 
                         {
                          "name":"hairFrame",
                          "type":"int",
-                         "value":22
+                         "value":454
+                        }, 
+                        {
+                         "name":"instance",
+                         "type":"string",
+                         "value":"bob0"
                         }, 
                         {
                          "name":"movement",
@@ -749,24 +701,24 @@
                         {
                          "name":"pantsFrame",
                          "type":"int",
-                         "value":3
+                         "value":381
                         }, 
                         {
                          "name":"shirtFrame",
                          "type":"int",
-                         "value":286
+                         "value":7
                         }, 
                         {
                          "name":"shoesFrame",
                          "type":"int",
-                         "value":4
+                         "value":382
                         }],
                  "rotation":0,
                  "type":"character",
                  "visible":true,
                  "width":16,
-                 "x":704,
-                 "y":800
+                 "x":812.666666666667,
+                 "y":879.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",

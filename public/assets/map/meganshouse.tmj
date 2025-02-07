@@ -330,7 +330,7 @@
                         {
                          "name":"dialog",
                          "type":"string",
-                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"Meow\",\n        \"I'm a huge pain in the butt\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    }\n  ]\n}"
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"Meow\",\n        \"I'm a huge pain in the butt\"\n      ],\n      \"onEnd\": \"nop\"\n    }\n  ]\n}"
                         }, 
                         {
                          "name":"eventKeyEnd",
