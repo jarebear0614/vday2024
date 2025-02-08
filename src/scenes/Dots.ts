@@ -122,7 +122,7 @@ export class Dots extends BaseScene
                                     pointer.position.y >= rectY && pointer.position.y <= rectY + sizeY
                                  )
                                  {
-                                    this.add.line(0, 0, this.downPosition.x, this.downPosition.y, rectX + sizeX / (10 * 2), rectY + sizeY / (10 * 2), 0x000000, 1.0).setOrigin(0, 0);
+                                    this.add.line(0, 0, this.downPosition.x +sizeX / (10 * 2), this.downPosition.y + sizeY / (10 * 2), rectX + sizeX / (10 * 2), rectY + sizeY / (10 * 2), 0x000000, 1.0).setOrigin(0, 0);
                                     this.currentDot++;
 
                                     this.selectedRectangle.destroy();
