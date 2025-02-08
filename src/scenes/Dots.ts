@@ -25,26 +25,14 @@ export class Dots extends BaseScene
     downPosition: Phaser.Math.Vector2;
 
     dots: Dot[] = [];
-    rectangles: Phaser.GameObjects.Rectangle[] = [];
 
-    deleteLastKey: Phaser.Input.Keyboard.Key | undefined;
-
-    deleteLastDown: boolean = false;
-    previousLastDown: boolean = false;
-
-    readonly buildX: number = -283.857063882064;
-    readonly buildY: number = 46.34999999999991;
     readonly buildWidth: number = 448;
     readonly buildHeight: number = 927;
-    readonly buildScale: number = 1.024938574938575
-
-    readonly buildDotsWidth: number = 1015.714127764128 
-    readonly buildDotsHeight: number = 834.3;
 
     scaleX: number = 1.0;
     scaleY: number = 1.0;
 
-    line: Phaser.GameObjects.Line | null = null;
+    selectedRectangle: Phaser.GameObjects.Rectangle | null = null;
 
     currentDot: number = 1;
 
@@ -95,11 +83,10 @@ export class Dots extends BaseScene
         this.dotsbackground.setPosition(this.getGameWidth() / 2 - this.dotsbackground.displayWidth / 2, this.getGameHeight() / 2 - this.dotsbackground.displayHeight / 2)
                     
                     .setInteractive()
-                    .addListener('pointerdown', (pointer: any) =>
+                    .addListener('pointerup', (pointer: any) =>
                     {
                         if(!this.down)
                         {
-                            this.down = true;
                             this.downPosition = new Phaser.Math.Vector2(pointer.position.x, pointer.position.y);
 
                             let rectX = this.dots[this.currentDot - 1].start.x * this.scaleX;
@@ -109,33 +96,19 @@ export class Dots extends BaseScene
                             if(
                                 this.downPosition.x >= rectX && this.downPosition.x <= rectX + sizeX &&
                                 this.downPosition.y >= rectY && this.downPosition.y <= rectY + sizeY
-                             )
-                             {
-                                this.line = this.add.line(0, 0, this.downPosition.x, this.downPosition.y, this.downPosition.x, this.downPosition.y, 0x000000)
+                            )
+                            {
+                                this.selectedRectangle = this.add.rectangle(rectX, rectY, sizeX, sizeY)
                                         .setOrigin(0, 0)
-                                        .setLineWidth(3, 3)
-                             }
-                        }
-                    })
-                    .addListener('pointermove', (pointer: any) => 
-                    {
-                        if(this.line)
-                        {
-                            this.line.setTo(this.downPosition.x, this.downPosition.y, pointer.position.x, pointer.position.y);
-                        }
-                    })
-                    .addListener('pointerup', (pointer: any) =>
-                    {
-                        if(this.down)
-                        {
-                            this.down = false;
-                            // this.dots.push(new Dot(this.downPosition, 12));
+                                        .setFillStyle(0xffffff, 0.3)
+                                        .setStrokeStyle(2, 0x000000, 1.0);
 
-                            // this.rectangles.push(this.add.rectangle(this.downPosition.x, this.downPosition.y, 12 * this.scaleX, 12 * this.scaleY)
-                            //     .setFillStyle(0xffffff, 0.3)
-                            //     .setStrokeStyle(2, 0x000000, 1.0)
-                            //     .setOrigin(0, 0));
-                            if(this.line)
+                                this.down = true;
+                            }
+                        }
+                        else if(this.down)
+                        {
+                            if(this.selectedRectangle)
                             {
                                 let rectX = this.dots[this.currentDot % this.dots.length].start.x * this.scaleX;
                                 let rectY = this.dots[this.currentDot % this.dots.length].start.y * this.scaleY;
@@ -146,8 +119,19 @@ export class Dots extends BaseScene
                                     pointer.position.y >= rectY && pointer.position.y <= rectY + sizeY
                                  )
                                  {
-                                    this.line.setTo(this.downPosition.x, this.downPosition.y, pointer.position.x, pointer.position.y);
+                                    this.add.line(0, 0, this.downPosition.x, this.downPosition.y, pointer.position.x, pointer.position.y, 0x000000, 1.0).setOrigin(0, 0);
                                     this.currentDot++;
+
+                                    this.selectedRectangle.destroy();
+                                    this.selectedRectangle = null;
+
+                                    this.selectedRectangle = this.add.rectangle(rectX, rectY, sizeX, sizeY)
+                                        .setOrigin(0, 0)
+                                        .setFillStyle(0xffffff, 0.3)
+                                        .setStrokeStyle(2, 0x000000, 1.0);
+
+                                    this.downPosition.x = pointer.position.x;
+                                    this.downPosition.y = pointer.position.y;
 
                                     if(this.currentDot == this.dots.length + 1)
                                     {
@@ -158,48 +142,16 @@ export class Dots extends BaseScene
                                         });
                                     }
                                  }
-                                 else
-                                 {
-                                    this.line.destroy();
-                                 }
                             }
-                            this.line = null;
                         }
-
-                        console.log(this.dots);
                     });
 
 
         this.dadBackground = this.add.image(this.dotsbackground.x, this.dotsbackground.y, 'dad').setOrigin(0, 0).setAlpha(0)
         this.dadBackground.setScale(this.dotsbackground.scaleX, this.dotsbackground.scaleY);
-
-        //this.deleteLastKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.DELETE);
-
-        // for(let dot of this.dots)
-        // {
-        //     this.add.rectangle(dot.start.x * this.scaleX, dot.start.y * this.scaleY, dot.size * this.scaleX, dot.size * this.scaleY)
-        //         .setFillStyle(0xffffff, 0.3)
-        //         .setStrokeStyle(2, 0x000000, 1.0)
-        //         .setOrigin(0, 0);
-        // }
     }
 
     update()
     {
-        if(this.deleteLastKey)
-        {
-            this.previousLastDown = this.deleteLastDown;
-            this.deleteLastDown = this.deleteLastKey.isDown;
-        }        
-
-        // if(this.previousLastDown && !this.deleteLastDown)
-        // {
-        //     if(this.dots.length > 0)
-        //     {
-        //         this.dots.splice(this.dots.length - 1, 1);
-        //         this.rectangles.splice(this.rectangles.length - 1, 1)[0].destroy();
-        //         console.log(this.dots);
-        //     }
-        // }
     }
 }
