@@ -10,7 +10,7 @@ import { Interactive, InteractiveConfig } from '../gameObjects/interactive';
 import { CharacterEvent, CharacterEventUtility, EndAction } from '../gameObjects/dialog';
 import { RandomInRadiusCharacterMovement, CharacterMovementConfig, WaypointCharacterMovement, NopCharacterMovement } from '../gameObjects/CharacterMovementComponents';
 import { ICharacterMovement } from '../gameObjects/ICharacterMovement';
-import { GameEvent, GameEventManager, GameEvents } from '../gameObjects/GameEvent';
+import { GameEventManager} from '../gameObjects/GameEvent';
 
 export class Game extends BaseScene
 {

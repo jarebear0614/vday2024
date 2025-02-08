@@ -162,8 +162,8 @@ export class Character
         {
             this.destroyed = true;
 
-            this.scene.physics.world.removeCollider(this.collider);
-            this.scene.physics.world.removeCollider(this.overlapCollider);
+            this.collider.destroy();
+            this.overlapCollider.destroy();
 
             if(this.spriteGroup.children)
             {
