@@ -91,17 +91,20 @@ export class Dots extends BaseScene
 
                             let rectX = this.dots[this.currentDot - 1].start.x * this.scaleX;
                             let rectY = this.dots[this.currentDot - 1].start.y * this.scaleY;
-                            let sizeX = this.dots[this.currentDot - 1].size * this.scaleX;
-                            let sizeY = this.dots[this.currentDot - 1].size * this.scaleY;
+                            let sizeX = this.dots[this.currentDot - 1].size * this.scaleX * 10;
+                            let sizeY = this.dots[this.currentDot - 1].size * this.scaleY * 10;
                             if(
                                 this.downPosition.x >= rectX && this.downPosition.x <= rectX + sizeX &&
                                 this.downPosition.y >= rectY && this.downPosition.y <= rectY + sizeY
                             )
                             {
-                                this.selectedRectangle = this.add.rectangle(rectX, rectY, sizeX, sizeY)
+                                this.selectedRectangle = this.add.rectangle(rectX, rectY, sizeX / 10, sizeY / 10)
                                         .setOrigin(0, 0)
                                         .setFillStyle(0xffffff, 0.3)
                                         .setStrokeStyle(2, 0x000000, 1.0);
+
+                                this.downPosition.x = rectX;
+                                this.downPosition.y = rectY;
 
                                 this.down = true;
                             }
@@ -112,26 +115,26 @@ export class Dots extends BaseScene
                             {
                                 let rectX = this.dots[this.currentDot % this.dots.length].start.x * this.scaleX;
                                 let rectY = this.dots[this.currentDot % this.dots.length].start.y * this.scaleY;
-                                let sizeX = this.dots[this.currentDot % this.dots.length].size * this.scaleX;
-                                let sizeY = this.dots[this.currentDot % this.dots.length].size * this.scaleY;
+                                let sizeX = this.dots[this.currentDot % this.dots.length].size * this.scaleX * 10;
+                                let sizeY = this.dots[this.currentDot % this.dots.length].size * this.scaleY * 10;
                                 if(
                                     pointer.position.x >= rectX && pointer.position.x <= rectX + sizeX &&
                                     pointer.position.y >= rectY && pointer.position.y <= rectY + sizeY
                                  )
                                  {
-                                    this.add.line(0, 0, this.downPosition.x, this.downPosition.y, pointer.position.x, pointer.position.y, 0x000000, 1.0).setOrigin(0, 0);
+                                    this.add.line(0, 0, this.downPosition.x, this.downPosition.y, rectX + sizeX / (10 * 2), rectY + sizeY / (10 * 2), 0x000000, 1.0).setOrigin(0, 0);
                                     this.currentDot++;
 
                                     this.selectedRectangle.destroy();
                                     this.selectedRectangle = null;
 
-                                    this.selectedRectangle = this.add.rectangle(rectX, rectY, sizeX, sizeY)
+                                    this.selectedRectangle = this.add.rectangle(rectX, rectY, sizeX / 10, sizeY / 10)
                                         .setOrigin(0, 0)
                                         .setFillStyle(0xffffff, 0.3)
                                         .setStrokeStyle(2, 0x000000, 1.0);
 
-                                    this.downPosition.x = pointer.position.x;
-                                    this.downPosition.y = pointer.position.y;
+                                    this.downPosition.x = rectX;
+                                    this.downPosition.y = rectY;
 
                                     if(this.currentDot == this.dots.length + 1)
                                     {
