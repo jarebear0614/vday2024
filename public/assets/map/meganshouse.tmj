@@ -65,7 +65,7 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 185, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -235,12 +235,75 @@
                  "height":24,
                  "id":6,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"eventKeyTrigger",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"eventName",
+                         "type":"string",
+                         "value":"tetris"
+                        }, 
+                        {
+                         "name":"fromX",
+                         "type":"int",
+                         "value":19
+                        }, 
+                        {
+                         "name":"fromY",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"to_scene",
+                         "type":"string",
+                         "value":"Tetris"
+                        }],
                  "rotation":0,
-                 "type":"tetris",
+                 "type":"scene",
                  "visible":true,
                  "width":24,
                  "x":300,
                  "y":0
+                }, 
+                {
+                 "height":24,
+                 "id":7,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"eventKeyTrigger",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"eventName",
+                         "type":"string",
+                         "value":"dots"
+                        }, 
+                        {
+                         "name":"fromX",
+                         "type":"int",
+                         "value":14
+                        }, 
+                        {
+                         "name":"fromY",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"to_scene",
+                         "type":"string",
+                         "value":"Dots"
+                        }],
+                 "rotation":0,
+                 "type":"scene",
+                 "visible":true,
+                 "width":24,
+                 "x":219.5,
+                 "y":0.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -386,7 +449,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":7,
+ "nextobjectid":8,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

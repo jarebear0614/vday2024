@@ -23,6 +23,7 @@ export class Player extends Character
 
         this.body = this.scene.physics.add.sprite(100, 100, "transparent", 0);
         this.body.setSize(16, 16);
+        this.body.setPushable(false);
         
         Align.scaleToGameWidth(this.body, TILE_SCALE, this.scene); 
 

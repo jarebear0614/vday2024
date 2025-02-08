@@ -16,7 +16,7 @@ export class Dot
 
 export class Dots extends BaseScene
 {
-    gameState: GameState;
+    gameState: GameState = { lyricsPieces: 0 };
 
     dotsbackground: Phaser.GameObjects.Image;
     dadBackground: Phaser.GameObjects.Image;
@@ -59,6 +59,10 @@ export class Dots extends BaseScene
         });
 
         this.dots = JSON.parse('[{"start":{"x":234,"y":110},"size":12},{"start":{"x":276,"y":132},"size":12},{"start":{"x":296,"y":175},"size":12},{"start":{"x":282,"y":179},"size":12},{"start":{"x":275,"y":289},"size":12},{"start":{"x":365,"y":324},"size":12},{"start":{"x":409,"y":444},"size":12},{"start":{"x":408,"y":541},"size":12},{"start":{"x":356,"y":540},"size":12},{"start":{"x":355,"y":568},"size":12},{"start":{"x":344,"y":578},"size":12},{"start":{"x":360,"y":697},"size":12},{"start":{"x":340,"y":800},"size":12},{"start":{"x":322,"y":822},"size":12},{"start":{"x":175,"y":821},"size":12},{"start":{"x":138,"y":765},"size":12},{"start":{"x":102,"y":653},"size":12},{"start":{"x":119,"y":606},"size":12},{"start":{"x":118,"y":544},"size":12},{"start":{"x":56,"y":554},"size":12},{"start":{"x":33,"y":526},"size":12},{"start":{"x":39,"y":487},"size":12},{"start":{"x":26,"y":456},"size":12},{"start":{"x":81,"y":333},"size":12},{"start":{"x":135,"y":304},"size":12},{"start":{"x":27,"y":139},"size":12},{"start":{"x":28,"y":119},"size":12},{"start":{"x":47,"y":117},"size":12},{"start":{"x":100,"y":205},"size":12},{"start":{"x":154,"y":291},"size":12},{"start":{"x":179,"y":285},"size":12},{"start":{"x":185,"y":246},"size":12},{"start":{"x":164,"y":200},"size":12},{"start":{"x":175,"y":131},"size":12},{"start":{"x":201,"y":111},"size":12}]');
+        this.selectedRectangle = null;
+        this.currentDot = 1;
+        this.down = false;
+        this.downPosition = new Phaser.Math.Vector2(0, 0);
     }
 
     preload()
@@ -143,6 +147,15 @@ export class Dots extends BaseScene
                                             duration: 1000,
                                             alpha: 1
                                         });
+
+                                        this.gameState.completedDots = true;
+
+                                        this.time.delayedCall(3000, () => 
+                                        {
+                                            this.scene.start('Game', {
+                                                gameState: this.gameState
+                                            });
+                                        })
                                     }
                                  }
                             }
@@ -150,7 +163,7 @@ export class Dots extends BaseScene
                     });
 
 
-        this.dadBackground = this.add.image(this.dotsbackground.x, this.dotsbackground.y, 'dad').setOrigin(0, 0).setAlpha(0)
+        this.dadBackground = this.add.image(this.dotsbackground.x, this.dotsbackground.y, 'dad').setOrigin(0, 0).setAlpha(0);
         this.dadBackground.setScale(this.dotsbackground.scaleX, this.dotsbackground.scaleY);
     }
 

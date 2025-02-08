@@ -85,19 +85,26 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
 
         if(this.isMoving)
         {
-            let start = new Phaser.Math.Vector2(this.startX, this.startY);       
+            // let start = new Phaser.Math.Vector2(this.startX, this.startY);       
             
-            let velScale = this.velocity / start.distance(this.destination);
+            // let velScale = this.velocity / start.distance(this.destination);
 
-            this.moveTime += (delta / 1000);
+            // this.moveTime += (delta / 1000);
 
-            let newPosition = Phaser.Math.LinearXY(start, this.destination, this.moveTime * velScale);
-            this.character.setPosition(newPosition.x, newPosition.y);
+            // let newPosition = Phaser.Math.LinearXY(start, this.destination, this.moveTime * velScale);
+            // this.character.setPosition(newPosition.x, newPosition.y);
 
-            if(this.moveTime * velScale >= 1)
+            // if(this.moveTime * velScale >= 1)
+            // {
+            //     this.isMoving = false;
+            //     this.waitUntil = Math.round(Math.random() * this.waitTimeRange.max - this.waitTimeRange.min) + this.waitTimeRange.min;
+            // }
+
+            if(this.destination.distance(this.character.getPosition()) <= 5)
             {
                 this.isMoving = false;
                 this.waitUntil = Math.round(Math.random() * this.waitTimeRange.max - this.waitTimeRange.min) + this.waitTimeRange.min;
+                this.character.setVelocity(0, 0);
             }
         }
         else 
@@ -114,6 +121,9 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
                 
                 this.destination.x = Math.round(Math.random() * this.radius) + this.xCenter - this.radius;
                 this.destination.y = Math.round(Math.random() * this.radius) + this.yCenter - this.radius;
+
+                let v = new Phaser.Math.Vector2(this.destination.x, this.destination.y).subtract(new Phaser.Math.Vector2(this.startX, this.startY)).normalize().scale(this.velocity);
+                this.character.setVelocity(v.x, v.y);
             }
         }
     }
@@ -188,20 +198,27 @@ export class WaypointCharacterMovement implements ICharacterMovement
         
         if(this.isMoving)
         {
-            let velScale = this.velocity / this.start.distance(this.destination);
-
-            this.moveTime += (delta / 1000.0);
-
-            let newPosition = Phaser.Math.LinearXY(this.start, this.destination, this.moveTime * velScale)
-
-            this.character.setPosition(newPosition.x, newPosition.y);
-
-            if(this.moveTime * velScale >= 1)
+            if(this.destination.distance(this.character.getPosition()) <= 5)
             {
                 this.isMoving = false;
                 this.waitUntil = Math.round(Math.random() * this.waitTimeRange.max - this.waitTimeRange.min) + this.waitTimeRange.min;
                 this.waypointIndex = (this.waypointIndex + 1) % this.waypoints.length;
+                this.character.setVelocity(0, 0);
             }
+            // let velScale = this.velocity / this.start.distance(this.destination);
+
+            // this.moveTime += (delta / 1000.0);
+
+            // let newPosition = Phaser.Math.LinearXY(this.start, this.destination, this.moveTime * velScale)
+
+            // this.character.setPosition(newPosition.x, newPosition.y);
+
+            // if(this.moveTime * velScale >= 1)
+            // {
+            //     this.isMoving = false;
+            //     this.waitUntil = Math.round(Math.random() * this.waitTimeRange.max - this.waitTimeRange.min) + this.waitTimeRange.min;
+            //     this.waypointIndex = (this.waypointIndex + 1) % this.waypoints.length;
+            // }
         }
         else {
             this.currentWaitTime += delta;
@@ -215,6 +232,9 @@ export class WaypointCharacterMovement implements ICharacterMovement
                 this.destination = new Phaser.Math.Vector2(
                     this.waypoints[this.waypointIndex].x * (16 * this.scale), 
                     this.waypoints[this.waypointIndex].y * (16 * this.scale));
+
+                let v = new Phaser.Math.Vector2(this.destination.x, this.destination.y).subtract(this.start).normalize().scale(this.velocity);
+                this.character.setVelocity(v.x, v.y);
             }
         }
     }    

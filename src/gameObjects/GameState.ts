@@ -8,6 +8,8 @@ export class GameState
 
     tetrisScore?: number = 0;
 
+    completedDots?: boolean = false;
+
     fromScene?: string = '';
 
     lyricsPieces: number = 0;

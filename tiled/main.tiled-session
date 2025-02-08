@@ -89,22 +89,22 @@
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx": {
             "expandedObjectLayers": [
-                12,
                 10,
+                12,
                 11
             ],
             "scale": 1,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 319.5,
+                "x": 500.5,
                 "y": 537
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx": {
             "expandedObjectLayers": [
-                9,
                 8,
-                7
+                7,
+                9
             ],
             "scale": 2,
             "selectedLayer": 7,

@@ -6,11 +6,13 @@ import { BaseScene } from './BaseScene';
 import { Align } from '../util/align';
 import { GameState } from '../gameObjects/GameState';
 import { Player } from '../gameObjects/player';
-import { Interactive, InteractiveConfig } from '../gameObjects/interactive';
+import { Interactive, InteractiveConfig, InteractiveTriggerConfig } from '../gameObjects/interactive';
 import { CharacterEvent, CharacterEventUtility, EndAction } from '../gameObjects/dialog';
 import { RandomInRadiusCharacterMovement, CharacterMovementConfig, WaypointCharacterMovement, NopCharacterMovement } from '../gameObjects/CharacterMovementComponents';
 import { ICharacterMovement } from '../gameObjects/ICharacterMovement';
 import { GameEventManager} from '../gameObjects/GameEvent';
+
+
 
 export class Game extends BaseScene
 {
@@ -18,8 +20,6 @@ export class Game extends BaseScene
     dialog: RexUIPlugin.Dialog | null;
 
     camera: Phaser.Cameras.Scene2D.Camera;
-    background: Phaser.GameObjects.Image;
-    msg_text : Phaser.GameObjects.Text;
     player: Player;
     cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
 
@@ -53,7 +53,7 @@ export class Game extends BaseScene
 
     map: Phaser.Tilemaps.Tilemap;
     overworldTileset: Phaser.Tilemaps.Tileset;
-    backgroundJuiceLayer: Phaser.Tilemaps.TilemapLayer;
+    backgroundAboveLayer: Phaser.Tilemaps.TilemapLayer;
     backgroundCollidersLayer: Phaser.Tilemaps.TilemapLayer;
 
     currentInteractiveObject: Interactive | null = null;
@@ -61,6 +61,7 @@ export class Game extends BaseScene
     gameEventManager: GameEventManager = new GameEventManager();
 
     lyricCountText: Phaser.GameObjects.Text;
+    interactText: Phaser.GameObjects.Text;
 
     constructor ()
     {
@@ -116,6 +117,8 @@ export class Game extends BaseScene
     {
         super.create();
 
+        this.gameEventManager.purgeCharactersFromEvents();
+
         this.camera = this.cameras.main;
         this.camera.setBackgroundColor(0x000000);   
         
@@ -132,7 +135,6 @@ export class Game extends BaseScene
 
         this.player.setPosition(playerXSpawn, playerYSpawn);
 
-        console.log(this.gameEventManager.gameEventProgress);
         this.configureEvent();
 
         if(this.gameState.fromScene === "Tetris")
@@ -148,6 +150,8 @@ export class Game extends BaseScene
         }
 
         let papers = this.add.image(this.getGameWidth() * 0.08, this.getGameHeight() * 0.05, 'lyricPieces').setOrigin(0, 0).setScrollFactor(0);
+        Align.scaleToGameWidth(papers, 0.08, this);
+
         let xText = this.add.text(0, 0, ' x ', {fontFamily: 'Arial', fontSize: 20, color: '#ffffff'}).setOrigin(0, 0).setStroke('#000000', 2).setScrollFactor(0);
 
         xText.setPosition(papers.x + papers.displayWidth + 7 * this.tilemapScale, papers.y + papers.displayHeight / 2 - xText.displayHeight / 2);
@@ -214,7 +218,11 @@ export class Game extends BaseScene
 
         if(!this.isPreviousInteractKeyDown && this.isInteractKeyDown)
         {
-            this.triggrInteractiveEvent(this.currentInteractiveObject);
+            this.triggerInteractiveEvent({
+                type: this.currentInteractiveObject?.type ?? 'sign',
+                interactive: this.currentInteractiveObject,
+                scene: this.currentInteractiveObject?.sceneTransition
+            });
         }
 
         let touching = !this.player.body.body.touching.none;
@@ -230,6 +238,15 @@ export class Game extends BaseScene
         {
             ev.update(delta);
         }
+
+        if(this.currentInteractiveObject && !this.interactText.visible)
+        {
+            this.interactText.setVisible(true);
+        }
+        else if(this.currentInteractiveObject == null && this.interactText.visible)
+        {
+            this.interactText.setVisible(false);
+        }
     }
 
     private configurePlayer() {
@@ -238,12 +255,12 @@ export class Game extends BaseScene
         
         this.cursors = this.input.keyboard?.createCursorKeys();
         
-        this.backgroundJuiceLayer = this.map.createLayer('above', this.overworldTileset, 0, 0)!;
+        this.backgroundAboveLayer = this.map.createLayer('above', this.overworldTileset, 0, 0)!;
         this.backgroundCollidersLayer = this.map.createLayer('colliders', this.overworldTileset, 0, 0)!;
         let aboveDecorationLayer = this.map.createLayer('above_decoration_1', this.overworldTileset, 0, 0)!;
         let aboveDecorationLayer2 = this.map.createLayer('above_decoration_2', this.overworldTileset, 0, 0)!;
         
-        this.backgroundJuiceLayer?.setScale(this.tilemapScale, this.tilemapScale);
+        this.backgroundAboveLayer?.setScale(this.tilemapScale, this.tilemapScale);
         this.backgroundCollidersLayer.setScale(this.tilemapScale, this.tilemapScale);
         aboveDecorationLayer.setScale(this.tilemapScale, this.tilemapScale);
         aboveDecorationLayer2.setScale(this.tilemapScale, this.tilemapScale);
@@ -310,12 +327,34 @@ export class Game extends BaseScene
             let message: string = '';
             let type: string = interactive.type;
 
+            let toScene: string | undefined;
+            let fromX: number = 0;
+            let fromY: number = 0;
+
+            let eventName: string | undefined;
+            let eventKeyTrigger: number | undefined;
+
             if(properties)
             {
                 for (const property of properties) {
                     switch (property.name) {
                         case 'message':
                             message = property.value;
+                            break;
+                        case 'to_scene':
+                            toScene = property.value;
+                            break;
+                        case 'fromX':
+                            fromX = parseInt(property.value);
+                            break;
+                        case 'fromY':
+                            fromY = parseInt(property.value);
+                            break;
+                        case 'eventName':
+                            eventName = property.value;
+                            break;
+                        case 'eventKeyTrigger':
+                            eventKeyTrigger = parseInt(property.value);
                             break;
                     }
                 }
@@ -327,7 +366,22 @@ export class Game extends BaseScene
 
             this.physics.add.overlap(this.player.body, sprite, () => 
             {
-                this.currentInteractiveObject = new Interactive([message], type);
+                let progress = Number.MAX_SAFE_INTEGER;
+                if(eventName)
+                {
+                    progress = this.gameEventManager.getCurrentEventProgress(eventName);
+                }
+                
+                if(progress >= (eventKeyTrigger ?? 0))
+                {
+                    this.currentInteractiveObject = new Interactive([message], type, eventName, eventKeyTrigger, {
+                        sceneTransition: {
+                            toScene: toScene ?? '',
+                            fromX: fromX,
+                            fromY: fromY
+                        }
+                    });
+                }
             });
         }
     }
@@ -417,16 +471,18 @@ export class Game extends BaseScene
                         let messages = CharacterEventUtility.findEventByKey(dialog, ev);
                         if(messages !== undefined)
                         {
-                            this.currentInteractiveObject = new Interactive(messages.dialog, type, eventName, {
-                                title: name,
-                                endAction: messages.onEnd,
-                                sourceCharacter: newCharacter
-                            });
+                            if(ev >= eventKeyTrigger)
+                            {
+                                this.currentInteractiveObject = new Interactive(messages.dialog, type, eventName, eventKeyTrigger, {
+                                    title: name,
+                                    endAction: messages.onEnd,
+                                    sourceCharacter: newCharacter
+                                });
+                            }
                         }
                     }
                 },
                 movement: this.getMovementFromConfig(x!, y!, movement)
-
             });
 
             if(!possibleExistingCharacter)
@@ -487,6 +543,13 @@ export class Game extends BaseScene
         Align.scaleToGameWidth(dpadfull, 0.18, this);
         Align.scaleToGameWidth(interactButton, 0.18, this);
 
+        this.interactText = this.add.text(0, 0, '!!', {fontFamily: 'Arial', fontSize: 64, color: '#ff0000'})
+            .setStroke("#000000", 2)
+            .setScrollFactor(0)
+            .setVisible(false);
+
+        this.interactText.setPosition(interactButton.x + (interactButton.displayWidth / 2) * 0.45, interactButton.y - (interactButton.displayHeight / 2) - this.interactText.displayHeight / 2);
+
         let dpadWidth = dpadfull.scaleX * 80;
         dpadfull.setPosition(dpadTopLeft.x, dpadTopLeft.y + dpadWidth  /2);
 
@@ -512,7 +575,11 @@ export class Game extends BaseScene
         
         interactButton.on('pointerup', () => 
         {
-            this.triggrInteractiveEvent(this.currentInteractiveObject);
+            this.triggerInteractiveEvent({
+                type: this.currentInteractiveObject?.type ?? 'sign',
+                interactive: this.currentInteractiveObject,
+                scene: this.currentInteractiveObject?.sceneTransition
+            });
         });
 
         this.input.on('gameobjectover', (pointer: Object, gameObject: Phaser.GameObjects.GameObject) => {
@@ -568,28 +635,40 @@ export class Game extends BaseScene
         this.interactKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.E);
     }
 
-    private triggrInteractiveEvent(interactiveObject: Interactive | null) {
-        if (interactiveObject !== null) {
-            switch (interactiveObject.type) {
+    private triggerInteractiveEvent(config: InteractiveTriggerConfig) 
+    {
+        if(!config)
+        {
+            return;
+        }
+
+        if (config.interactive !== null) {
+            switch (config.type) {
                 case "sign":
                 case "character":
-                    this.showDialog(interactiveObject.messages, {
-                        title: interactiveObject.title,
-                        endAction: interactiveObject.endAction,
-                        sourceCharacter: interactiveObject.sourceCharacter
-                    });
+                    if(config.interactive)
+                    {
+                        this.showDialog(config.interactive.messages, {
+                            title: config.interactive.title,
+                            endAction: config.interactive.endAction,
+                            sourceCharacter: config.interactive.sourceCharacter
+                        });
+                    }
                     break;
 
-                case "tetris":
-                    this.gameState.fromScene = this.scene.key;
-                    this.gameState.spawnX = 19;
-                    this.gameState.spawnY = 2;
+                case "scene":
+                    if(config.scene)
+                    {
+                        this.gameState.fromScene = this.scene.key;
+                        this.gameState.spawnX = config.scene.fromX;
+                        this.gameState.spawnY = config.scene.fromY;
 
-                    this.gameEventManager.purgeCharactersFromEvents();
+                        this.gameEventManager.purgeCharactersFromEvents();
 
-                    this.scene.start("Tetris", {
-                        gameState: this.gameState
-                    });
+                        this.scene.start(config.scene.toScene, {
+                            gameState: this.gameState
+                        });
+                    }
                     break;
             }
         }
@@ -701,8 +780,8 @@ export class Game extends BaseScene
                         }
                         else if(this.currentInteractiveObject?.endAction == EndAction.giveLyricPiece)
                         {
-                            console.log('here');
                             this.addLyricPiece();
+                            this.incrementEvent(this.currentInteractiveObject.eventName ?? 'test');
                         }
                         this.currentInteractiveObject = null;
                         return;

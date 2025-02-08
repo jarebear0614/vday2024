@@ -38,7 +38,7 @@ export class CharacterConfig
 
 export class Character
 {
-    public spriteGroup: Phaser.Physics.Arcade.StaticGroup;
+    public spriteGroup: Phaser.Physics.Arcade.Group;
 
     public name: string = 'Unknown Name';
 
@@ -78,25 +78,26 @@ export class Character
         let newWidth = width * TILE_SCALE;
         let scale = newWidth / 16;
 
-        this.spriteGroup = this.scene.physics.add.staticGroup();
+        this.spriteGroup = this.scene.physics.add.group();
         
-        this.spriteGroup.create(0, 0, 'characters', this.config.bodyFrame, true, true).setScale(scale, scale).refreshBody();
-        this.spriteGroup.create(0, 0, 'characters', this.config.shirtFrame, true, true).setScale(scale, scale).refreshBody();
-        this.spriteGroup.create(0, 0, 'characters', this.config.pantsFrame, true, true).setScale(scale, scale).refreshBody();
-        this.spriteGroup.create(0, 0, 'characters', this.config.shoesFrame, true, true).setScale(scale, scale).refreshBody();
-        this.spriteGroup.create(0, 0, 'characters', this.config.hairFrame, true, true).setScale(scale, scale).refreshBody();
+        this.spriteGroup.create(0, 0, 'characters', this.config.bodyFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false);
+        this.spriteGroup.create(0, 0, 'characters', this.config.shirtFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false);
+        this.spriteGroup.create(0, 0, 'characters', this.config.pantsFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false);
+        this.spriteGroup.create(0, 0, 'characters', this.config.shoesFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false);
+        this.spriteGroup.create(0, 0, 'characters', this.config.hairFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false);
         
         this.spriteGroup.setXY(this.x, this.y); 
-        this.spriteGroup.refresh();
+        //this.spriteGroup.refresh();
 
         this.overlapDialogSprite = this.scene.physics.add.sprite(this.x, this.y, "transparent", 0);
         this.overlapDialogSprite.setSize(24, 24);
+        this.overlapDialogSprite.setPushable(false);
         
         Align.scaleToGameWidth(this.overlapDialogSprite, TILE_SCALE, this.scene); 
 
         if(this.config.player) 
         {
-            this.collider = this.scene.physics.add.collider(this.config.player, this.spriteGroup);
+            //this.collider = this.scene.physics.add.collider(this.config.player, this.spriteGroup);
             this.overlapCollider = this.scene.physics.add.overlap(this.config.player, this.overlapDialogSprite, this.config.overlapCallback);
         }
 
@@ -137,8 +138,36 @@ export class Character
         this.y = y;
 
         this.spriteGroup.setXY(x, y);
-        this.spriteGroup.refresh();
+        //this.spriteGroup.refresh();
         this.overlapDialogSprite.setPosition(x, y);
+
+        //this.spriteGroup.vel
+    }
+
+    getPosition() : Phaser.Math.Vector2
+    {
+        if(!this.spriteGroup || !this.spriteGroup.children)
+        {
+            return Phaser.Math.Vector2.ZERO;
+        }
+        
+        return new Phaser.Math.Vector2((<any>this.spriteGroup.children.getArray()[0]).x, (<any>this.spriteGroup.children.getArray()[0]).y);
+    }
+
+    setVelocity(x: number, y: number)
+    {
+        this.spriteGroup.setVelocity(x, y);
+        //this.overlapDialogSprite.setVelocity(x, y);
+    }
+
+    getVelocity() : Phaser.Math.Vector2
+    {
+        if(!this.spriteGroup || !this.spriteGroup.children)
+        {
+            return Phaser.Math.Vector2.ZERO;
+        }
+        
+        return new Phaser.Math.Vector2((<any>this.spriteGroup.children.getArray()[0]).body.velocity.x, (<any>this.spriteGroup.children.getArray()[0]).body.velocity.y);
     }
 
     isCreated() : boolean 
@@ -162,7 +191,7 @@ export class Character
         {
             this.destroyed = true;
 
-            this.collider.destroy();
+            //this.collider.destroy();
             this.overlapCollider.destroy();
 
             if(this.spriteGroup.children)
@@ -177,5 +206,8 @@ export class Character
     update(delta: number) 
     {
         this.movement?.update(delta);
+
+        let getVelocity = this.getVelocity();
+        this.overlapDialogSprite.setVelocity(getVelocity.x, getVelocity.y);
     }
 }

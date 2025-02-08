@@ -29,7 +29,6 @@ export class GameEvent
         for(let character of this.characters)
         {
             //key + 1 because we assume on deactivate we're at the next event
-            console.log(this.key + 1);
             if(character.isCreated() && this.key + 1 >= character.getEventKeyEnd())
             {
                 character.tearDown();
@@ -78,6 +77,8 @@ export class GameEventManager
 
         let existingEvent = this.findEventByNameAndKey(name, eventKey);
 
+        console.log(existingEvent);
+
         if(existingEvent)
         {
             if(characters)
@@ -89,6 +90,10 @@ export class GameEventManager
                     {
                         existingEvent.characters.push(character);
                     }
+                    else
+                    {
+                        console.log('existing character');
+                    }
                 }                
             }            
         }
@@ -96,8 +101,6 @@ export class GameEventManager
         {
             this.gameEvents[name].push(new GameEvent(name, eventKey, characters));
         }
-
-        console.log(this.gameEvents);
     }
 
     incrementEvent(name: string)
@@ -125,7 +128,7 @@ export class GameEventManager
 
     getCurrentEventProgress(name: string): number
     {
-        return this.gameEventProgress[name];
+        return this.gameEventProgress[name] ?? 0;
     }
 
     getCurrentEvent(name: string) : GameEvent | undefined
@@ -157,17 +160,35 @@ export class GameEventManager
         return events;
     }
 
-    purgeCharactersFromEvents() 
+    activateCurrentEvents()
     {
         let events = this.getCurrentGameEvents();
+
         for(let ev of events)
         {
-            for(let c of ev.characters)
+            ev.activate();
+        }
+    }
+
+    purgeCharactersFromEvents() 
+    {
+        let names = Object.keys(this.gameEvents);
+        for(let name of names)
+        {
+            let events = this.gameEvents[name];
+
+            for(let ev of events)
             {
-                c.tearDown();
+                for(let c of ev.characters)
+                {
+                    if(c.isCreated())
+                    {
+                        c.tearDown();
+                    }                    
+                }
+
+                ev.characters = [];
             }
-            
-            ev.characters = [];
         }
     }
 

@@ -162,7 +162,6 @@ export class Tetris extends BaseScene
         this.setUpField();       
 
         this.textActiveFunctions.push(() => {
-            console.log(this.menuGroup);
             this.menuGroup = this.physics.add.staticGroup();
 
             let modal = this.add.rectangle(0, 0, this.getGameWidth(), this.getGameHeight(), 0x000000, 0.45).setOrigin(0, 0);
@@ -308,7 +307,6 @@ export class Tetris extends BaseScene
 
         if(this.menuGroup && this.menuGroup.children)
         {
-            console.log('destroy menu group');
             this.menuGroup.clear();
             this.menuGroup = null!;
         }
