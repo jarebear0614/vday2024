@@ -53,6 +53,7 @@ export class Game extends BaseScene
 
     map: Phaser.Tilemaps.Tilemap;
     overworldTileset: Phaser.Tilemaps.Tileset;
+    interiorTileset: Phaser.Tilemaps.Tileset;
     backgroundAboveLayer: Phaser.Tilemaps.TilemapLayer;
     backgroundCollidersLayer: Phaser.Tilemaps.TilemapLayer;
 
@@ -152,15 +153,7 @@ export class Game extends BaseScene
             }
         }
 
-        let papers = this.add.image(this.getGameWidth() * 0.08, this.getGameHeight() * 0.05, 'lyricPieces').setOrigin(0, 0).setScrollFactor(0);
-        Align.scaleToGameWidth(papers, 0.08, this);
-
-        let xText = this.add.text(0, 0, ' x ', {fontFamily: 'Arial', fontSize: 20, color: '#ffffff'}).setOrigin(0, 0).setStroke('#000000', 2).setScrollFactor(0);
-
-        xText.setPosition(papers.x + papers.displayWidth + 7 * this.tilemapScale, papers.y + papers.displayHeight / 2 - xText.displayHeight / 2);
-
-        this.lyricCountText = this.add.text(0, 0, this.gameState.lyricsPieces.toString(), {fontFamily: 'Arial', fontSize: 20, color: '#ffffff'}).setStroke('#000000', 2).setScrollFactor(0);
-        this.lyricCountText.setPosition(xText.x + xText.displayWidth + 4 * this.tilemapScale, papers.y + papers.displayHeight / 2 - this.lyricCountText.displayHeight / 2)
+        this.configureLyricUI();
     }
 
     update(_: number, delta: number) 
@@ -261,10 +254,11 @@ export class Game extends BaseScene
         
         this.cursors = this.input.keyboard?.createCursorKeys();
         
-        this.backgroundAboveLayer = this.map.createLayer('above', this.overworldTileset, 0, 0)!;
-        this.backgroundCollidersLayer = this.map.createLayer('colliders', this.overworldTileset, 0, 0)!;
-        let aboveDecorationLayer = this.map.createLayer('above_decoration_1', this.overworldTileset, 0, 0)!;
-        let aboveDecorationLayer2 = this.map.createLayer('above_decoration_2', this.overworldTileset, 0, 0)!;
+        
+        this.backgroundCollidersLayer = this.map.createLayer('colliders', [this.overworldTileset, this.interiorTileset], 0, 0)!;
+        this.backgroundAboveLayer = this.map.createLayer('above', [this.overworldTileset, this.interiorTileset], 0, 0)!;
+        let aboveDecorationLayer = this.map.createLayer('above_decoration_1', [this.overworldTileset, this.interiorTileset], 0, 0)!;
+        let aboveDecorationLayer2 = this.map.createLayer('above_decoration_2', [this.overworldTileset, this.interiorTileset], 0, 0)!;
         
         this.backgroundAboveLayer?.setScale(this.tilemapScale, this.tilemapScale);
         this.backgroundCollidersLayer.setScale(this.tilemapScale, this.tilemapScale);
@@ -528,9 +522,10 @@ export class Game extends BaseScene
     private configureTilemaps() {        
         this.map = this.make.tilemap({key: this.gameState.tilemap ?? 'map'});
         this.overworldTileset = this.map.addTilesetImage('overworld', 'overworldTiles', 16, 16, 1, 3)!;
+        this.interiorTileset = this.map.addTilesetImage('interior', 'interiorTiles', 16, 16, 1, 3)!;
        // const interior = this.map.addTilesetImage('interior', 'interiorTiles', 16, 16, 1, 3)!;
-        let backgroundLayer = this.map.createLayer('ground', this.overworldTileset, 0, 0);
-        let groundDecorationLayer = this.map.createLayer('ground_decoration', this.overworldTileset, 0, 0);        
+        let backgroundLayer = this.map.createLayer('ground', [this.overworldTileset, this.interiorTileset], 0, 0);
+        let groundDecorationLayer = this.map.createLayer('ground_decoration', [this.overworldTileset, this.interiorTileset], 0, 0);        
 
         this.tilemapScale = (this.getGameWidth() * TILE_SCALE) / TILE_SIZE;
         backgroundLayer?.setScale(this.tilemapScale, this.tilemapScale);
@@ -679,6 +674,18 @@ export class Game extends BaseScene
                     break;
             }
         }
+    }
+
+    private configureLyricUI() {
+        let papers = this.add.image(this.getGameWidth() * 0.08, this.getGameHeight() * 0.05, 'lyricPieces').setOrigin(0, 0).setScrollFactor(0);
+        Align.scaleToGameWidth(papers, 0.08, this);
+
+        let xText = this.add.text(0, 0, ' x ', { fontFamily: 'Arial', fontSize: 20, color: '#ffffff' }).setOrigin(0, 0).setStroke('#000000', 2).setScrollFactor(0);
+
+        xText.setPosition(papers.x + papers.displayWidth + 7 * this.tilemapScale, papers.y + papers.displayHeight / 2 - xText.displayHeight / 2);
+
+        this.lyricCountText = this.add.text(0, 0, this.gameState.lyricsPieces.toString(), { fontFamily: 'Arial', fontSize: 20, color: '#ffffff' }).setStroke('#000000', 2).setScrollFactor(0);
+        this.lyricCountText.setPosition(xText.x + xText.displayWidth + 4 * this.tilemapScale, papers.y + papers.displayHeight / 2 - this.lyricCountText.displayHeight / 2);
     }
 
     private showDialog(messages: string[], config?: InteractiveConfig)

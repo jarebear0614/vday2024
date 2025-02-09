@@ -230,8 +230,6 @@ export class WaypointCharacterMovement implements ICharacterMovement
                     this.waypoints[this.waypointIndex].x * (16 * this.scale), 
                     this.waypoints[this.waypointIndex].y * (16 * this.scale));
 
-                    console.log(this.destination);
-
                 let v = new Phaser.Math.Vector2(this.destination.x, this.destination.y).subtract(this.start).normalize().scale(this.velocity);
                 this.character.setVelocity(v.x, v.y);
 
