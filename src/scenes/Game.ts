@@ -251,6 +251,8 @@ export class Game extends BaseScene
         {
             this.interactText.setVisible(false);
         }
+
+        //console.log(this.player.body.x, this.player.body.y);
     }
 
     private configurePlayer() {
@@ -487,7 +489,7 @@ export class Game extends BaseScene
                         }
                     }
                 },
-                movement: this.getMovementFromConfig(x!, y!, movement)
+                movement: this.getMovementFromConfig(x! * this.tilemapScale, y! * this.tilemapScale, movement)
             });
 
             if(!possibleExistingCharacter)
@@ -515,9 +517,9 @@ export class Game extends BaseScene
         switch(config.type)
         {
             case "random":
-                return new RandomInRadiusCharacterMovement(x * this.tilemapScale, y * this.tilemapScale, 16 * this.tilemapScale * 5);
+                return new RandomInRadiusCharacterMovement(x, y, 16 * this.tilemapScale * config.radius);
             case "waypoint":
-                return new WaypointCharacterMovement(x * this.tilemapScale, y * this.tilemapScale, this.tilemapScale, config);
+                return new WaypointCharacterMovement(x, y, this.tilemapScale, config);
             default:
                 return new NopCharacterMovement();
         }

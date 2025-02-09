@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="60" height="60" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="29">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="left-down" width="60" height="60" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="29">
  <editorsettings>
   <export target="main.tmj" format="json"/>
  </editorsettings>
@@ -393,8 +393,8 @@
  <objectgroup id="10" name="map_transport">
   <object id="7" name="tomeganshouse" x="465.5" y="624" width="29" height="16">
    <properties>
-    <property name="map_spawn_x" type="int" value="19"/>
-    <property name="map_spawn_y" type="int" value="17"/>
+    <property name="map_spawn_x" type="int" value="20"/>
+    <property name="map_spawn_y" type="int" value="16"/>
     <property name="to_map" value="meganshouse"/>
    </properties>
   </object>
@@ -412,7 +412,7 @@
   </object>
  </objectgroup>
  <objectgroup id="12" name="map_character">
-  <object id="26" name="Jared" type="character" gid="1773" x="512" y="784" width="16" height="16">
+  <object id="26" name="Jared" type="character" gid="1773" x="512" y="768" width="16" height="16">
    <properties>
     <property name="bodyFrame" type="int" value="0"/>
     <property name="dialog">{
@@ -454,7 +454,7 @@
     <property name="shoesFrame" type="int" value="4"/>
    </properties>
   </object>
-  <object id="25" name="Jared" type="character" gid="1773" x="50.1667" y="394.5" width="16" height="16">
+  <object id="25" name="Jared" type="character" gid="1773" x="128" y="256" width="16" height="16">
    <properties>
     <property name="bodyFrame" type="int" value="0"/>
     <property name="dialog">{
@@ -475,7 +475,8 @@
     <property name="hairFrame" type="int" value="22"/>
     <property name="instance" value="jared1"/>
     <property name="movement">{
-  &quot;type&quot;: &quot;random&quot;
+  &quot;type&quot;: &quot;random&quot;,
+  &quot;radius&quot;: 2
 }</property>
     <property name="pantsFrame" type="int" value="3"/>
     <property name="shirtFrame" type="int" value="286"/>
@@ -524,7 +525,8 @@
     <property name="hairFrame" type="int" value="454"/>
     <property name="instance" value="bob0"/>
     <property name="movement">{
-  &quot;type&quot;: &quot;random&quot;
+  &quot;type&quot;: &quot;random&quot;,
+  &quot;radius&quot;: 5
 }</property>
     <property name="pantsFrame" type="int" value="381"/>
     <property name="shirtFrame" type="int" value="7"/>

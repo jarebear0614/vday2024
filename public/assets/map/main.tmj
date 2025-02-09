@@ -441,12 +441,12 @@
                         {
                          "name":"map_spawn_x",
                          "type":"int",
-                         "value":19
+                         "value":20
                         }, 
                         {
                          "name":"map_spawn_y",
                          "type":"int",
-                         "value":17
+                         "value":16
                         }, 
                         {
                          "name":"to_map",
@@ -582,7 +582,7 @@
                  "visible":true,
                  "width":16,
                  "x":512,
-                 "y":784
+                 "y":768
                 }, 
                 {
                  "gid":1773,
@@ -628,7 +628,7 @@
                         {
                          "name":"movement",
                          "type":"string",
-                         "value":"{\n  \"type\": \"random\"\n}"
+                         "value":"{\n  \"type\": \"random\",\n  \"radius\": 2\n}"
                         }, 
                         {
                          "name":"pantsFrame",
@@ -649,8 +649,8 @@
                  "type":"character",
                  "visible":true,
                  "width":16,
-                 "x":50.1667,
-                 "y":394.5
+                 "x":128,
+                 "y":256
                 }, 
                 {
                  "gid":1773,
@@ -696,7 +696,7 @@
                         {
                          "name":"movement",
                          "type":"string",
-                         "value":"{\n  \"type\": \"random\"\n}"
+                         "value":"{\n  \"type\": \"random\",\n  \"radius\": 5\n}"
                         }, 
                         {
                          "name":"pantsFrame",
@@ -729,7 +729,7 @@
  "nextlayerid":13,
  "nextobjectid":29,
  "orientation":"orthogonal",
- "renderorder":"right-down",
+ "renderorder":"left-down",
  "tiledversion":"1.11.2",
  "tileheight":16,
  "tilesets":[
@@ -802,6 +802,7 @@
          "imagewidth":968,
          "margin":0,
          "name":"overworld",
+         "objectalignment":"topleft",
          "spacing":1,
          "tilecount":1767,
          "tileheight":16,
@@ -815,6 +816,7 @@
          "imagewidth":917,
          "margin":0,
          "name":"characters",
+         "objectalignment":"topleft",
          "spacing":1,
          "tilecount":648,
          "tileheight":16,

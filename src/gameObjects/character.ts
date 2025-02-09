@@ -80,21 +80,18 @@ export class Character
 
         this.spriteGroup = this.scene.physics.add.group();
         
-        this.spriteGroup.create(0, 0, 'characters', this.config.bodyFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false);
-        this.spriteGroup.create(0, 0, 'characters', this.config.shirtFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false);
-        this.spriteGroup.create(0, 0, 'characters', this.config.pantsFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false);
-        this.spriteGroup.create(0, 0, 'characters', this.config.shoesFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false);
-        this.spriteGroup.create(0, 0, 'characters', this.config.hairFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false);
+        this.spriteGroup.create(0, 0, 'characters', this.config.bodyFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false).setOrigin(0, 0);
+        this.spriteGroup.create(0, 0, 'characters', this.config.shirtFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false).setOrigin(0, 0);
+        this.spriteGroup.create(0, 0, 'characters', this.config.pantsFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false).setOrigin(0, 0);
+        this.spriteGroup.create(0, 0, 'characters', this.config.shoesFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false).setOrigin(0, 0);
+        this.spriteGroup.create(0, 0, 'characters', this.config.hairFrame, true, true).setScale(scale, scale).refreshBody().setPushable(false).setOrigin(0, 0);
         
-        this.spriteGroup.setXY(this.x, this.y); 
-        //this.spriteGroup.refresh();
+        this.spriteGroup.setXY(this.x, this.y).setOrigin(0, 0); 
 
         this.overlapDialogSprite = this.scene.physics.add.sprite(this.x, this.y, "transparent", 0);
         this.overlapDialogSprite.setSize(24, 24);
-        
-
-        //this.spriteGroup.add(this.overlapDialogSprite);
         this.overlapDialogSprite.setPushable(false);
+        this.overlapDialogSprite.setOrigin(0, 0);
         
         Align.scaleToGameWidth(this.overlapDialogSprite, TILE_SCALE, this.scene); 
 

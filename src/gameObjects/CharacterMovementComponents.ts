@@ -112,8 +112,8 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
            
                 this.start = new Phaser.Math.Vector2(this.destination.x, this.destination.y);
                 
-                this.destination.x = Math.round(Math.random() * this.radius) + this.xCenter - this.radius;
-                this.destination.y = Math.round(Math.random() * this.radius) + this.yCenter - this.radius;
+                this.destination.x = Math.round(Math.random() * this.radius * 2) + this.xCenter - this.radius;
+                this.destination.y = Math.round(Math.random() * this.radius * 2) + this.yCenter - this.radius;
 
                 let v = new Phaser.Math.Vector2(this.destination.x, this.destination.y).subtract(this.start).normalize().scale(this.velocity);
                 this.character.setVelocity(v.x, v.y);
@@ -130,6 +130,8 @@ export class CharacterMovementConfig
 
     loop: boolean;
     waypoints: Phaser.Math.Vector2[];
+
+    radius: number = 5;
 }
 
 export class WaypointCharacterMovement implements ICharacterMovement
@@ -227,6 +229,8 @@ export class WaypointCharacterMovement implements ICharacterMovement
                 this.destination = new Phaser.Math.Vector2(
                     this.waypoints[this.waypointIndex].x * (16 * this.scale), 
                     this.waypoints[this.waypointIndex].y * (16 * this.scale));
+
+                    console.log(this.destination);
 
                 let v = new Phaser.Math.Vector2(this.destination.x, this.destination.y).subtract(this.start).normalize().scale(this.velocity);
                 this.character.setVelocity(v.x, v.y);

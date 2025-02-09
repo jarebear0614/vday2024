@@ -21,7 +21,7 @@ export class Player extends Character
     create(): Character {
         let character = super.create();
 
-        this.body = this.scene.physics.add.sprite(100, 100, "transparent", 0);
+        this.body = this.scene.physics.add.sprite(100, 100, "transparent", 0).setOrigin(0, 0);
         this.body.setSize(16, 16);
         this.body.setPushable(false);
         
