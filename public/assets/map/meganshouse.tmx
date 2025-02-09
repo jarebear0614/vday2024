@@ -168,7 +168,7 @@
     <property name="to_scene" value="Tetris"/>
    </properties>
   </object>
-  <object id="7" type="scene" x="219.5" y="0.5" width="24" height="24">
+  <object id="7" type="scene" x="220" y="0" width="24" height="24">
    <properties>
     <property name="eventKeyTrigger" type="int" value="1"/>
     <property name="eventName" value="dots"/>

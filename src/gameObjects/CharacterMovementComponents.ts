@@ -33,8 +33,7 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
     private yCenter: number = 0;
     private radius: number = 0;
 
-    private startX: number = 0;
-    private startY: number = 0;
+    private start: Phaser.Math.Vector2 = Phaser.Math.Vector2.ZERO;
 
     private currentWaitTime = 0;
     private waitUntil = 0;
@@ -42,11 +41,12 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
 
     private isMoving: boolean = false;
     private destination: Phaser.Math.Vector2 = Phaser.Math.Vector2.ZERO;
-    private moveTime: number = 0;
 
     private velocity: number = 128;
 
     private isPaused: boolean = false;
+
+    private lastDistance: number = 0;
 
     constructor(xCenter: number, yCenter: number, radius: number)
     {
@@ -56,8 +56,7 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
 
         this.waitUntil = Math.round(Math.random() * this.waitTimeRange.max - this.waitTimeRange.min) + this.waitTimeRange.min;
 
-        this.startX = this.xCenter;
-        this.startY = this.yCenter;
+        this.start = new Phaser.Math.Vector2(this.xCenter, this.yCenter);
 
         this.destination = new Phaser.Math.Vector2(this.xCenter, this.yCenter);
     }
@@ -65,11 +64,15 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
     pause(): void 
     {
         this.isPaused = true;
+        this.character.setVelocity(0, 0);
     }
 
     unpause(): void 
     {
         this.isPaused = false;
+
+        let v = new Phaser.Math.Vector2(this.destination.x, this.destination.y).subtract(this.start).normalize().scale(this.velocity);
+        this.character.setVelocity(v.x, v.y);
     }
 
     setCharacter(character: Character): void {
@@ -85,20 +88,12 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
 
         if(this.isMoving)
         {
-            // let start = new Phaser.Math.Vector2(this.startX, this.startY);       
-            
-            // let velScale = this.velocity / start.distance(this.destination);
-
-            // this.moveTime += (delta / 1000);
-
-            // let newPosition = Phaser.Math.LinearXY(start, this.destination, this.moveTime * velScale);
-            // this.character.setPosition(newPosition.x, newPosition.y);
-
-            // if(this.moveTime * velScale >= 1)
-            // {
-            //     this.isMoving = false;
-            //     this.waitUntil = Math.round(Math.random() * this.waitTimeRange.max - this.waitTimeRange.min) + this.waitTimeRange.min;
-            // }
+            let currentDistance = this.destination.distance(this.character.getPosition());
+            if(currentDistance > this.lastDistance)
+            {
+                let v = new Phaser.Math.Vector2(this.destination.x, this.destination.y).subtract(this.character.getPosition()).normalize().scale(this.velocity);
+                this.character.setVelocity(v.x, v.y);
+            }
 
             if(this.destination.distance(this.character.getPosition()) <= 5)
             {
@@ -113,17 +108,17 @@ export class RandomInRadiusCharacterMovement implements ICharacterMovement
             if(this.currentWaitTime >= this.waitUntil)
             {
                 this.currentWaitTime = 0;
-                this.moveTime = 0;
                 this.isMoving = true;     
            
-                this.startX = this.destination.x;
-                this.startY = this.destination.y;
+                this.start = new Phaser.Math.Vector2(this.destination.x, this.destination.y);
                 
                 this.destination.x = Math.round(Math.random() * this.radius) + this.xCenter - this.radius;
                 this.destination.y = Math.round(Math.random() * this.radius) + this.yCenter - this.radius;
 
-                let v = new Phaser.Math.Vector2(this.destination.x, this.destination.y).subtract(new Phaser.Math.Vector2(this.startX, this.startY)).normalize().scale(this.velocity);
+                let v = new Phaser.Math.Vector2(this.destination.x, this.destination.y).subtract(this.start).normalize().scale(this.velocity);
                 this.character.setVelocity(v.x, v.y);
+
+                this.lastDistance = this.destination.distance(this.character.getPosition());
             }
         }
     }
@@ -156,11 +151,12 @@ export class WaypointCharacterMovement implements ICharacterMovement
     private waitTimeRange = {min: 500, max: 1500};
 
     private isMoving: boolean = false;
-    private moveTime: number = 0;
 
     private velocity: number = 128;
 
     private isPaused: boolean = false;
+
+    private lastDistance: number = 0;
 
     constructor(xCenter: number, yCenter: number, scale: number, config: CharacterMovementConfig)
     {
@@ -177,11 +173,14 @@ export class WaypointCharacterMovement implements ICharacterMovement
     pause(): void 
     {
         this.isPaused = true;
+        this.character.setVelocity(0, 0);
     }
 
     unpause(): void 
     {
         this.isPaused = false;
+        let v = new Phaser.Math.Vector2(this.destination.x, this.destination.y).subtract(this.start).normalize().scale(this.velocity);
+        this.character.setVelocity(v.x, v.y);
     }
 
     setCharacter(character: Character): void 
@@ -198,35 +197,31 @@ export class WaypointCharacterMovement implements ICharacterMovement
         
         if(this.isMoving)
         {
-            if(this.destination.distance(this.character.getPosition()) <= 5)
+            let currentDistance = this.destination.distance(this.character.getPosition());
+            if(currentDistance > this.lastDistance)
+            {
+                let v = new Phaser.Math.Vector2(this.destination.x, this.destination.y).subtract(this.character.getPosition()).normalize().scale(this.velocity);
+                this.character.setVelocity(v.x, v.y);
+            }
+
+            if(currentDistance <= 5)
             {
                 this.isMoving = false;
                 this.waitUntil = Math.round(Math.random() * this.waitTimeRange.max - this.waitTimeRange.min) + this.waitTimeRange.min;
                 this.waypointIndex = (this.waypointIndex + 1) % this.waypoints.length;
                 this.character.setVelocity(0, 0);
+
+                if(this.waypointIndex == 0 && !this.loop)
+                {
+                    this.waitUntil = Number.MAX_SAFE_INTEGER;
+                }
             }
-            // let velScale = this.velocity / this.start.distance(this.destination);
-
-            // this.moveTime += (delta / 1000.0);
-
-            // let newPosition = Phaser.Math.LinearXY(this.start, this.destination, this.moveTime * velScale)
-
-            // this.character.setPosition(newPosition.x, newPosition.y);
-
-            // if(this.moveTime * velScale >= 1)
-            // {
-            //     this.isMoving = false;
-            //     this.waitUntil = Math.round(Math.random() * this.waitTimeRange.max - this.waitTimeRange.min) + this.waitTimeRange.min;
-            //     this.waypointIndex = (this.waypointIndex + 1) % this.waypoints.length;
-            // }
-        }
-        else {
+        } else {
             this.currentWaitTime += delta;
             if(this.currentWaitTime >= this.waitUntil)
             {
                 this.currentWaitTime = 0;
                 this.isMoving = true;
-                this.moveTime = 0;
 
                 this.start = new Phaser.Math.Vector2(this.destination.x, this.destination.y);
                 this.destination = new Phaser.Math.Vector2(
@@ -235,6 +230,8 @@ export class WaypointCharacterMovement implements ICharacterMovement
 
                 let v = new Phaser.Math.Vector2(this.destination.x, this.destination.y).subtract(this.start).normalize().scale(this.velocity);
                 this.character.setVelocity(v.x, v.y);
+
+                this.lastDistance = this.destination.distance(this.character.getPosition());
             }
         }
     }    

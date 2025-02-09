@@ -63,6 +63,9 @@ export class Game extends BaseScene
     lyricCountText: Phaser.GameObjects.Text;
     interactText: Phaser.GameObjects.Text;
 
+    playerTouching: boolean = false;
+    wasPlayerTouching: boolean = false;
+
     constructor ()
     {
         super('Game');
@@ -225,11 +228,12 @@ export class Game extends BaseScene
             });
         }
 
-        let touching = !this.player.body.body.touching.none;
-        let wasTouching = !this.player.body.body.wasTouching.none;
-
-        if(wasTouching && !touching) 
+        this.wasPlayerTouching = this.playerTouching;
+        this.playerTouching = this.player.body.body.embedded;
+        
+        if(this.wasPlayerTouching && !this.playerTouching) 
         {
+            this.currentInteractiveObject?.sourceCharacter?.movement?.unpause();
             this.currentInteractiveObject = null;
         }
 
@@ -465,6 +469,7 @@ export class Game extends BaseScene
                 dialog: dialog,
                 player: this.player.getBody(),
                 overlapCallback: () => {
+                    newCharacter.movement?.pause();
                     let ev = this.gameEventManager.getCurrentEventProgress(eventName);
                     if(ev !== undefined)
                     {
@@ -680,8 +685,6 @@ export class Game extends BaseScene
         {
             return;
         }
-        
-        config?.sourceCharacter?.movement?.pause();
 
         let messagesIndex = 0;
 

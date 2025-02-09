@@ -37,6 +37,11 @@ export class Player extends Character
 
     setVelocityX(x: number) 
     {
+        if(this.destroyed)
+        {
+            return;
+        }
+        
         this.body.setVelocityX(x);
     }
 
@@ -47,6 +52,11 @@ export class Player extends Character
 
     setVelocity(x: number, y: number) 
     {
+        if(this.destroyed || !this.body)
+        {
+            return;
+        }
+
         this.body.setVelocity(x, y);
     }
 

@@ -45,8 +45,8 @@ export class Character
     x: number;
     y: number;
 
-    private created: boolean = false;
-    private destroyed: boolean = false;
+    protected created: boolean = false;
+    protected destroyed: boolean = false;
 
     movement?: ICharacterMovement = undefined;
 
@@ -91,13 +91,16 @@ export class Character
 
         this.overlapDialogSprite = this.scene.physics.add.sprite(this.x, this.y, "transparent", 0);
         this.overlapDialogSprite.setSize(24, 24);
+        
+
+        //this.spriteGroup.add(this.overlapDialogSprite);
         this.overlapDialogSprite.setPushable(false);
         
         Align.scaleToGameWidth(this.overlapDialogSprite, TILE_SCALE, this.scene); 
 
         if(this.config.player) 
         {
-            //this.collider = this.scene.physics.add.collider(this.config.player, this.spriteGroup);
+            this.collider = this.scene.physics.add.collider(this.config.player, this.spriteGroup);
             this.overlapCollider = this.scene.physics.add.overlap(this.config.player, this.overlapDialogSprite, this.config.overlapCallback);
         }
 
@@ -146,7 +149,7 @@ export class Character
 
     getPosition() : Phaser.Math.Vector2
     {
-        if(!this.spriteGroup || !this.spriteGroup.children)
+        if(!this.spriteGroup || !this.spriteGroup.children || this.spriteGroup.children.getArray().length == 0)
         {
             return Phaser.Math.Vector2.ZERO;
         }
@@ -156,13 +159,18 @@ export class Character
 
     setVelocity(x: number, y: number)
     {
+        if(this.destroyed)
+        {
+            return;
+        }
+
         this.spriteGroup.setVelocity(x, y);
-        //this.overlapDialogSprite.setVelocity(x, y);
+        this.overlapDialogSprite.setVelocity(x, y);
     }
 
     getVelocity() : Phaser.Math.Vector2
     {
-        if(!this.spriteGroup || !this.spriteGroup.children)
+        if(!this.spriteGroup || !this.spriteGroup.children || this.spriteGroup.children.getArray().length == 0)
         {
             return Phaser.Math.Vector2.ZERO;
         }
@@ -191,8 +199,8 @@ export class Character
         {
             this.destroyed = true;
 
-            //this.collider.destroy();
-            this.overlapCollider.destroy();
+            this.collider.destroy();
+            //this.overlapCollider.destroy();
 
             if(this.spriteGroup.children)
             {
@@ -205,6 +213,11 @@ export class Character
 
     update(delta: number) 
     {
+        if(this.destroyed)
+        {
+            return;
+        }
+        
         this.movement?.update(delta);
 
         let getVelocity = this.getVelocity();

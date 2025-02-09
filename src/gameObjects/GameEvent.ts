@@ -77,8 +77,6 @@ export class GameEventManager
 
         let existingEvent = this.findEventByNameAndKey(name, eventKey);
 
-        console.log(existingEvent);
-
         if(existingEvent)
         {
             if(characters)
@@ -89,10 +87,6 @@ export class GameEventManager
                     if(!existingCharacter)
                     {
                         existingEvent.characters.push(character);
-                    }
-                    else
-                    {
-                        console.log('existing character');
                     }
                 }                
             }            
