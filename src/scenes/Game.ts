@@ -6,7 +6,7 @@ import { BaseScene } from './BaseScene';
 import { Align } from '../util/align';
 import { GameState } from '../gameObjects/GameState';
 import { Player } from '../gameObjects/player';
-import { Interactive, InteractiveConfig, InteractiveTriggerConfig } from '../gameObjects/interactive';
+import { Interactive, InteractiveConfig, InteractiveTriggerConfig, SceneTransitionConfig } from '../gameObjects/interactive';
 import { CharacterEvent, CharacterEventUtility, EndAction } from '../gameObjects/dialog';
 import { RandomInRadiusCharacterMovement, CharacterMovementConfig, WaypointCharacterMovement, NopCharacterMovement } from '../gameObjects/CharacterMovementComponents';
 import { ICharacterMovement } from '../gameObjects/ICharacterMovement';
@@ -149,6 +149,20 @@ export class Game extends BaseScene
                 this.showDialog(['I better go talk to bob, I beat the high score!'], 
                 {
                     endAction: EndAction.incrementEvent
+                });
+            }
+        }
+        if(this.gameState.fromScene === "Dots")
+        {
+            console.log(this.gameEventManager);
+            if(this.gameEventManager.getCurrentEventProgress("dots") === 0 && this.gameState.completedDots)
+            {
+                console.log('here');
+                this.gameEventManager.incrementEvent('dots');
+                this.showDialog(['Ahh I feel better now', 'Wait, what\'s this?', 'Oh, a lyric piece!'], 
+                {
+                    eventName: 'dots',
+                    endAction: EndAction.giveLyricPiece
                 });
             }
         }
@@ -298,11 +312,11 @@ export class Game extends BaseScene
             Align.scaleToGameWidth(sprite, TILE_SCALE, this);
 
             let collider = this.physics.add.overlap(this.player.getBody(), sprite, () => {
-                let gameState: GameState = new GameState();
-                gameState.tilemap = tilemap;
-                gameState.spawnX = spawnX;
-                gameState.spawnY = spawnY;
-                gameState.fromScene = this.scene.key;
+                
+                this.gameState.tilemap = tilemap;
+                this.gameState.spawnX = spawnX;
+                this.gameState.spawnY = spawnY;
+                this.gameState.fromScene = this.scene.key;
 
                 this.camera.fadeOut(300);
 
@@ -310,7 +324,7 @@ export class Game extends BaseScene
 
                 this.time.delayedCall(300, () => {
                     this.gameEventManager.purgeCharactersFromEvents();
-                    this.scene.restart({ gameState: gameState });
+                    this.scene.restart({ gameState: this.gameState });
                 });
             });
         }
@@ -334,6 +348,8 @@ export class Game extends BaseScene
             let eventName: string | undefined;
             let eventKeyTrigger: number | undefined;
 
+            let dialog: CharacterEvent | undefined = undefined;
+
             if(properties)
             {
                 for (const property of properties) {
@@ -356,6 +372,8 @@ export class Game extends BaseScene
                         case 'eventKeyTrigger':
                             eventKeyTrigger = parseInt(property.value);
                             break;
+                        case 'dialog':
+                            dialog = JSON.parse(property.value);
                     }
                 }
             }
@@ -364,12 +382,39 @@ export class Game extends BaseScene
             sprite.body.setSize(width, height, false);
             Align.scaleToGameWidth(sprite, TILE_SCALE, this);
 
+            if(eventName && eventKeyTrigger)
+            {
+                this.gameEventManager.addEvent(eventName, eventKeyTrigger);
+            }
+
             this.physics.add.overlap(this.player.body, sprite, () => 
             {
                 let progress = Number.MAX_SAFE_INTEGER;
                 if(eventName)
                 {
                     progress = this.gameEventManager.getCurrentEventProgress(eventName);
+                }
+
+                if(dialog)
+                {
+                    let current = dialog?.events.find((ev) =>
+                    {
+                        return ev.eventKey == progress;
+                    });
+
+                    if(current)
+                    {
+                        this.currentInteractiveObject = new Interactive(current.dialog, 'sign', eventName, current.eventKey, 
+                            {
+                                endAction: current.onEnd,
+                                sceneTransition: {
+                                    toScene: toScene ?? '',
+                                    fromX: fromX,
+                                    fromY: fromY
+                                }
+                            },
+                        );   
+                    }
                 }
                 
                 if(progress >= (eventKeyTrigger ?? 0))
@@ -661,18 +706,25 @@ export class Game extends BaseScene
                 case "scene":
                     if(config.scene)
                     {
-                        this.gameState.fromScene = this.scene.key;
-                        this.gameState.spawnX = config.scene.fromX;
-                        this.gameState.spawnY = config.scene.fromY;
-
-                        this.gameEventManager.purgeCharactersFromEvents();
-
-                        this.scene.start(config.scene.toScene, {
-                            gameState: this.gameState
-                        });
+                        this.triggerSceneFromConfig(config.scene);
                     }
                     break;
             }
+        }
+    }
+
+    private triggerSceneFromConfig(config: SceneTransitionConfig) {
+        if(config)
+        {
+            this.gameState.fromScene = this.scene.key;
+            this.gameState.spawnX = config.fromX;
+            this.gameState.spawnY = config.fromY;
+
+            this.gameEventManager.purgeCharactersFromEvents();
+
+            this.scene.start(config.toScene, {
+                gameState: this.gameState
+            });
         }
     }
 
@@ -786,14 +838,23 @@ export class Game extends BaseScene
 
                         config?.sourceCharacter?.movement?.unpause();
 
-                        if(this.currentInteractiveObject?.endAction == EndAction.incrementEvent) 
+                        console.log(this.currentInteractiveObject?.endAction);
+
+                        let endAction = config?.endAction ?? this.currentInteractiveObject?.endAction ?? EndAction.nop;
+                        let eventName = config?.eventName ?? this.currentInteractiveObject?.eventName ?? undefined;
+
+                        if(endAction == EndAction.incrementEvent) 
                         {
-                            this.incrementEvent(this.currentInteractiveObject.eventName ?? 'test');
+                            this.incrementEvent(eventName);
                         }
-                        else if(this.currentInteractiveObject?.endAction == EndAction.giveLyricPiece)
+                        else if(endAction == EndAction.startScene && this.currentInteractiveObject && this.currentInteractiveObject.sceneTransition)
+                        {
+                            this.triggerSceneFromConfig(this.currentInteractiveObject.sceneTransition);
+                        }
+                        else if(endAction == EndAction.giveLyricPiece)
                         {
                             this.addLyricPiece();
-                            this.incrementEvent(this.currentInteractiveObject.eventName ?? 'test');
+                            this.incrementEvent(eventName);
                         }
                         this.currentInteractiveObject = null;
                         return;
@@ -834,9 +895,12 @@ export class Game extends BaseScene
         }
     }
 
-    private incrementEvent(name: string) 
+    private incrementEvent(name: string | undefined) 
     {
-        this.gameEventManager.incrementEvent(name);      
-        this.configureEvent();
+        if(name)
+        {
+            this.gameEventManager.incrementEvent(name);      
+            this.configureEvent();
+        }
     }
 }

@@ -1,10 +1,10 @@
 export class GameState 
 {
-    tilemap?: string = "main";
+    tilemap?: string = "meganshouse";
 
-    spawnX?: number = 35;
+    spawnX?: number = 12;
 
-    spawnY?: number = 45;
+    spawnY?: number = 5;
 
     tetrisScore?: number = 0;
 

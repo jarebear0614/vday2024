@@ -1,11 +1,13 @@
 import { Character } from "./character";
-import { EndAction } from "./dialog";
+import { CharacterEvent, EndAction } from "./dialog";
 export class InteractiveConfig
 {
     title?: string;
     endAction?: EndAction = EndAction.nop;
     sourceCharacter?: Character;
     sceneTransition?: SceneTransitionConfig;
+    sourceDialog?: CharacterEvent;
+    eventName?: string;
 }
 
 export class InteractiveTriggerConfig

@@ -4,6 +4,8 @@ export enum EndAction
 
     incrementEvent = "incrementEvent",
 
+    startScene = "startScene",
+
     giveLyricPiece = "giveLyricPiece"
 }
 

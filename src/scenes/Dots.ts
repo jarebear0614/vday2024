@@ -97,9 +97,10 @@ export class Dots extends BaseScene
                             let rectY = this.dots[this.currentDot - 1].start.y * this.scaleY;
                             let sizeX = this.dots[this.currentDot - 1].size * this.scaleX * 10;
                             let sizeY = this.dots[this.currentDot - 1].size * this.scaleY * 10;
+
                             if(
-                                this.downPosition.x >= rectX && this.downPosition.x <= rectX + sizeX &&
-                                this.downPosition.y >= rectY && this.downPosition.y <= rectY + sizeY
+                                this.downPosition.x >= rectX - sizeX / 2 && this.downPosition.x <= rectX + sizeX / 2 &&
+                                this.downPosition.y >= rectY - sizeY / 2 && this.downPosition.y <= rectY + sizeY / 2
                             )
                             {
                                 this.selectedRectangle = this.add.rectangle(rectX, rectY, sizeX / 10, sizeY / 10)
@@ -122,8 +123,8 @@ export class Dots extends BaseScene
                                 let sizeX = this.dots[this.currentDot % this.dots.length].size * this.scaleX * 10;
                                 let sizeY = this.dots[this.currentDot % this.dots.length].size * this.scaleY * 10;
                                 if(
-                                    pointer.position.x >= rectX && pointer.position.x <= rectX + sizeX &&
-                                    pointer.position.y >= rectY && pointer.position.y <= rectY + sizeY
+                                    pointer.position.x >= rectX - sizeX / 2 && pointer.position.x <= rectX + sizeX / 2 &&
+                                    pointer.position.y >= rectY - sizeX / 2 && pointer.position.y <= rectY + sizeY / 2
                                  )
                                  {
                                     this.add.line(0, 0, this.downPosition.x +sizeX / (10 * 2), this.downPosition.y + sizeY / (10 * 2), rectX + sizeX / (10 * 2), rectY + sizeY / (10 * 2), 0x000000, 1.0).setOrigin(0, 0);
@@ -148,6 +149,7 @@ export class Dots extends BaseScene
                                             alpha: 1
                                         });
 
+                                        this.gameState.fromScene = this.scene.key;
                                         this.gameState.completedDots = true;
 
                                         this.time.delayedCall(3000, () => 
