@@ -1,6 +1,8 @@
 import { RandomBag } from "./randomBag";
 import { Tetromino } from "./tetromino";
 
+import { Math } from 'phaser'
+
 export class TetrominoMapping
 {
     [key: string]: TetrominoData;
@@ -8,16 +10,16 @@ export class TetrominoMapping
 
 export class TetrominoWallKickData
 {
-    [key: string]: Phaser.Math.Vector2[];
+    [key: string]: Math.Vector2[];
 }
 
 export class TetrominoData
 {
-    public readonly rotationMatrix: Phaser.Math.Vector2[][];
+    public readonly rotationMatrix: Math.Vector2[][];
 
     public readonly wallKickData: TetrominoWallKickData;
 
-    constructor(rotationMatrix: Phaser.Math.Vector2[][], wallKickData: TetrominoWallKickData)
+    constructor(rotationMatrix: Math.Vector2[][], wallKickData: TetrominoWallKickData)
     {
         this.rotationMatrix = rotationMatrix;
         this.wallKickData = wallKickData;
@@ -75,14 +77,14 @@ export class TetrominoFactory
     }
 
     /*
-        * The rotation matrix focuses on a single rotation Phaser.Math.Vector2. So for example in the T rotation matrix, the 0,0 Phaser.Math.Vector2 is always the
+        * The rotation matrix focuses on a single rotation Math.Vector2. So for example in the T rotation matrix, the 0,0 Math.Vector2 is always the
         * one marked with an 'R'
         * 
         *   [0]
         *    #
         *  # R #
         *   
-        * The above format shows the # as normal Minos and the R as the rotation Phaser.Math.Vector2. That is the first rotation matrix or
+        * The above format shows the # as normal Minos and the R as the rotation Math.Vector2. That is the first rotation matrix or
         * the first row in the TRotationmatrix Array. The rest would be as follows
         * 
         *   [1]   [2]    [3]    
@@ -93,82 +95,82 @@ export class TetrominoFactory
         * The rest of the pieces follow a similar path.
         */
 
-    private static TRotationMatrix: Phaser.Math.Vector2[][] = [
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(-1,0), new Phaser.Math.Vector2(1, 0), new Phaser.Math.Vector2(0,-1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(0,1), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(1,0)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(-1, 0), new Phaser.Math.Vector2(0, 1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(0,1), new Phaser.Math.Vector2(-1, 0)]
+    private static TRotationMatrix: Math.Vector2[][] = [
+        [new Math.Vector2(0,0), new Math.Vector2(-1,0), new Math.Vector2(1, 0), new Math.Vector2(0,-1)],
+        [new Math.Vector2(0,0), new Math.Vector2(0,1), new Math.Vector2(0,-1), new Math.Vector2(1,0)],
+        [new Math.Vector2(0,0), new Math.Vector2(1,0), new Math.Vector2(-1, 0), new Math.Vector2(0, 1)],
+        [new Math.Vector2(0,0), new Math.Vector2(0,-1), new Math.Vector2(0,1), new Math.Vector2(-1, 0)]
     ];
 
-    private static SRotationMatrix: Phaser.Math.Vector2[][] = [
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(-1,0), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(1,-1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(1,1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(0,1), new Phaser.Math.Vector2(-1,1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(-1,0), new Phaser.Math.Vector2(-1,-1), new Phaser.Math.Vector2(0,1)]
+    private static SRotationMatrix: Math.Vector2[][] = [
+        [new Math.Vector2(0,0), new Math.Vector2(-1,0), new Math.Vector2(0,-1), new Math.Vector2(1,-1)],
+        [new Math.Vector2(0,0), new Math.Vector2(0,-1), new Math.Vector2(1,0), new Math.Vector2(1,1)],
+        [new Math.Vector2(0,0), new Math.Vector2(1,0), new Math.Vector2(0,1), new Math.Vector2(-1,1)],
+        [new Math.Vector2(0,0), new Math.Vector2(-1,0), new Math.Vector2(-1,-1), new Math.Vector2(0,1)]
     ];
 
-    private static ZRotationMatrix: Phaser.Math.Vector2[][] = [
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(-1,-1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(0,1), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(1,-1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(-1,0), new Phaser.Math.Vector2(0,1), new Phaser.Math.Vector2(1,1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(-1,0), new Phaser.Math.Vector2(-1,1)]
+    private static ZRotationMatrix: Math.Vector2[][] = [
+        [new Math.Vector2(0,0), new Math.Vector2(1,0), new Math.Vector2(0,-1), new Math.Vector2(-1,-1)],
+        [new Math.Vector2(0,0), new Math.Vector2(0,1), new Math.Vector2(1,0), new Math.Vector2(1,-1)],
+        [new Math.Vector2(0,0), new Math.Vector2(-1,0), new Math.Vector2(0,1), new Math.Vector2(1,1)],
+        [new Math.Vector2(0,0), new Math.Vector2(0,-1), new Math.Vector2(-1,0), new Math.Vector2(-1,1)]
     ];
 
-    private static ORotationMatrix: Phaser.Math.Vector2[][] = [
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(1,-1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(1,-1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(1,-1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(1,-1)]
+    private static ORotationMatrix: Math.Vector2[][] = [
+        [new Math.Vector2(0,0), new Math.Vector2(1,0), new Math.Vector2(0,-1), new Math.Vector2(1,-1)],
+        [new Math.Vector2(0,0), new Math.Vector2(1,0), new Math.Vector2(0,-1), new Math.Vector2(1,-1)],
+        [new Math.Vector2(0,0), new Math.Vector2(1,0), new Math.Vector2(0,-1), new Math.Vector2(1,-1)],
+        [new Math.Vector2(0,0), new Math.Vector2(1,0), new Math.Vector2(0,-1), new Math.Vector2(1,-1)]
     ];
 
-    private static IRotationMatrix: Phaser.Math.Vector2[][] = [
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(-1,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(2,0)],
-        [new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(1,-1), new Phaser.Math.Vector2(1,1), new Phaser.Math.Vector2(1,2)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(-1,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(2,0)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(0,-2), new Phaser.Math.Vector2(0,1)]
+    private static IRotationMatrix: Math.Vector2[][] = [
+        [new Math.Vector2(0,0), new Math.Vector2(-1,0), new Math.Vector2(1,0), new Math.Vector2(2,0)],
+        [new Math.Vector2(1,0), new Math.Vector2(1,-1), new Math.Vector2(1,1), new Math.Vector2(1,2)],
+        [new Math.Vector2(0,0), new Math.Vector2(-1,0), new Math.Vector2(1,0), new Math.Vector2(2,0)],
+        [new Math.Vector2(0,0), new Math.Vector2(0,-1), new Math.Vector2(0,-2), new Math.Vector2(0,1)]
     ];
 
-    private static LRotationMatrix: Phaser.Math.Vector2[][] = [
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(-1,0), new Phaser.Math.Vector2(1,-1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(0,1), new Phaser.Math.Vector2(1,1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(-1,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(-1,1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(0,1), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(-1,-1)]
+    private static LRotationMatrix: Math.Vector2[][] = [
+        [new Math.Vector2(0,0), new Math.Vector2(1,0), new Math.Vector2(-1,0), new Math.Vector2(1,-1)],
+        [new Math.Vector2(0,0), new Math.Vector2(0,-1), new Math.Vector2(0,1), new Math.Vector2(1,1)],
+        [new Math.Vector2(0,0), new Math.Vector2(-1,0), new Math.Vector2(1,0), new Math.Vector2(-1,1)],
+        [new Math.Vector2(0,0), new Math.Vector2(0,1), new Math.Vector2(0,-1), new Math.Vector2(-1,-1)]
     ];
 
-    private static JRotationMatrix: Phaser.Math.Vector2[][] = [
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(-1,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(-1,-1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(0,1), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(1,-1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(1,0), new Phaser.Math.Vector2(-1,0), new Phaser.Math.Vector2(1,1)],
-        [new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(0,-1), new Phaser.Math.Vector2(0,1), new Phaser.Math.Vector2(-1,1)]
+    private static JRotationMatrix: Math.Vector2[][] = [
+        [new Math.Vector2(0,0), new Math.Vector2(-1,0), new Math.Vector2(1,0), new Math.Vector2(-1,-1)],
+        [new Math.Vector2(0,0), new Math.Vector2(0,1), new Math.Vector2(0,-1), new Math.Vector2(1,-1)],
+        [new Math.Vector2(0,0), new Math.Vector2(1,0), new Math.Vector2(-1,0), new Math.Vector2(1,1)],
+        [new Math.Vector2(0,0), new Math.Vector2(0,-1), new Math.Vector2(0,1), new Math.Vector2(-1,1)]
     ];
 
     private static JLSTZ_OffsetData: TetrominoWallKickData =
     {
-        'Kick_0R': [ new Phaser.Math.Vector2(-1, 0), new Phaser.Math.Vector2 (-1, -1), new Phaser.Math.Vector2(0, 2), new Phaser.Math.Vector2(-1, 2) ],
-        'Kick_R0': [ new Phaser.Math.Vector2(1, 0), new Phaser.Math.Vector2 (1, 1), new Phaser.Math.Vector2(0, -2), new Phaser.Math.Vector2(1, -2) ],
+        'Kick_0R': [ new Math.Vector2(-1, 0), new Math.Vector2 (-1, -1), new Math.Vector2(0, 2), new Math.Vector2(-1, 2) ],
+        'Kick_R0': [ new Math.Vector2(1, 0), new Math.Vector2 (1, 1), new Math.Vector2(0, -2), new Math.Vector2(1, -2) ],
 
-        'Kick_R2': [ new Phaser.Math.Vector2(1, 0), new Phaser.Math.Vector2 (1, -1), new Phaser.Math.Vector2(0, 2), new Phaser.Math.Vector2(1, -2) ],
-        'Kick_2R': [ new Phaser.Math.Vector2(-1, 0), new Phaser.Math.Vector2 (-1, -1), new Phaser.Math.Vector2(0, 2), new Phaser.Math.Vector2(-1, 2) ],
+        'Kick_R2': [ new Math.Vector2(1, 0), new Math.Vector2 (1, -1), new Math.Vector2(0, 2), new Math.Vector2(1, -2) ],
+        'Kick_2R': [ new Math.Vector2(-1, 0), new Math.Vector2 (-1, -1), new Math.Vector2(0, 2), new Math.Vector2(-1, 2) ],
 
-        'Kick_2L': [ new Phaser.Math.Vector2(1, 0), new Phaser.Math.Vector2 (1, -1), new Phaser.Math.Vector2(0, 2), new Phaser.Math.Vector2(1, 2) ],
-        'Kick_L2': [ new Phaser.Math.Vector2(-1, 0), new Phaser.Math.Vector2 (-1, 1), new Phaser.Math.Vector2(0, -2), new Phaser.Math.Vector2(-1, -2) ],
+        'Kick_2L': [ new Math.Vector2(1, 0), new Math.Vector2 (1, -1), new Math.Vector2(0, 2), new Math.Vector2(1, 2) ],
+        'Kick_L2': [ new Math.Vector2(-1, 0), new Math.Vector2 (-1, 1), new Math.Vector2(0, -2), new Math.Vector2(-1, -2) ],
 
-        'Kick_L0': [ new Phaser.Math.Vector2(-1, 0), new Phaser.Math.Vector2 (-1, 1), new Phaser.Math.Vector2(0, -2), new Phaser.Math.Vector2(-1, -2) ],
-        'Kick_0L': [ new Phaser.Math.Vector2(1, 0), new Phaser.Math.Vector2 (1, -1), new Phaser.Math.Vector2(0, 2), new Phaser.Math.Vector2(1, 2) ]
+        'Kick_L0': [ new Math.Vector2(-1, 0), new Math.Vector2 (-1, 1), new Math.Vector2(0, -2), new Math.Vector2(-1, -2) ],
+        'Kick_0L': [ new Math.Vector2(1, 0), new Math.Vector2 (1, -1), new Math.Vector2(0, 2), new Math.Vector2(1, 2) ]
     };
 
     private static I_OffsetData: TetrominoWallKickData =
     {
-        'Kick_0R': [ new Phaser.Math.Vector2(-2, 0), new Phaser.Math.Vector2 (1, 0), new Phaser.Math.Vector2(-2, 1), new Phaser.Math.Vector2(1, -2) ],
-        'Kick_R0': [ new Phaser.Math.Vector2(2, 0), new Phaser.Math.Vector2 (-1, 0), new Phaser.Math.Vector2(2, -1), new Phaser.Math.Vector2(-1, 2) ],
+        'Kick_0R': [ new Math.Vector2(-2, 0), new Math.Vector2 (1, 0), new Math.Vector2(-2, 1), new Math.Vector2(1, -2) ],
+        'Kick_R0': [ new Math.Vector2(2, 0), new Math.Vector2 (-1, 0), new Math.Vector2(2, -1), new Math.Vector2(-1, 2) ],
 
-        'Kick_R2': [ new Phaser.Math.Vector2(-1, 0), new Phaser.Math.Vector2 (2, 0), new Phaser.Math.Vector2(-1, -2), new Phaser.Math.Vector2(2, 1) ],
-        'Kick_2R': [ new Phaser.Math.Vector2(1, 0), new Phaser.Math.Vector2 (-2, 0), new Phaser.Math.Vector2(1, 2), new Phaser.Math.Vector2(-2, -1) ],
+        'Kick_R2': [ new Math.Vector2(-1, 0), new Math.Vector2 (2, 0), new Math.Vector2(-1, -2), new Math.Vector2(2, 1) ],
+        'Kick_2R': [ new Math.Vector2(1, 0), new Math.Vector2 (-2, 0), new Math.Vector2(1, 2), new Math.Vector2(-2, -1) ],
 
-        'Kick_2L': [ new Phaser.Math.Vector2(2, 0), new Phaser.Math.Vector2 (-1, 0), new Phaser.Math.Vector2(2, -1), new Phaser.Math.Vector2(-1, 2) ],
-        'Kick_L2': [ new Phaser.Math.Vector2(-2, 0), new Phaser.Math.Vector2 (1, 0), new Phaser.Math.Vector2(-2, 1), new Phaser.Math.Vector2(1, -2) ],
+        'Kick_2L': [ new Math.Vector2(2, 0), new Math.Vector2 (-1, 0), new Math.Vector2(2, -1), new Math.Vector2(-1, 2) ],
+        'Kick_L2': [ new Math.Vector2(-2, 0), new Math.Vector2 (1, 0), new Math.Vector2(-2, 1), new Math.Vector2(1, -2) ],
 
-        'Kick_L0': [ new Phaser.Math.Vector2(1, 0), new Phaser.Math.Vector2 (-2, 0), new Phaser.Math.Vector2(1, 2), new Phaser.Math.Vector2(-2, -1) ],
-        'Kick_0L': [ new Phaser.Math.Vector2(-1, 0), new Phaser.Math.Vector2 (2, 0), new Phaser.Math.Vector2(-1, -2), new Phaser.Math.Vector2(2, 1) ]
+        'Kick_L0': [ new Math.Vector2(1, 0), new Math.Vector2 (-2, 0), new Math.Vector2(1, 2), new Math.Vector2(-2, -1) ],
+        'Kick_0L': [ new Math.Vector2(-1, 0), new Math.Vector2 (2, 0), new Math.Vector2(-1, -2), new Math.Vector2(2, 1) ]
     };
 }

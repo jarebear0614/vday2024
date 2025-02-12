@@ -7,7 +7,7 @@ import { Align } from '../util/align';
 import { GameState } from '../gameObjects/GameState';
 import { Player } from '../gameObjects/player';
 import { Interactive, InteractiveConfig, InteractiveTriggerConfig, SceneTransitionConfig } from '../gameObjects/interactive';
-import { CharacterEvent, CharacterEventUtility, EndAction } from '../gameObjects/dialog';
+import { CharacterEvent, CharacterEventUtility, EndAction, OverlapAction } from '../gameObjects/dialog';
 import { RandomInRadiusCharacterMovement, CharacterMovementConfig, WaypointCharacterMovement, NopCharacterMovement } from '../gameObjects/CharacterMovementComponents';
 import { ICharacterMovement } from '../gameObjects/ICharacterMovement';
 import { GameEventManager} from '../gameObjects/GameEvent';
@@ -524,6 +524,16 @@ export class Game extends BaseScene
                                     endAction: messages.onEnd,
                                     sourceCharacter: newCharacter
                                 });
+
+                                if(messages.overlapAction == OverlapAction.autoTrigger)
+                                {
+                                    console.log('here');
+                                    this.triggerInteractiveEvent({
+                                        type: this.currentInteractiveObject?.type ?? 'sign',
+                                        interactive: this.currentInteractiveObject,
+                                        scene: undefined
+                                    });
+                                }
                             }
                         }
                     }
@@ -686,6 +696,16 @@ export class Game extends BaseScene
     {
         if(!config)
         {
+            return;
+        }
+
+        if(this.gameEventManager.getCurrentEventProgress('lyrics') == 0 && config.interactive?.eventName !== 'lyrics')
+        {
+            this.showDialog(['I should talk to my guest Joe Goldberging in my living room first'],
+                {
+                    endAction: EndAction.nop
+                }
+            );
             return;
         }
 
@@ -883,6 +903,7 @@ export class Game extends BaseScene
     {
         this.gameState.lyricsPieces++;
         this.lyricCountText.text = this.gameState.lyricsPieces.toString();
+        this.incrementEvent('lyrics');
     }
 
     private configureEvent() 

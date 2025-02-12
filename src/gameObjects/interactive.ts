@@ -1,5 +1,6 @@
 import { Character } from "./character";
 import { CharacterEvent, EndAction } from "./dialog";
+
 export class InteractiveConfig
 {
     title?: string;

@@ -286,7 +286,7 @@
                         {
                          "name":"eventKeyTrigger",
                          "type":"int",
-                         "value":5
+                         "value":0
                         }, 
                         {
                          "name":"eventName",
@@ -451,6 +451,74 @@
                  "width":16,
                  "x":113,
                  "y":257.5
+                }, 
+                {
+                 "gid":1768,
+                 "height":16,
+                 "id":10,
+                 "name":"Jared",
+                 "properties":[
+                        {
+                         "name":"bodyFrame",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"dialog",
+                         "type":"string",
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"Hey there love\",\n        \"This little game isn't much, but I'll explain what the goal is.\",\n        \"You have to collect the 4 hidden lyric pieces. You'll have a counter on the top left.\",\n        \"The \\\"A\\\" button will show 2 exclamation ! marks to indicate that there's something you can interact with. Check around and talk to everyone!\",\n        \"And when you've collected all 4, meet me at the pond outside. Can't wait to see you <3\"\n      ],\n      \"onEnd\": \"incrementEvent\",\n      \"overlapAction\": \"autoTrigger\"\n    }\n  ]\n}"
+                        }, 
+                        {
+                         "name":"eventKeyEnd",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"eventKeyTrigger",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"eventName",
+                         "type":"string",
+                         "value":"lyrics"
+                        }, 
+                        {
+                         "name":"hairFrame",
+                         "type":"int",
+                         "value":22
+                        }, 
+                        {
+                         "name":"instance",
+                         "type":"string",
+                         "value":"jared0"
+                        }, 
+                        {
+                         "name":"movement",
+                         "type":"string",
+                         "value":"{\n  \"type\": \"nop\"\n}"
+                        }, 
+                        {
+                         "name":"pantsFrame",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"shirtFrame",
+                         "type":"int",
+                         "value":286
+                        }, 
+                        {
+                         "name":"shoesFrame",
+                         "type":"int",
+                         "value":4
+                        }],
+                 "rotation":0,
+                 "type":"character",
+                 "visible":true,
+                 "width":16,
+                 "x":328.5,
+                 "y":246.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -459,7 +527,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":8,
+ "nextobjectid":11,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

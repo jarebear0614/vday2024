@@ -197,7 +197,7 @@ export class Character
             this.destroyed = true;
 
             this.collider.destroy();
-            //this.overlapCollider.destroy();
+            this.overlapCollider.destroy();
 
             if(this.spriteGroup.children)
             {

@@ -9,6 +9,14 @@ export enum EndAction
     giveLyricPiece = "giveLyricPiece"
 }
 
+
+export enum OverlapAction 
+{
+    nop = "nop",
+
+    autoTrigger = "autoTrigger"
+}
+
 export class CharacterEventDialog
 {
     eventKey: number = 0;
@@ -16,6 +24,8 @@ export class CharacterEventDialog
     dialog: string[] = [];
 
     onEnd: EndAction = EndAction.nop;
+
+    overlapAction: OverlapAction = OverlapAction.nop;
 }
 
 export class CharacterEvent

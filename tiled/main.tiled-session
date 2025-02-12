@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx",
+    "activeFile": "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx",
     "automapping.whileDrawing": true,
     "expandedProjectPaths": [
     ],
@@ -17,7 +17,8 @@
             "scaleInDock": 1
         },
         ":/automap-tiles.tsx": {
-            "scaleInDock": 1.5
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx": {
             "expandedObjectLayers": [
@@ -90,14 +91,14 @@
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx": {
             "expandedObjectLayers": [
                 10,
-                11,
-                12
+                12,
+                11
             ],
-            "scale": 3,
-            "selectedLayer": 8,
+            "scale": 5.5,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 465.66666666666663,
-                "y": 480.16666666666663
+                "x": 463.9090909090909,
+                "y": 714.3636363636364
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx": {
@@ -106,11 +107,11 @@
                 9,
                 7
             ],
-            "scale": 5.5,
-            "selectedLayer": 6,
+            "scale": 2,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 232.0909090909091,
-                "y": 159.9090909090909
+                "x": 230.25,
+                "y": 137
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/characters.tsx": {
@@ -122,7 +123,7 @@
             "scaleInEditor": 3
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/overworld.tsx": {
-            "scaleInDock": 1,
+            "scaleInDock": 1.5,
             "scaleInEditor": 3
         }
     },
@@ -146,18 +147,18 @@
     "project": "main.tiled-project",
     "property.type": "string",
     "recentFiles": [
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/interior.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/overworld.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/characters.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx",
-        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx",
+        ":/automap-tiles.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/characters.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/interior.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/trees.tmx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/houses.tmx",
-        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/meganshouse.tmx",
-        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/overworld.tsx"
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/meganshouse.tmx"
     ],
     "tileset.embedInMap": false,
     "tileset.lastUsedFormat": "tsx",
