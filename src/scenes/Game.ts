@@ -67,6 +67,8 @@ export class Game extends BaseScene
     playerTouching: boolean = false;
     wasPlayerTouching: boolean = false;
 
+    currentItem: Phaser.GameObjects.Image | null;
+
     constructor ()
     {
         super('Game');
@@ -115,6 +117,8 @@ export class Game extends BaseScene
         this.load.spritesheet('characters', 'assets/characters.png', {frameWidth: 16, frameHeight: 16, spacing: 1});
 
         this.load.image('lyricPieces', 'assets/paper.png');
+        this.load.image('Shovel', 'assets/shovel_silver.png');
+        this.load.image('Ring', 'assets/ring.png');
     }
 
     create ()
@@ -157,7 +161,6 @@ export class Game extends BaseScene
         {
             if(this.gameEventManager.getCurrentEventProgress("dots") === 0 && this.gameState.completedDots)
             {
-                console.log('here');
                 this.gameEventManager.incrementEvent('dots');
                 this.showDialog(['Ahh I feel better now', 'Wait, what\'s this?', 'Oh, a lyric piece!'], 
                 {
@@ -270,8 +273,6 @@ export class Game extends BaseScene
         {
             this.interactText.setVisible(false);
         }
-
-        //console.log(this.player.body.x, this.player.body.y);
     }
 
     private configurePlayer() {
@@ -359,8 +360,11 @@ export class Game extends BaseScene
 
             let eventName: string | undefined;
             let eventKeyTrigger: number | undefined;
+            let eventKeyEnd: number | undefined;
 
             let dialog: CharacterEvent | undefined = undefined;
+
+            let item: string | undefined;
 
             if(properties)
             {
@@ -384,8 +388,15 @@ export class Game extends BaseScene
                         case 'eventKeyTrigger':
                             eventKeyTrigger = parseInt(property.value);
                             break;
+                        case 'eventKeyEnd':
+                            eventKeyEnd = parseInt(property.value);
+                            break;
                         case 'dialog':
                             dialog = JSON.parse(property.value);
+                            break;
+                        case 'item':
+                            item = property.value;
+                            break;
                     }
                 }
             }
@@ -419,6 +430,7 @@ export class Game extends BaseScene
                         this.currentInteractiveObject = new Interactive(current.dialog, 'sign', eventName, current.eventKey, 
                             {
                                 endAction: current.onEnd,
+                                grantedItem: item,
                                 sceneTransition: {
                                     toScene: toScene ?? '',
                                     fromX: fromX,
@@ -429,17 +441,26 @@ export class Game extends BaseScene
                     }
                 }
                 
-                if(progress >= (eventKeyTrigger ?? 0))
+                if((!eventKeyTrigger && !eventKeyEnd) || progress >= (eventKeyTrigger ?? 0) && progress < (eventKeyEnd ?? 5000))
                 {
-                    this.currentInteractiveObject = new Interactive([message], type, eventName, eventKeyTrigger, {
-                        sceneTransition: {
-                            toScene: toScene ?? '',
-                            fromX: fromX,
-                            fromY: fromY
-                        }
-                    });
+                    if(!this.currentInteractiveObject)
+                    {
+                        this.currentInteractiveObject = new Interactive([message], type, eventName, eventKeyTrigger, {
+                            grantedItem: item,
+                            sceneTransition: {
+                                toScene: toScene ?? '',
+                                fromX: fromX,
+                                fromY: fromY
+                            }
+                        });
+                    }
                 }
             });
+
+            if(eventName && eventKeyTrigger != undefined)
+            {
+                this.gameEventManager.addEvent(eventName, eventKeyTrigger);
+            }
         }
     }
 
@@ -535,6 +556,7 @@ export class Game extends BaseScene
                                     title: name,
                                     endAction: messages.onEnd,
                                     sourceCharacter: newCharacter,
+                                    grantedItem: messages.item,
                                     sceneTransition: messages.scene ? {
                                         toScene: messages.scene,
                                         fromX: messages.fromX,
@@ -734,7 +756,8 @@ export class Game extends BaseScene
                         this.showDialog(config.interactive.messages, {
                             title: config.interactive.title,
                             endAction: config.interactive.endAction,
-                            sourceCharacter: config.interactive.sourceCharacter
+                            sourceCharacter: config.interactive.sourceCharacter,
+                            grantedItem: config.interactive.grantedItem
                         });
                     }
                     break;
@@ -743,6 +766,20 @@ export class Game extends BaseScene
                     if(config.scene)
                     {
                         this.triggerSceneFromConfig(config.scene);
+                    }
+                    break;
+
+                case "grantItem":
+                    if(config.interactive && config.interactive.grantedItem)
+                    {
+                        this.showDialog(config.interactive.messages, {
+                            title: config.interactive.title,
+                            endAction: config.interactive.endAction,
+                            sourceCharacter: config.interactive.sourceCharacter,
+                            grantedItem: config.interactive.grantedItem
+                        });
+
+                        this.grantItem(config.interactive.grantedItem, config.interactive.eventName)
                     }
                     break;
             }
@@ -874,8 +911,6 @@ export class Game extends BaseScene
 
                         config?.sourceCharacter?.movement?.unpause();
 
-                        console.log(this.currentInteractiveObject?.endAction);
-
                         let endAction = config?.endAction ?? this.currentInteractiveObject?.endAction ?? EndAction.nop;
                         let eventName = config?.eventName ?? this.currentInteractiveObject?.eventName ?? undefined;
 
@@ -892,6 +927,15 @@ export class Game extends BaseScene
                             this.addLyricPiece();
                             this.incrementEvent(eventName);
                         }
+                        else if(endAction == EndAction.grantItem && config?.grantedItem)
+                        {
+                            this.grantItem(config.grantedItem, eventName);
+                        }
+                        else if(endAction == EndAction.clearItem)
+                        {
+                            this.currentItem?.destroy();
+                            this.incrementEvent(eventName);
+                        }
                         this.currentInteractiveObject = null;
                         return;
                     }
@@ -899,6 +943,8 @@ export class Game extends BaseScene
                     let text = this.dialog?.getElement('content') as Phaser.GameObjects.Text;
                     text.text = messages[messagesIndex];
                     
+                    this.dialog?.layout();
+
                     return;
                 }
 
@@ -913,6 +959,19 @@ export class Game extends BaseScene
             {
                 button.getElement('background').setStrokeStyle();
             });            
+    }
+
+    private grantItem(item: string, eventName: string | undefined) 
+    {
+        if (this.currentItem) 
+        {
+            this.currentItem.destroy();
+        }
+
+        this.currentItem = this.add.image(this.getGameWidth() * 0.08, this.getGameHeight() * 0.10, item).setOrigin(0, 0).setScrollFactor(0);
+        Align.scaleToGameWidth(this.currentItem, 0.08, this);
+
+        this.incrementEvent(eventName);
     }
 
     private addLyricPiece()

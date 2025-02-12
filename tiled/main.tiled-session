@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx",
+    "activeFile": "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx",
     "automapping.whileDrawing": true,
     "expandedProjectPaths": [
     ],
@@ -91,21 +91,21 @@
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx": {
             "expandedObjectLayers": [
                 11,
-                10,
-                12
+                12,
+                10
             ],
-            "scale": 1.5,
-            "selectedLayer": 8,
+            "scale": 2,
+            "selectedLayer": 7,
             "viewCenter": {
-                "x": 852.3333333333333,
-                "y": 356.66666666666663
+                "x": 66.75,
+                "y": 762.5
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx": {
             "expandedObjectLayers": [
+                8,
                 9,
-                7,
-                8
+                7
             ],
             "scale": 2,
             "selectedLayer": 7,
@@ -145,13 +145,13 @@
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/interior.tsx"
     ],
     "project": "main.tiled-project",
-    "property.type": "string",
+    "property.type": "int",
     "recentFiles": [
-        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/interior.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/overworld.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/characters.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx",
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx",
         ":/automap-tiles.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/characters.tsx",

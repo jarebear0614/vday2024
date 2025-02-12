@@ -6,7 +6,11 @@ export enum EndAction
 
     startScene = "startScene",
 
-    giveLyricPiece = "giveLyricPiece"
+    giveLyricPiece = "giveLyricPiece",
+
+    grantItem = "grantItem",
+
+    clearItem = "clearItem"
 }
 
 
@@ -29,6 +33,8 @@ export class CharacterEventDialog
 
     fromX: number = 0;
     fromY: number = 0;
+
+    item?: string;
 
     overlapAction: OverlapAction = OverlapAction.nop;
 }

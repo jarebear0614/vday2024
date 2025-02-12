@@ -227,7 +227,7 @@
 </property>
     <property name="eventKeyEnd" type="int" value="5000"/>
     <property name="eventKeyTrigger" type="int" value="0"/>
-    <property name="eventName" value="dots"/>
+    <property name="eventName" value="mittens"/>
     <property name="hairFrame" type="int" value="2"/>
     <property name="movement">{
   &quot;type&quot;: &quot;random&quot;,

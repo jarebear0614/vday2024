@@ -355,7 +355,7 @@
                         {
                          "name":"eventName",
                          "type":"string",
-                         "value":"dots"
+                         "value":"mittens"
                         }, 
                         {
                          "name":"hairFrame",
@@ -545,6 +545,23 @@
          "spacing":1,
          "tilecount":1767,
          "tileheight":16,
+         "tiles":[
+                {
+                 "id":5,
+                 "probability":7
+                }, 
+                {
+                 "id":62,
+                 "probability":7
+                }, 
+                {
+                 "id":347,
+                 "probability":100
+                }, 
+                {
+                 "id":348,
+                 "probability":20
+                }],
          "tilewidth":16
         }, 
         {

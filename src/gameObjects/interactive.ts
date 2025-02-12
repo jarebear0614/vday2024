@@ -9,6 +9,7 @@ export class InteractiveConfig
     sceneTransition?: SceneTransitionConfig;
     sourceDialog?: CharacterEvent;
     eventName?: string;
+    grantedItem?: string;
 }
 
 export class InteractiveTriggerConfig
@@ -37,6 +38,7 @@ export class Interactive
     endAction: EndAction = EndAction.nop;
     sourceCharacter?: Character;
     sceneTransition?: SceneTransitionConfig;
+    grantedItem?: string;
 
     constructor(messages: string[], type: string, eventName?: string, eventKeyTrigger?: number, config?: InteractiveConfig) 
     {
@@ -48,5 +50,6 @@ export class Interactive
         this.endAction = config?.endAction ?? EndAction.nop;
         this.sourceCharacter = config?.sourceCharacter;
         this.sceneTransition = config?.sceneTransition;
+        this.grantedItem = config?.grantedItem;
     }
 }

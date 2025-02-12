@@ -1,12 +1,12 @@
 import { GameState } from '../gameObjects/GameState';
 import { BaseScene } from './BaseScene';
-import { GameObjects, Math as PhaserMath } from 'phaser';
+import { GameObjects, Math as PhaserMath, Physics } from 'phaser';
 
 export class Hangman extends BaseScene
 {
     gameState: GameState = {lyricsPieces: 0};
 
-    possibleWords: string[] = ['INFINITY', 'FEBRUARY', 'BABYGIRL'];
+    possibleWords: string[] = ['INFINITY', 'FEBRUARY', 'BABYGIRL', 'RONALD'];
 
     letterRectangles: GameObjects.Rectangle[] = [];
 
@@ -27,7 +27,7 @@ export class Hangman extends BaseScene
     wrongGuesses: number = 0;
     correctLetters: number = 0;
 
-    private menuGroup: Phaser.Physics.Arcade.StaticGroup;
+    private menuGroup: Physics.Arcade.StaticGroup;
 
     constructor()
     {
@@ -350,7 +350,7 @@ export class Hangman extends BaseScene
         {
             this.selectedRectangle.setFillStyle(0x00FF00, 0);
         }
-        
+
         this.selectedRectangle = null;
         this.selectedLetter = null;
     }
