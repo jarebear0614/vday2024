@@ -2,6 +2,7 @@ import { GameState } from "../gameObjects/GameState";
 import { Field } from "../gameObjects/tetris/field";
 import { Tetromino, TetrominoTransform } from "../gameObjects/tetris/tetromino";
 import { TetrominoFactory } from "../gameObjects/tetris/tetrominoFactory";
+import { Align } from "../util/align";
 import { BaseScene } from "./BaseScene";
 
 import WebFont from 'webfontloader';
@@ -395,9 +396,8 @@ export class Tetris extends BaseScene
         this.nextTetrominoTransform = this.boxTetrominoTransform(this.nextQueue[0], this.nextTopLeft);
 
         let logo = this.add.image(0, 0, 'tetris_logo');
-        let logoScale = rectangleWidth / this.getGameWidth();
+        Align.scaleToGameWidth(logo, 0.35, this);
 
-        logo.setScale(logoScale, logoScale);
         logo.setX(this.getGameWidth() / 2  );
         logo.setY(this.getGameHeight() * .10);
 
