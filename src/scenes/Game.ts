@@ -152,9 +152,9 @@ export class Game extends BaseScene
                 });
             }
         }
+        
         if(this.gameState.fromScene === "Dots")
         {
-            console.log(this.gameEventManager);
             if(this.gameEventManager.getCurrentEventProgress("dots") === 0 && this.gameState.completedDots)
             {
                 console.log('here');
@@ -162,6 +162,18 @@ export class Game extends BaseScene
                 this.showDialog(['Ahh I feel better now', 'Wait, what\'s this?', 'Oh, a lyric piece!'], 
                 {
                     eventName: 'dots',
+                    endAction: EndAction.giveLyricPiece
+                });
+            }
+        }
+
+        if(this.gameState.fromScene === "Hangman")
+        {
+            if(this.gameEventManager.getCurrentEventProgress("hangman") === 0 && this.gameState.completedHangman)
+            {
+                this.showDialog(['You got a lyric piece!'], 
+                {
+                    eventName: 'hangman',
                     endAction: EndAction.giveLyricPiece
                 });
             }
@@ -522,12 +534,16 @@ export class Game extends BaseScene
                                 this.currentInteractiveObject = new Interactive(messages.dialog, type, eventName, eventKeyTrigger, {
                                     title: name,
                                     endAction: messages.onEnd,
-                                    sourceCharacter: newCharacter
+                                    sourceCharacter: newCharacter,
+                                    sceneTransition: messages.scene ? {
+                                        toScene: messages.scene,
+                                        fromX: messages.fromX,
+                                        fromY: messages.fromY
+                                    } : undefined
                                 });
 
                                 if(messages.overlapAction == OverlapAction.autoTrigger)
                                 {
-                                    console.log('here');
                                     this.triggerInteractiveEvent({
                                         type: this.currentInteractiveObject?.type ?? 'sign',
                                         interactive: this.currentInteractiveObject,

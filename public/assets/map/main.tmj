@@ -536,8 +536,8 @@
                  "type":"sign",
                  "visible":true,
                  "width":24,
-                 "x":364.333333333333,
-                 "y":636.333333333333
+                 "x":364.333,
+                 "y":636.333
                 }, 
                 {
                  "height":24,
@@ -553,8 +553,8 @@
                  "type":"sign",
                  "visible":true,
                  "width":24,
-                 "x":412.333333333333,
-                 "y":636.333333333333
+                 "x":412.333,
+                 "y":636.333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -633,7 +633,7 @@
                  "visible":true,
                  "width":16,
                  "x":128,
-                 "y":224.333333333333
+                 "y":224.333
                 }, 
                 {
                  "gid":1773,
@@ -701,7 +701,75 @@
                  "visible":true,
                  "width":16,
                  "x":464.667,
-                 "y":784.666333333333
+                 "y":784.666
+                }, 
+                {
+                 "gid":1773,
+                 "height":16,
+                 "id":34,
+                 "name":"Jared",
+                 "properties":[
+                        {
+                         "name":"bodyFrame",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"dialog",
+                         "type":"string",
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"Let's play some hangman!\"\n      ],\n      \"onEnd\": \"startScene\",\n      \"scene\": \"Hangman\",\n      \"fromX\": 53,\n      \"fromY\": 9\n    },\n    {\n      \"eventKey\": 1,\n      \"dialog\": [\n        \"You beat it!\"\n      ],\n      \"onEnd\": \"nop\"\n    }\n  ]\n}"
+                        }, 
+                        {
+                         "name":"eventKeyEnd",
+                         "type":"int",
+                         "value":5000
+                        }, 
+                        {
+                         "name":"eventKeyTrigger",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"eventName",
+                         "type":"string",
+                         "value":"hangman"
+                        }, 
+                        {
+                         "name":"hairFrame",
+                         "type":"int",
+                         "value":22
+                        }, 
+                        {
+                         "name":"instance",
+                         "type":"string",
+                         "value":"jaredhangman"
+                        }, 
+                        {
+                         "name":"movement",
+                         "type":"string",
+                         "value":"{\n  \"type\": \"nop\"\n}"
+                        }, 
+                        {
+                         "name":"pantsFrame",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"shirtFrame",
+                         "type":"int",
+                         "value":286
+                        }, 
+                        {
+                         "name":"shoesFrame",
+                         "type":"int",
+                         "value":4
+                        }],
+                 "rotation":0,
+                 "type":"character",
+                 "visible":true,
+                 "width":16,
+                 "x":848,
+                 "y":126.666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -710,7 +778,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":34,
+ "nextobjectid":35,
  "orientation":"orthogonal",
  "renderorder":"left-down",
  "tiledversion":"1.11.2",

@@ -25,6 +25,11 @@ export class CharacterEventDialog
 
     onEnd: EndAction = EndAction.nop;
 
+    scene?: string;
+
+    fromX: number = 0;
+    fromY: number = 0;
+
     overlapAction: OverlapAction = OverlapAction.nop;
 }
 

@@ -9,6 +9,7 @@ import { Game, Types } from "phaser";
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 import { Tetris } from './scenes/Tetris';
 import { Dots } from './scenes/Dots';
+import { Hangman } from './scenes/Hangman';
 
 
 let requestedHeight = 1024;
@@ -37,7 +38,8 @@ const config: Types.Core.GameConfig = {
         MainGame,
         GameOver,
         Tetris,
-        Dots
+        Dots,
+        Hangman
     ],
     physics: {
         default: "arcade",

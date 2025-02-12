@@ -1,6 +1,6 @@
+import { Scene } from 'phaser'
 
-
-export class BaseScene extends Phaser.Scene {
+export class BaseScene extends Scene {
 
     gameWidth: number;
     gameHeight: number;

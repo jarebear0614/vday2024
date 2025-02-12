@@ -10,6 +10,8 @@ export class GameState
 
     completedDots?: boolean = false;
 
+    completedHangman?: boolean = false;
+
     fromScene?: string = '';
 
     lyricsPieces: number = 0;
