@@ -474,24 +474,24 @@
       &quot;onEnd&quot;: &quot;nop&quot;
     },
     {
-      &quot;eventKey&quot;: 3,
+      &quot;eventKey&quot;: 4,
       &quot;dialog&quot;: [
         &quot;So close!!&quot;
       ],
       &quot;onEnd&quot;: &quot;nop&quot;
     },
     {
-      &quot;eventKey&quot;: 4,
+      &quot;eventKey&quot;: 5,
       &quot;dialog&quot;: [
         &quot;You made it&quot;,
         &quot;I promise I won't push you in&quot;,
-        &quot;I hope you had fun with the game&quot;,
+        &quot;Thank you for being you, and sticking with playing the whole game.&quot;,
         &quot;I just want you to know, that I love you so very much&quot;,
-        &quot;The last part is to see the lyrics you've been collecting&quot;,
-        &quot;So without further ado, here you are. Thank you for playing!&quot;,
-        &quot;Happy Valentine's Day&quot;
+        &quot;The last part is to see the lyrics from the pieces you've been collecting.&quot;,
+        &quot;Message me on discord with the code \&quot;stardrop\&quot;. Thank you for playing!&quot;,
+        &quot;Happy Valentine's Day babygirl &lt;3&quot;
       ],
-      &quot;onEnd&quot;: &quot;incrementEvent&quot;
+      &quot;onEnd&quot;: &quot;nop&quot;
     }
   ]
 }</property>
@@ -508,7 +508,7 @@
     <property name="shoesFrame" type="int" value="4"/>
    </properties>
   </object>
-  <object id="27" name="Bob" type="character" gid="1773" x="464.667" y="784.666" width="16" height="16">
+  <object id="27" name="John" type="character" gid="1773" x="464.667" y="784.666" width="16" height="16">
    <properties>
     <property name="bodyFrame" type="int" value="0"/>
     <property name="dialog">{
@@ -547,15 +547,15 @@
     <property name="eventKeyEnd" type="int" value="4"/>
     <property name="eventKeyTrigger" type="int" value="0"/>
     <property name="eventName" value="tetris"/>
-    <property name="hairFrame" type="int" value="454"/>
-    <property name="instance" value="bob0"/>
+    <property name="hairFrame" type="int" value="242"/>
+    <property name="instance" value="john0"/>
     <property name="movement">{
   &quot;type&quot;: &quot;random&quot;,
   &quot;radius&quot;: 5
 }</property>
-    <property name="pantsFrame" type="int" value="381"/>
-    <property name="shirtFrame" type="int" value="7"/>
-    <property name="shoesFrame" type="int" value="382"/>
+    <property name="pantsFrame" type="int" value="111"/>
+    <property name="shirtFrame" type="int" value="281"/>
+    <property name="shoesFrame" type="int" value="112"/>
    </properties>
   </object>
   <object id="34" name="Jared" type="character" gid="1773" x="848" y="126.667" width="16" height="16">

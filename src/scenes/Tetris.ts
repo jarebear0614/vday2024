@@ -114,7 +114,7 @@ export class Tetris extends BaseScene
         this.fallSpeedDelta = this.fallSpeed;
 
         this.levelGoals = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75];
-        this.fallSpeeds = [10, 1100, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 25, 10];
+        this.fallSpeeds = [1200, 1100, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 50, 25, 10];
 
         this.linesClearedDelta = this.levelGoals[this.level];
         this.fallSpeed = this.fallSpeeds[this.level];
@@ -711,7 +711,7 @@ export class Tetris extends BaseScene
     public setupGame()
     {
         this.score = this.level = 0;
-        this.score = 5000;
+        //this.score = 5000;
         this.linesClearedDelta = this.levelGoals[this.level];
         this.fallSpeed = this.fallSpeeds[this.level];
 

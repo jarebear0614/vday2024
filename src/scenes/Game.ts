@@ -412,6 +412,8 @@ export class Game extends BaseScene
 
             this.physics.add.overlap(this.player.body, sprite, () => 
             {
+                this.currentInteractiveObject = null;
+                
                 let progress = Number.MAX_SAFE_INTEGER;
                 if(eventName)
                 {
@@ -446,6 +448,7 @@ export class Game extends BaseScene
                     if(!this.currentInteractiveObject)
                     {
                         this.currentInteractiveObject = new Interactive([message], type, eventName, eventKeyTrigger, {
+                            endAction: EndAction.nop,
                             grantedItem: item,
                             sceneTransition: {
                                 toScene: toScene ?? '',

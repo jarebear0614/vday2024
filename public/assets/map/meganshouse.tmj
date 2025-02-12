@@ -340,7 +340,7 @@
                         {
                          "name":"dialog",
                          "type":"string",
-                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"Meow\",\n        \"Meow Meow\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    }\n  ]\n}\n"
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"Meow\",\n        \"Meow Meow\"\n      ],\n      \"onEnd\": \"nop\"\n    }\n  ]\n}\n"
                         }, 
                         {
                          "name":"eventKeyEnd",

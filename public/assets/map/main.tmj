@@ -618,7 +618,7 @@
                         {
                          "name":"dialog",
                          "type":"string",
-                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 1,\n      \"dialog\": [\n        \"You've still gotta find all the lyric pieces!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 2,\n      \"dialog\": [\n        \"You got one, three left to go!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 3,\n      \"dialog\": [\n        \"Halfway there!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 3,\n      \"dialog\": [\n        \"So close!!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 4,\n      \"dialog\": [\n        \"You made it\",\n        \"I promise I won't push you in\",\n        \"I hope you had fun with the game\",\n        \"I just want you to know, that I love you so very much\",\n        \"The last part is to see the lyrics you've been collecting\",\n        \"So without further ado, here you are. Thank you for playing!\",\n        \"Happy Valentine's Day\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    }\n  ]\n}"
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 1,\n      \"dialog\": [\n        \"You've still gotta find all the lyric pieces!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 2,\n      \"dialog\": [\n        \"You got one, three left to go!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 3,\n      \"dialog\": [\n        \"Halfway there!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 4,\n      \"dialog\": [\n        \"So close!!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 5,\n      \"dialog\": [\n        \"You made it\",\n        \"I promise I won't push you in\",\n        \"Thank you for being you, and sticking with playing the whole game.\",\n        \"I just want you to know, that I love you so very much\",\n        \"The last part is to see the lyrics from the pieces you've been collecting.\",\n        \"Message me on discord with the code \\\"stardrop\\\". Thank you for playing!\",\n        \"Happy Valentine's Day babygirl <3\"\n      ],\n      \"onEnd\": \"nop\"\n    }\n  ]\n}"
                         }, 
                         {
                          "name":"eventKeyEnd",
@@ -676,7 +676,7 @@
                  "gid":1773,
                  "height":16,
                  "id":27,
-                 "name":"Bob",
+                 "name":"John",
                  "properties":[
                         {
                          "name":"bodyFrame",
@@ -706,12 +706,12 @@
                         {
                          "name":"hairFrame",
                          "type":"int",
-                         "value":454
+                         "value":242
                         }, 
                         {
                          "name":"instance",
                          "type":"string",
-                         "value":"bob0"
+                         "value":"john0"
                         }, 
                         {
                          "name":"movement",
@@ -721,17 +721,17 @@
                         {
                          "name":"pantsFrame",
                          "type":"int",
-                         "value":381
+                         "value":111
                         }, 
                         {
                          "name":"shirtFrame",
                          "type":"int",
-                         "value":7
+                         "value":281
                         }, 
                         {
                          "name":"shoesFrame",
                          "type":"int",
-                         "value":382
+                         "value":112
                         }],
                  "rotation":0,
                  "type":"character",
