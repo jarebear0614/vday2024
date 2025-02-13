@@ -681,10 +681,9 @@
     {
       &quot;eventKey&quot;: 2,
       &quot;dialog&quot;: [
-        &quot;Nooo not the ring of indentured servitude!&quot;,
-        &quot;Ahh... You've saved me thank you.&quot;,
-        &quot;Return to my wife for your lyric piece.&quot;,
-        &quot;In the meantime...&quot;
+        &quot;What's this..?&quot;,
+        &quot;Yes, yes a thousand times yes!&quot;,
+        &quot;We should tell my future ex-wife.&quot;
       ],
       &quot;onEnd&quot;: &quot;clearItem&quot;
     }

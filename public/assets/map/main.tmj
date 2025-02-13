@@ -890,7 +890,7 @@
                         {
                          "name":"dialog",
                          "type":"string",
-                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"You'll never take me alive!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 1,\n      \"dialog\": [\n        \"You'll never take me alive!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 2,\n      \"dialog\": [\n        \"Nooo not the ring of indentured servitude!\",\n        \"Ahh... You've saved me thank you.\",\n        \"Return to my wife for your lyric piece.\",\n        \"In the meantime...\"\n      ],\n      \"onEnd\": \"clearItem\"\n    }\n  ]\n}"
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"You'll never take me alive!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 1,\n      \"dialog\": [\n        \"You'll never take me alive!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 2,\n      \"dialog\": [\n        \"What's this..?\",\n        \"Yes, yes a thousand times yes!\",\n        \"We should tell my future ex-wife.\"\n      ],\n      \"onEnd\": \"clearItem\"\n    }\n  ]\n}"
                         }, 
                         {
                          "name":"eventKeyEnd",

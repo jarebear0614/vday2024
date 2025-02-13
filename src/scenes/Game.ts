@@ -654,7 +654,7 @@ export class Game extends BaseScene
         
         let interactButton = this.add.image(this.getGameWidth() * 0.85, this.getGameHeight() * 0.20, 'interact').setInteractive({useHandCursor: true}).setScrollFactor(0);
 
-        Align.scaleToGameWidth(dpadfull, 0.18, this);
+        Align.scaleToGameWidth(dpadfull, 0.26, this);
         Align.scaleToGameWidth(interactButton, 0.18, this);
 
         this.interactText = this.add.text(0, 0, '!!', {fontFamily: 'Arial', fontSize: 64, color: '#ff0000'})
