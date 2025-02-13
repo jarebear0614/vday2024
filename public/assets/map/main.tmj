@@ -686,7 +686,7 @@
                         {
                          "name":"dialog",
                          "type":"string",
-                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"Boy, I love Tetris!\",\n        \"Come see me if you can get 1000 points\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    },\n    {\n      \"eventKey\": 1,\n      \"dialog\": [\n        \"Come see me if you can get 1000 points. You can play at the computer in your house!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 2,\n      \"dialog\": [\n        \"Congrats! You've earned this lyric piece.\"\n      ],\n      \"onEnd\": \"giveLyricPiece\"\n    },\n    {\n      \"eventKey\": 3,\n      \"dialog\": [\n        \"Congrats again!\"\n      ],\n      \"onEnd\": \"nop\"\n    }\n  ]\n}"
+                         "value":"{\n  \"events\": [\n    {\n      \"eventKey\": 0,\n      \"dialog\": [\n        \"Boy, I love Tetris!\",\n        \"Come see me if you can get 1000 points. You can play at the computer in your house!\"\n      ],\n      \"onEnd\": \"incrementEvent\"\n    },\n    {\n      \"eventKey\": 1,\n      \"dialog\": [\n        \"Come see me if you can get 1000 points. You can play at the computer in your house!\"\n      ],\n      \"onEnd\": \"nop\"\n    },\n    {\n      \"eventKey\": 2,\n      \"dialog\": [\n        \"Congrats! You've earned this lyric piece.\"\n      ],\n      \"onEnd\": \"giveLyricPiece\"\n    },\n    {\n      \"eventKey\": 3,\n      \"dialog\": [\n        \"Congrats again!\"\n      ],\n      \"onEnd\": \"nop\"\n    }\n  ]\n}"
                         }, 
                         {
                          "name":"eventKeyEnd",

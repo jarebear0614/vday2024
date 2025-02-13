@@ -517,7 +517,7 @@
       &quot;eventKey&quot;: 0,
       &quot;dialog&quot;: [
         &quot;Boy, I love Tetris!&quot;,
-        &quot;Come see me if you can get 1000 points&quot;
+        &quot;Come see me if you can get 1000 points. You can play at the computer in your house!&quot;
       ],
       &quot;onEnd&quot;: &quot;incrementEvent&quot;
     },
