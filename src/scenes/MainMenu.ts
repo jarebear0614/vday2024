@@ -23,7 +23,7 @@ export class MainMenu extends BaseScene
 
         this.input.once('pointerdown', () => {
 
-            this.scene.start('Tetris');
+            this.scene.start('Game');
 
         });
     }
