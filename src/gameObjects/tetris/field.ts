@@ -72,10 +72,6 @@ export class Field
             {
                 if(this.minoImages[i][j] !== null)
                 {
-                    let count = fullLines.filter((n) => {
-                        return i <= n;
-                    });
-
                     this.minoImages[i][j].setY(this.fieldTopleft.y + (32 * Tetris.minoScale) * i);
                 }
             }
