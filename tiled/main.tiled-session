@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx",
+    "activeFile": "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx",
     "automapping.whileDrawing": true,
     "expandedProjectPaths": [
     ],
@@ -94,24 +94,24 @@
                 12,
                 10
             ],
-            "scale": 2,
+            "scale": 1,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 458.5,
-                "y": 480.25
+                "x": 690.5,
+                "y": 230
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx": {
             "expandedObjectLayers": [
                 8,
-                9,
-                7
+                7,
+                9
             ],
             "scale": 2,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 230.25,
-                "y": 137
+                "x": 232.25,
+                "y": 159.75
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/characters.tsx": {
@@ -123,7 +123,7 @@
             "scaleInEditor": 3
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/overworld.tsx": {
-            "scaleInDock": 1.5,
+            "scaleInDock": 0.75,
             "scaleInEditor": 3
         }
     },
@@ -147,11 +147,11 @@
     "project": "main.tiled-project",
     "property.type": "int",
     "recentFiles": [
+        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/interior.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/overworld.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/tilesets/characters.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/main.tmx",
-        "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx",
         ":/automap-tiles.tsx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/main.tmx",
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2024/vday2024/public/assets/map/tilesets/characters.tsx",

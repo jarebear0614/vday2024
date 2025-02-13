@@ -524,7 +524,7 @@
     {
       &quot;eventKey&quot;: 1,
       &quot;dialog&quot;: [
-        &quot;Come see me if you can get 1000 points&quot;
+        &quot;Come see me if you can get 1000 points. You can play at the computer in your house!&quot;
       ],
       &quot;onEnd&quot;: &quot;nop&quot;
     },
