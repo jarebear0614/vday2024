@@ -484,7 +484,7 @@
       &quot;eventKey&quot;: 5,
       &quot;dialog&quot;: [
         &quot;You made it&quot;,
-        &quot;I promise I won't push you in&quot;,
+        &quot;I promise I won't push you into the pond. Anyway...&quot;,
         &quot;Thank you for being you, and sticking with playing the whole game.&quot;,
         &quot;I just want you to know, that I love you so very much&quot;,
         &quot;The last part is to see the lyrics from the pieces you've been collecting.&quot;,
@@ -517,21 +517,21 @@
       &quot;eventKey&quot;: 0,
       &quot;dialog&quot;: [
         &quot;Boy, I love Tetris!&quot;,
-        &quot;Come see me if you can get 2000 points&quot;
+        &quot;Come see me if you can get 1000 points&quot;
       ],
       &quot;onEnd&quot;: &quot;incrementEvent&quot;
     },
     {
       &quot;eventKey&quot;: 1,
       &quot;dialog&quot;: [
-        &quot;Come see me if you can get 2000 points&quot;
+        &quot;Come see me if you can get 1000 points&quot;
       ],
       &quot;onEnd&quot;: &quot;nop&quot;
     },
     {
       &quot;eventKey&quot;: 2,
       &quot;dialog&quot;: [
-        &quot;Wow you did it!&quot;
+        &quot;Congrats! You've earned this lyric piece.&quot;
       ],
       &quot;onEnd&quot;: &quot;giveLyricPiece&quot;
     },
@@ -576,9 +576,12 @@
     {
       &quot;eventKey&quot;: 1,
       &quot;dialog&quot;: [
-        &quot;You beat it!&quot;
+        &quot;You wanna play again?&quot;
       ],
-      &quot;onEnd&quot;: &quot;nop&quot;
+      &quot;onEnd&quot;: &quot;startScene&quot;,
+      &quot;scene&quot;: &quot;Hangman&quot;,
+      &quot;fromX&quot;: 53,
+      &quot;fromY&quot;: 9
     }
   ]
 }</property>
@@ -623,7 +626,7 @@
       &quot;dialog&quot;: [
         &quot;What's that you found?&quot;,
         &quot;Uh I'll pretend I didn't see it.&quot;,
-        &quot;Be on your way and cure Ronald.&quot;
+        &quot;Be on your way and cure Ronald. I trust you&quot;
       ],
       &quot;onEnd&quot;: &quot;nop&quot;
     },
@@ -679,7 +682,9 @@
       &quot;eventKey&quot;: 2,
       &quot;dialog&quot;: [
         &quot;Nooo not the ring of indentured servitude!&quot;,
-        &quot;Fine, I'll come along willingly&quot;
+        &quot;Ahh... You've saved me thank you.&quot;,
+        &quot;Return to my wife for your lyric piece.&quot;,
+        &quot;In the meantime...&quot;
       ],
       &quot;onEnd&quot;: &quot;clearItem&quot;
     }

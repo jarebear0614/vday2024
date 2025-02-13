@@ -97,8 +97,8 @@
             "scale": 2,
             "selectedLayer": 8,
             "viewCenter": {
-                "x": 470.75,
-                "y": 894.5
+                "x": 458.5,
+                "y": 480.25
             }
         },
         "C:/Users/Jared Germano/OneDrive/Pictures/MeganProjects/VDay2025/vday2025/public/assets/map/meganshouse.tmx": {
@@ -108,7 +108,7 @@
                 7
             ],
             "scale": 2,
-            "selectedLayer": 7,
+            "selectedLayer": 8,
             "viewCenter": {
                 "x": 230.25,
                 "y": 137

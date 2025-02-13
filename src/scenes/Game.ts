@@ -69,6 +69,10 @@ export class Game extends BaseScene
 
     currentItem: Phaser.GameObjects.Image | null;
 
+    isUpdating: boolean = true;
+
+    treasureSound: Phaser.Sound.BaseSound;
+
     constructor ()
     {
         super('Game');
@@ -119,6 +123,8 @@ export class Game extends BaseScene
         this.load.image('lyricPieces', 'assets/paper.png');
         this.load.image('Shovel', 'assets/shovel_silver.png');
         this.load.image('Ring', 'assets/ring.png');
+
+        this.load.audio('treasure', 'assets/treasure.mp3');
     }
 
     create ()
@@ -147,10 +153,10 @@ export class Game extends BaseScene
 
         if(this.gameState.fromScene === "Tetris")
         {
-            if(this.gameEventManager.getCurrentEventProgress("tetris") === 1 && (this.gameState.tetrisScore ?? 0) >= 5000)
+            if(this.gameEventManager.getCurrentEventProgress("tetris") === 1 && (this.gameState.tetrisScore ?? 0) >= 1000)
             {
                 this.gameEventManager.incrementEvent("tetris");
-                this.showDialog(['I better go talk to bob, I beat the high score!'], 
+                this.showDialog(['I better go talk to John, I beat the high score!'], 
                 {
                     endAction: EndAction.incrementEvent
                 });
@@ -174,7 +180,7 @@ export class Game extends BaseScene
         {
             if(this.gameEventManager.getCurrentEventProgress("hangman") === 0 && this.gameState.completedHangman)
             {
-                this.showDialog(['You got a lyric piece!'], 
+                this.showDialog(['Huzzah~', 'There\'s a couple words that can show up for this.', 'Feel free to play again!'], 
                 {
                     eventName: 'hangman',
                     endAction: EndAction.giveLyricPiece
@@ -183,10 +189,20 @@ export class Game extends BaseScene
         }
 
         this.configureLyricUI();
+
+        this.treasureSound = this.sound.add('treasure', 
+        {
+            loop: false
+        });
     }
 
     update(_: number, delta: number) 
     {   
+        if(!this.isUpdating)
+        {
+            return;
+        }
+
         this.isPreviousUpDown = this.isUpDown;
         this.isPreviousLeftDown = this.isLeftDown;
         this.isPreviousRightDown = this.isRightDown;
@@ -979,9 +995,29 @@ export class Game extends BaseScene
 
     private addLyricPiece()
     {
-        this.gameState.lyricsPieces++;
-        this.lyricCountText.text = this.gameState.lyricsPieces.toString();
-        this.incrementEvent('lyrics');
+        let duhNaNaNa = this.add.image(0, 0, 'lyricPieces').setOrigin(0, 0);
+        
+        Align.scaleToGameWidth(duhNaNaNa, 0.05, this);
+        duhNaNaNa.setPosition(this.player.body.x + this.player.body.displayWidth / 2 - duhNaNaNa.displayWidth / 2, this.player.body.y - duhNaNaNa.displayHeight);
+
+        this.isUpdating = false;
+
+        this.treasureSound.play({
+            seek: 0,
+            volume: 0.5
+        });
+        
+        this.time.delayedCall(2000, () =>
+        {
+            this.isUpdating = true;
+
+            this.gameState.lyricsPieces++;
+            this.lyricCountText.text = this.gameState.lyricsPieces.toString();
+            this.incrementEvent('lyrics');
+
+            this.treasureSound.stop();
+            duhNaNaNa.destroy();
+        });
     }
 
     private configureEvent() 
