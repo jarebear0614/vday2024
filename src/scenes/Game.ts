@@ -72,6 +72,7 @@ export class Game extends BaseScene
     isUpdating: boolean = true;
 
     treasureSound: Phaser.Sound.BaseSound;
+    theme: Phaser.Sound.BaseSound;
 
     constructor ()
     {
@@ -125,6 +126,7 @@ export class Game extends BaseScene
         this.load.image('Ring', 'assets/ring.png');
 
         this.load.audio('treasure', 'assets/treasure.mp3');
+        this.load.audio('theme', 'assets/village.mp3');
     }
 
     create ()
@@ -194,6 +196,19 @@ export class Game extends BaseScene
         {
             loop: false
         });
+
+        if(!this.theme)
+        {
+            this.theme = this.sound.add('theme', {
+                loop: true,
+                volume: 0.35
+            });
+        }
+
+        if(!this.theme.isPlaying)
+        {
+            this.theme.play();
+        }
     }
 
     update(_: number, delta: number) 
@@ -831,6 +846,8 @@ export class Game extends BaseScene
             this.gameState.spawnY = config.fromY;
 
             this.gameEventManager.purgeCharactersFromEvents();
+
+            this.theme.pause();
 
             this.scene.start(config.toScene, {
                 gameState: this.gameState

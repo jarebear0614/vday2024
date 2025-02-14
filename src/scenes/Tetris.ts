@@ -234,7 +234,7 @@ export class Tetris extends BaseScene
         this.placeSound = this.sound.add('place', { loop: false });
         this.tetrisSound = this.sound.add('tetris', { loop: false });
         this.levelUpSound = this.sound.add('levelup', { loop: false });
-        this.music = this.sound.add('music', {loop: true });
+        this.music = this.sound.add('music', {loop: true, volume: 0.35 });
 
         this.music.play();
     }
