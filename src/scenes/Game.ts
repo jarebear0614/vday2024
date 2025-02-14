@@ -649,6 +649,24 @@ export class Game extends BaseScene
 
     private configureInput() {
 
+        this.isTouchUpDown = false;
+        this.isTouchLeftDown = false;
+        this.isTouchRightDown = false;
+        this.isTouchDownDown = false;
+    
+        this.isUpDown = false;
+        this.isLeftDown = false;
+        this.isRightDown = false;
+        this.isDownDown = false;
+    
+        this.isPreviousUpDown = false;
+        this.isPreviousLeftDown = false;
+        this.isPreviousRightDown = false;
+        this.isPreviousDownDown = false;
+
+        this.isInteractKeyDown = false;
+        this.isPreviousInteractKeyDown = false;
+        
         let dpadTopLeft = {x: this.getGameWidth() * .85, y: this.getGameHeight() * .05};
         let dpadfull = this.add.image(0, 0, 'dpadfull').setScrollFactor(0);     
         

@@ -6,7 +6,7 @@ export class Hangman extends BaseScene
 {
     gameState: GameState = {lyricsPieces: 0};
 
-    possibleWords: string[] = ['INFINITY', 'FEBRUARY', 'BABYGIRL', 'RONALD'];
+    possibleWords: string[] = ['INFINITY', 'FEBRUARY', 'BABYGIRL'];
 
     letterRectangles: GameObjects.Rectangle[] = [];
 
